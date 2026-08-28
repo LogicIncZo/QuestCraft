@@ -27,7 +27,7 @@
     "noEmit": true,
     "strict": true,
     "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,

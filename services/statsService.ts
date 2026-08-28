@@ -38,7 +38,7 @@ export const statsService = {
             return { ...defaultStats };
         }
     },
-    updateTokens: (usage?: { inputTokens: number; outputTokens: number }) => {
+    updateTokens: (usage?: { inputTokens?: number; outputTokens?: number }) => {
         if (!usage || (usage.inputTokens === 0 && usage.outputTokens === 0)) return;
 
         const stats = statsService.getStats();
