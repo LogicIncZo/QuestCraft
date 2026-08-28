@@ -86,7 +86,7 @@ export const questPreGenerator = {
                         questConfig,
                         location,
                         numScenarios: numScenariosPerLocation,
-                        languageCode,
+                        language,
                         useGrounding
                     });
                     
@@ -105,7 +105,7 @@ export const questPreGenerator = {
                             questConfig,
                             location,
                             numScenarios: numScenariosPerLocation,
-                            languageCode,
+                            language,
                             useGrounding: false // Disable grounding for this attempt
                         });
                         
