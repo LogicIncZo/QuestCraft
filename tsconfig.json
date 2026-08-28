@@ -28,7 +28,7 @@
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "noImplicitThis": false,
+    "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true
