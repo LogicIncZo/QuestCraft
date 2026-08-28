@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import showdown from 'showdown';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 const converter = new showdown.Converter({
     ghCompatibleHeaderId: true,
@@ -35,7 +36,7 @@ const DocContent: React.FC<DocContentProps> = ({ docId, onHeadingsExtracted }) =
                 return res.text();
             })
             .then(text => {
-                const html = converter.makeHtml(text);
+                const html = sanitizeHtml(converter.makeHtml(text));
                 
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
