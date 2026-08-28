@@ -3,6 +3,7 @@
 ## 🐛 Report Bugs
 
 Open a [GitHub Issue](https://github.com/CCAgentOrg/QuestCraft/issues/new) with:
+
 - Browser + OS
 - Steps to reproduce
 - Expected vs actual behavior

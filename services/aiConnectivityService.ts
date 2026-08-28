@@ -1,4 +1,3 @@
-
 const CONNECTIVITY_STATUS_KEY = 'questcraft-ai-connectivity-status';
 export const CONNECTIVITY_UPDATED_EVENT = 'connectivityupdated';
 
@@ -12,7 +11,7 @@ export const aiConnectivityService = {
             localStorage.setItem(CONNECTIVITY_STATUS_KEY, JSON.stringify(status));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save connectivity status", e);
+            console.error('Failed to save connectivity status', e);
         }
     },
     isConnected: (): boolean => {
@@ -22,5 +21,5 @@ export const aiConnectivityService = {
         } catch {
             return false;
         }
-    }
+    },
 };

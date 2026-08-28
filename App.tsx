@@ -1,9 +1,15 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import type { QuestConfig, AppStats, Page, LoadedQuest, AiProviderSettings } from './types';
 import { statsService, STATS_UPDATED_EVENT } from './services/statsService';
-import { aiConnectivityService, CONNECTIVITY_UPDATED_EVENT } from './services/aiConnectivityService';
-import { settingsService, SETTINGS_UPDATED_EVENT, PROVIDER_CONFIGS } from './services/settingsService';
+import {
+    aiConnectivityService,
+    CONNECTIVITY_UPDATED_EVENT,
+} from './services/aiConnectivityService';
+import {
+    settingsService,
+    SETTINGS_UPDATED_EVENT,
+    PROVIDER_CONFIGS,
+} from './services/settingsService';
 import { testConnection } from './services/aiService';
 import { gameStateService } from './services/gameStateService';
 import { DEFAULT_QUEST_PATHS } from './constants';
@@ -36,7 +42,7 @@ const getCustomQuestsFromStorage = (): QuestConfig[] => {
         const questsJson = localStorage.getItem(CUSTOM_QUESTS_STORAGE_KEY);
         return questsJson ? JSON.parse(questsJson) : [];
     } catch (e) {
-        console.error("Failed to parse custom quests from localStorage", e);
+        console.error('Failed to parse custom quests from localStorage', e);
         return [];
     }
 };
@@ -45,7 +51,7 @@ const saveCustomQuestsToStorage = (quests: QuestConfig[]) => {
     try {
         localStorage.setItem(CUSTOM_QUESTS_STORAGE_KEY, JSON.stringify(quests));
     } catch (e) {
-        console.error("Failed to save custom quests to localStorage", e);
+        console.error('Failed to save custom quests to localStorage', e);
     }
 };
 
@@ -55,11 +61,16 @@ const App: React.FC = () => {
     const [questConfig, setQuestConfig] = useState<QuestConfig | null>(null);
     const [draftQuestForChat, setDraftQuestForChat] = useState<QuestConfig | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [openDrawerContent, setOpenDrawerContent] = useState<{title: string, content: string} | null>(null);
+    const [openDrawerContent, setOpenDrawerContent] = useState<{
+        title: string;
+        content: string;
+    } | null>(null);
     const [customQuests, setCustomQuests] = useState<QuestConfig[]>([]);
     const [defaultQuests, setDefaultQuests] = useState<LoadedQuest[]>([]);
     const [appStats, setAppStats] = useState<AppStats>(statsService.getStats());
-    const [aiSettings, setAiSettings] = useState<AiProviderSettings>(settingsService.getAiSettings());
+    const [aiSettings, setAiSettings] = useState<AiProviderSettings>(
+        settingsService.getAiSettings()
+    );
     const [isAiConnected, setIsAiConnected] = useState(aiConnectivityService.isConnected());
     const [showAuditLog, setShowAuditLog] = useState(false);
     const [showChat, setShowChat] = useState(false);
@@ -69,7 +80,7 @@ const App: React.FC = () => {
         const savedPage = localStorage.getItem(CURRENT_PAGE_KEY) as Page | null;
         const savedQuestJson = localStorage.getItem(ACTIVE_QUEST_CONFIG_KEY);
         const savedQuestConfig = savedQuestJson ? JSON.parse(savedQuestJson) : null;
-        
+
         setCustomQuests(getCustomQuestsFromStorage());
 
         const loadDefaultQuests = async () => {
@@ -84,13 +95,15 @@ const App: React.FC = () => {
                     return { filePath, config };
                 });
 
-                const loadedQuests = (await Promise.all(questsPromises)).filter((q): q is LoadedQuest => q !== null);
+                const loadedQuests = (await Promise.all(questsPromises)).filter(
+                    (q): q is LoadedQuest => q !== null
+                );
                 setDefaultQuests(loadedQuests);
             } catch (error) {
-                console.error("Error loading default quests:", error);
+                console.error('Error loading default quests:', error);
             }
         };
-        
+
         loadDefaultQuests();
 
         // Test connection on mount to set initial status
@@ -100,12 +113,11 @@ const App: React.FC = () => {
                 await testConnection(currentSettings);
                 aiConnectivityService.setConnected(true);
             } catch (error) {
-                console.warn("Initial AI connection test failed:", error);
+                console.warn('Initial AI connection test failed:', error);
                 aiConnectivityService.setConnected(false);
             }
         };
         testInitialConnection();
-
 
         if (savedQuestConfig) {
             setQuestConfig(savedQuestConfig);
@@ -119,7 +131,8 @@ const App: React.FC = () => {
 
         // Add event listeners
         const handleStatsUpdate = () => setAppStats(statsService.getStats());
-        const handleConnectivityUpdate = () => setIsAiConnected(aiConnectivityService.isConnected());
+        const handleConnectivityUpdate = () =>
+            setIsAiConnected(aiConnectivityService.isConnected());
         const handleSettingsUpdate = () => setAiSettings(settingsService.getAiSettings());
 
         window.addEventListener(STATS_UPDATED_EVENT, handleStatsUpdate);
@@ -131,7 +144,7 @@ const App: React.FC = () => {
             window.removeEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdate);
         };
     }, []);
-    
+
     useEffect(() => {
         // Persist page state, but don't save 'game' page to avoid getting stuck
         if (page !== 'game') {
@@ -148,7 +161,7 @@ const App: React.FC = () => {
         }
         return () => clearInterval(timerId);
     }, [page]);
-    
+
     const handleExitGameWithConfirm = useCallback(() => {
         const confirmed = window.confirm(t('confirmEndGame'));
         setIsMenuOpen(false); // Always close menu if action originated from there
@@ -169,60 +182,82 @@ const App: React.FC = () => {
         setPage('home');
     }, []);
 
-    const handleNavigate = useCallback((targetPage: Page) => {
-        if (targetPage === 'maker' && !isMakerModeEnabled) return;
+    const handleNavigate = useCallback(
+        (targetPage: Page) => {
+            if (targetPage === 'maker' && !isMakerModeEnabled) return;
 
-        if (page === 'game' && (targetPage === 'home' || targetPage === 'welcome')) {
-            handleExitGameWithConfirm();
-            return;
-        }
-        if (page === 'maker' && targetPage !== 'maker') {
-            const confirmed = !draftQuestForChat || window.confirm("You have an unsaved quest draft. Are you sure you want to leave the Quest Maker? Your draft will be lost.");
-            if (!confirmed) {
-                setIsMenuOpen(false);
+            if (page === 'game' && (targetPage === 'home' || targetPage === 'welcome')) {
+                handleExitGameWithConfirm();
                 return;
             }
-            setDraftQuestForChat(null); // Clear draft context when leaving maker
-        }
-        logger.info(`[App] Navigating from page "${page}" to "${targetPage}"`);
-        setPage(targetPage);
-        setIsMenuOpen(false);
-    }, [page, draftQuestForChat, handleExitGameWithConfirm]);
-
-    const handleLoadQuest = useCallback((config: QuestConfig, fromUserAction: boolean = false) => {
-        logger.info(`[App] Loading quest: "${getLocalizedString(config.name, 'en')}"`);
-        if (fromUserAction && isMakerModeEnabled) {
-            const newQuests = getCustomQuestsFromStorage();
-            const questName = getLocalizedString(config.name, 'en');
-            const existingIndex = newQuests.findIndex(q => getLocalizedString(q.name, 'en') === questName);
-            if (existingIndex > -1) {
-                newQuests[existingIndex] = config;
-            } else {
-                newQuests.push(config);
+            if (page === 'maker' && targetPage !== 'maker') {
+                const confirmed =
+                    !draftQuestForChat ||
+                    window.confirm(
+                        'You have an unsaved quest draft. Are you sure you want to leave the Quest Maker? Your draft will be lost.'
+                    );
+                if (!confirmed) {
+                    setIsMenuOpen(false);
+                    return;
+                }
+                setDraftQuestForChat(null); // Clear draft context when leaving maker
             }
-            saveCustomQuestsToStorage(newQuests);
-            setCustomQuests(newQuests);
-        }
-        setDraftQuestForChat(null); // Clear draft when loading a quest
-        setQuestConfig(config);
-        localStorage.setItem(ACTIVE_QUEST_CONFIG_KEY, JSON.stringify(config));
-        gameStateService.clear(); // Clear any previous game's state
-        handleNavigate('game');
-    }, [isMakerModeEnabled, handleNavigate]);
+            logger.info(`[App] Navigating from page "${page}" to "${targetPage}"`);
+            setPage(targetPage);
+            setIsMenuOpen(false);
+        },
+        [page, draftQuestForChat, handleExitGameWithConfirm]
+    );
+
+    const handleLoadQuest = useCallback(
+        (config: QuestConfig, fromUserAction: boolean = false) => {
+            logger.info(`[App] Loading quest: "${getLocalizedString(config.name, 'en')}"`);
+            if (fromUserAction && isMakerModeEnabled) {
+                const newQuests = getCustomQuestsFromStorage();
+                const questName = getLocalizedString(config.name, 'en');
+                const existingIndex = newQuests.findIndex(
+                    (q) => getLocalizedString(q.name, 'en') === questName
+                );
+                if (existingIndex > -1) {
+                    newQuests[existingIndex] = config;
+                } else {
+                    newQuests.push(config);
+                }
+                saveCustomQuestsToStorage(newQuests);
+                setCustomQuests(newQuests);
+            }
+            setDraftQuestForChat(null); // Clear draft when loading a quest
+            setQuestConfig(config);
+            localStorage.setItem(ACTIVE_QUEST_CONFIG_KEY, JSON.stringify(config));
+            gameStateService.clear(); // Clear any previous game's state
+            handleNavigate('game');
+        },
+        [isMakerModeEnabled, handleNavigate]
+    );
 
     const handleDeleteQuest = (questName: string) => {
-        if (isMakerModeEnabled && window.confirm(`Are you sure you want to delete the quest "${questName}"? This cannot be undone.`)) {
-            const newQuests = customQuests.filter(q => getLocalizedString(q.name, 'en') !== questName);
+        if (
+            isMakerModeEnabled &&
+            window.confirm(
+                `Are you sure you want to delete the quest "${questName}"? This cannot be undone.`
+            )
+        ) {
+            const newQuests = customQuests.filter(
+                (q) => getLocalizedString(q.name, 'en') !== questName
+            );
             saveCustomQuestsToStorage(newQuests);
             setCustomQuests(newQuests);
         }
     };
 
-    const handleEditQuest = useCallback((config: QuestConfig) => {
-        logger.info(`[App] Editing quest: "${getLocalizedString(config.name, 'en')}"`);
-        setDraftQuestForChat(config);
-        handleNavigate('maker');
-    }, [handleNavigate]);
+    const handleEditQuest = useCallback(
+        (config: QuestConfig) => {
+            logger.info(`[App] Editing quest: "${getLocalizedString(config.name, 'en')}"`);
+            setDraftQuestForChat(config);
+            handleNavigate('maker');
+        },
+        [handleNavigate]
+    );
 
     const handleResetStats = useCallback(() => {
         if (window.confirm(t('resetStatsConfirmation'))) {
@@ -243,60 +278,77 @@ const App: React.FC = () => {
                     handleExitGameImmediate();
                     return null;
                 }
-                return <GamePage 
-                            questConfig={questConfig} 
-                            onExit={handleExitGameImmediate} 
-                            onOpenFooterDrawer={setOpenDrawerContent}
-                        />;
+                return (
+                    <GamePage
+                        questConfig={questConfig}
+                        onExit={handleExitGameImmediate}
+                        onOpenFooterDrawer={setOpenDrawerContent}
+                    />
+                );
             case 'maker':
                 if (!isMakerModeEnabled) {
-                    return <HomePage onNavigate={handleNavigate} isMakerModeEnabled={isMakerModeEnabled} />;
+                    return (
+                        <HomePage
+                            onNavigate={handleNavigate}
+                            isMakerModeEnabled={isMakerModeEnabled}
+                        />
+                    );
                 }
-                return <QuestMakerPage
-                            draftQuest={draftQuestForChat}
-                            onLoadQuest={(config) => handleLoadQuest(config, true)}
-                            onDraftUpdate={setDraftQuestForChat}
-                        />;
+                return (
+                    <QuestMakerPage
+                        draftQuest={draftQuestForChat}
+                        onLoadQuest={(config) => handleLoadQuest(config, true)}
+                        onDraftUpdate={setDraftQuestForChat}
+                    />
+                );
             case 'docs':
                 return <DocsPage />;
             case 'settings':
-                return <SettingsPage 
-                            customQuests={customQuests}
-                            defaultQuests={defaultQuests}
-                            onDeleteQuest={handleDeleteQuest}
-                            onEditQuest={handleEditQuest}
-                            onOpenAuditLog={() => setShowAuditLog(true)}
-                            onResetStats={handleResetStats}
-                            isMakerModeEnabled={isMakerModeEnabled}
-                        />;
+                return (
+                    <SettingsPage
+                        customQuests={customQuests}
+                        defaultQuests={defaultQuests}
+                        onDeleteQuest={handleDeleteQuest}
+                        onEditQuest={handleEditQuest}
+                        onOpenAuditLog={() => setShowAuditLog(true)}
+                        onResetStats={handleResetStats}
+                        isMakerModeEnabled={isMakerModeEnabled}
+                    />
+                );
             case 'welcome':
-                return <WelcomeScreen 
-                            customQuests={customQuests}
-                            defaultQuests={defaultQuests}
-                            onLoadQuest={handleLoadQuest} 
-                            isMakerModeEnabled={isMakerModeEnabled}
-                        />;
+                return (
+                    <WelcomeScreen
+                        customQuests={customQuests}
+                        defaultQuests={defaultQuests}
+                        onLoadQuest={handleLoadQuest}
+                        isMakerModeEnabled={isMakerModeEnabled}
+                    />
+                );
             case 'home':
             default:
-                 return <HomePage onNavigate={handleNavigate} isMakerModeEnabled={isMakerModeEnabled} />;
+                return (
+                    <HomePage onNavigate={handleNavigate} isMakerModeEnabled={isMakerModeEnabled} />
+                );
         }
     };
-    
-    const modelDisplayName = aiSettings.providerId === 'community' 
-        ? PROVIDER_CONFIGS.community.name 
-        : aiSettings.model;
+
+    const modelDisplayName =
+        aiSettings.providerId === 'community' ? PROVIDER_CONFIGS.community.name : aiSettings.model;
 
     return (
         <div className="flex h-screen bg-gray-900 text-gray-100 font-sans antialiased">
-            <HamburgerMenu 
-                isOpen={isMenuOpen} 
-                onClose={() => setIsMenuOpen(false)} 
+            <HamburgerMenu
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
                 onNavigate={handleNavigate}
                 currentPage={page}
                 isMakerModeEnabled={isMakerModeEnabled}
             />
-            <div className="flex-1 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out" style={{ transform: isMenuOpen ? 'translateX(16rem)' : 'translateX(0)' }}>
-                <Header 
+            <div
+                className="flex-1 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out"
+                style={{ transform: isMenuOpen ? 'translateX(16rem)' : 'translateX(0)' }}
+            >
+                <Header
                     onMenuClick={() => setIsMenuOpen(true)}
                     page={page}
                     questConfig={questConfig}
@@ -304,10 +356,8 @@ const App: React.FC = () => {
                     onOpenFooterDrawer={setOpenDrawerContent}
                     onNavigate={handleNavigate}
                 />
-                <main className="flex-1 overflow-y-auto">
-                    {renderPage()}
-                </main>
-                <StatusBar 
+                <main className="flex-1 overflow-y-auto">{renderPage()}</main>
+                <StatusBar
                     stats={appStats}
                     modelName={modelDisplayName}
                     isAiConnected={isAiConnected}
@@ -322,11 +372,15 @@ const App: React.FC = () => {
                 onClose={() => setOpenDrawerContent(null)}
             >
                 {() => (
-                    <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(openDrawerContent?.content || '') }} />
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(openDrawerContent?.content || ''),
+                        }}
+                    />
                 )}
             </Drawer>
             <AIAuditLogDrawer show={showAuditLog} onClose={() => setShowAuditLog(false)} />
-            <ChatDrawer 
+            <ChatDrawer
                 show={showChat}
                 onClose={() => setShowChat(false)}
                 page={page}

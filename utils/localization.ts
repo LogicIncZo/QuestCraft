@@ -1,8 +1,7 @@
-
 import type { LocalizedString, LanguageCode } from '../types';
 
 export const getLocalizedString = (
-    localizedString: LocalizedString | string | undefined, 
+    localizedString: LocalizedString | string | undefined,
     lang: LanguageCode,
     defaultLang: LanguageCode = 'en'
 ): string => {

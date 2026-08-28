@@ -12,13 +12,13 @@ export const scenarioGenerationTests: TestCase[] = [
             locationDescription: 'Protected wildlife sanctuary',
             resourceNames: 'Funding, Conservation, Awareness',
             languageCode: 'en',
-            languageList: ['en', 'es']
+            languageList: ['en', 'es'],
         },
         expectedSchema: true,
         validators: {
             hasRequiredFields: ['title', 'description', 'choices'],
-            minLanguageCount: 2
-        }
+            minLanguageCount: 2,
+        },
     },
     {
         name: 'single_choice_scenario',
@@ -28,12 +28,12 @@ export const scenarioGenerationTests: TestCase[] = [
             locationDescription: 'Modern business environment',
             resourceNames: 'Revenue, Innovation, Culture',
             languageCode: 'en',
-            languageList: ['en']
+            languageList: ['en'],
         },
         expectedSchema: true,
         validators: {
-            hasRequiredFields: ['title', 'description', 'choices']
-        }
+            hasRequiredFields: ['title', 'description', 'choices'],
+        },
     },
     {
         name: 'grounded_scenario_with_sources',
@@ -44,13 +44,13 @@ export const scenarioGenerationTests: TestCase[] = [
             resourceNames: 'Budget, Efficiency, Satisfaction',
             languageCode: 'en',
             languageList: ['en'],
-            groundingInReality: true // Flag to test grounded prompt
+            groundingInReality: true, // Flag to test grounded prompt
         },
         expectedSchema: true,
         validators: {
-            hasRequiredFields: ['title', 'description', 'choices', 'sourceUrl']
-        }
-    }
+            hasRequiredFields: ['title', 'description', 'choices', 'sourceUrl'],
+        },
+    },
 ];
 
 export const promptVariationTests: TestCase[] = [
@@ -61,21 +61,21 @@ export const promptVariationTests: TestCase[] = [
             locationName: 'Test Location',
             locationDescription: 'Test description',
             resourceNames: 'Resource1, Resource2',
-            languageCode: 'en'
+            languageCode: 'en',
         },
         validators: {
-            notContainsHallucinations: true
-        }
+            notContainsHallucinations: true,
+        },
     },
     {
         name: 'multilingual_capability',
         input: {
             questDescription: 'International business',
             languageList: ['en', 'es', 'hi', 'ta'], // Request all 4
-            languageCode: 'en'
+            languageCode: 'en',
         },
         validators: {
-            minLanguageCount: 4
-        }
-    }
+            minLanguageCount: 4,
+        },
+    },
 ];

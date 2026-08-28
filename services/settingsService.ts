@@ -1,5 +1,3 @@
-
-
 import type { AiProviderSettings, AiProviderId, AppSettings, LanguageCode } from '../types';
 import { logger } from './logger';
 
@@ -74,7 +72,7 @@ export const PROVIDER_CONFIGS: Record<AiProviderId, AiProviderConfig> = {
         baseUrl: '',
         isCustom: true,
         isGemini: false,
-    }
+    },
 };
 
 const ENV_API_KEYS: Partial<Record<AiProviderId, string | undefined>> = {
@@ -126,7 +124,8 @@ export const settingsService = {
             const settingsJson = localStorage.getItem(APP_SETTINGS_STORAGE_KEY);
             const saved = settingsJson ? JSON.parse(settingsJson) : {};
 
-            const savedVersion = typeof saved.settingsVersion === 'number' ? saved.settingsVersion : 0;
+            const savedVersion =
+                typeof saved.settingsVersion === 'number' ? saved.settingsVersion : 0;
             for (let v = savedVersion; v < SETTINGS_MIGRATIONS.length; v++) {
                 SETTINGS_MIGRATIONS[v](saved);
             }
@@ -136,7 +135,7 @@ export const settingsService = {
 
             const merged: AppSettings = {
                 ai: { ...defaultSettings.ai, ...savedAi },
-                language: saved.language || defaultSettings.language
+                language: saved.language || defaultSettings.language,
             };
 
             if (!PROVIDER_CONFIGS[merged.ai.providerId]) {
@@ -144,7 +143,7 @@ export const settingsService = {
             }
             return merged;
         } catch (e) {
-            console.error("Failed to parse app settings from localStorage", e);
+            console.error('Failed to parse app settings from localStorage', e);
             return { ...defaultSettings };
         }
     },
@@ -159,7 +158,7 @@ export const settingsService = {
             localStorage.setItem(APP_SETTINGS_STORAGE_KEY, JSON.stringify(settingsToSave));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save app settings to localStorage", e);
+            console.error('Failed to save app settings to localStorage', e);
         }
     },
 
@@ -173,7 +172,7 @@ export const settingsService = {
         delete (aiSettingsToSave as any).apiKey;
         settingsService.saveSettings({ ...currentSettings, ai: aiSettingsToSave });
     },
-    
+
     getLanguage: (): LanguageCode => {
         return settingsService.getSettings().language;
     },
@@ -186,7 +185,7 @@ export const settingsService = {
         try {
             return sessionStorage.getItem(SESSION_API_KEY_STORAGE_KEY);
         } catch (e) {
-            console.error("Failed to get session API key from sessionStorage", e);
+            console.error('Failed to get session API key from sessionStorage', e);
             return null;
         }
     },
@@ -196,7 +195,7 @@ export const settingsService = {
             sessionStorage.setItem(SESSION_API_KEY_STORAGE_KEY, apiKey);
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save session API key to sessionStorage", e);
+            console.error('Failed to save session API key to sessionStorage', e);
         }
     },
     clearSessionApiKey: (): void => {
@@ -205,7 +204,7 @@ export const settingsService = {
             sessionStorage.removeItem(SESSION_API_KEY_STORAGE_KEY);
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to clear session API key from sessionStorage", e);
+            console.error('Failed to clear session API key from sessionStorage', e);
         }
-    }
+    },
 };

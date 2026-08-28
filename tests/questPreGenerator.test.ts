@@ -30,15 +30,24 @@ const loc = (name: string): BoardLocation => ({
 
 const questConfig: QuestConfig = {
     description: { en: 'Budgeting quest' },
-    board: { jailPosition: 0, locations: [loc('Market'), { name: { en: 'Start' }, description: { en: 'Go' }, type: 'START' }, loc('School')] },
+    board: {
+        jailPosition: 0,
+        locations: [
+            loc('Market'),
+            { name: { en: 'Start' }, description: { en: 'Go' }, type: 'START' },
+            loc('School'),
+        ],
+    },
 } as unknown as QuestConfig;
 
-const scenarioFor = (locName: string) => ([{
-    id: `s_${locName}`,
-    title: { en: `Scenario at ${locName}` },
-    description: { en: 'd' },
-    choices: [],
-}]);
+const scenarioFor = (locName: string) => [
+    {
+        id: `s_${locName}`,
+        title: { en: `Scenario at ${locName}` },
+        description: { en: 'd' },
+        choices: [],
+    },
+];
 
 describe('questPreGenerator.preGenerateQuest (issue #59)', () => {
     beforeEach(() => {
@@ -50,7 +59,9 @@ describe('questPreGenerator.preGenerateQuest (issue #59)', () => {
         mockGenerate.mockImplementation(async ({ location }) => scenarioFor(location.name.en));
 
         const progress: Array<[string, number]> = [];
-        const result = await questPreGenerator.preGenerateQuest(questConfig, 'en', true, (m, p) => progress.push([m, p]));
+        const result = await questPreGenerator.preGenerateQuest(questConfig, 'en', true, (m, p) =>
+            progress.push([m, p])
+        );
 
         expect(Object.keys(result.scenarios).sort()).toEqual(['Market', 'School']);
         expect(result.metadata.totalScenarios).toBe(2);
@@ -93,7 +104,10 @@ describe('questPreGenerator.preGenerateQuest (issue #59)', () => {
     it('handles quests with no PROPERTY locations', async () => {
         const noProps = {
             description: { en: 'x' },
-            board: { jailPosition: 0, locations: [{ name: { en: 'Start' }, description: { en: 'Go' }, type: 'START' }] },
+            board: {
+                jailPosition: 0,
+                locations: [{ name: { en: 'Start' }, description: { en: 'Go' }, type: 'START' }],
+            },
         } as unknown as QuestConfig;
 
         const result = await questPreGenerator.preGenerateQuest(noProps, 'en', true);

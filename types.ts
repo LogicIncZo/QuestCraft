@@ -1,19 +1,19 @@
 export enum BoardLocationType {
-    START = "START",
-    PROPERTY = "PROPERTY",
-    CHANCE = "CHANCE",
-    COMMUNITY_CHEST = "COMMUNITY_CHEST",
-    UTILITY = "UTILITY",
-    TAX = "TAX",
-    JAIL = "JAIL",
-    FREE_PARKING = "FREE_PARKING",
-    GO_TO_JAIL = "GO_TO_JAIL",
+    START = 'START',
+    PROPERTY = 'PROPERTY',
+    CHANCE = 'CHANCE',
+    COMMUNITY_CHEST = 'COMMUNITY_CHEST',
+    UTILITY = 'UTILITY',
+    TAX = 'TAX',
+    JAIL = 'JAIL',
+    FREE_PARKING = 'FREE_PARKING',
+    GO_TO_JAIL = 'GO_TO_JAIL',
 }
 
 export type LocalizedString = Record<string, string>;
 
 export interface ResourceDefinition {
-    name: LocalizedString; 
+    name: LocalizedString;
     icon: 'MoneyIcon' | 'TimeIcon' | 'InfoIcon';
     barColor: string; // Tailwind CSS class e.g., "bg-green-500"
     initialValue: number;
@@ -98,7 +98,7 @@ export interface Player {
     isAI?: boolean;
 }
 
-export type GamePhase = 
+export type GamePhase =
     | 'WELCOME'
     | 'DOCS'
     | 'QUEST_MAKER'
@@ -118,7 +118,14 @@ export type GamePhase =
 export interface AIAuditLog {
     id: string;
     timestamp: string;
-    mode: 'Quest Maker' | 'Dynamic Scenario (Grounded)' | 'Dynamic Scenario (Fictional)' | 'Pregenerated Scenarios' | 'Enhance Idea' | 'AI Player Choice' | 'Chat';
+    mode:
+        | 'Quest Maker'
+        | 'Dynamic Scenario (Grounded)'
+        | 'Dynamic Scenario (Fictional)'
+        | 'Pregenerated Scenarios'
+        | 'Enhance Idea'
+        | 'AI Player Choice'
+        | 'Chat';
     prompt: string;
     systemInstruction?: string;
     response: string;
@@ -139,7 +146,8 @@ export interface AppStats {
     webSearchFailures?: number;
 }
 
-export type AiProviderId = 'gemini' | 'openai' | 'openrouter' | 'groq' | 'together' | 'custom' | 'community';
+export type AiProviderId =
+    'gemini' | 'openai' | 'openrouter' | 'groq' | 'together' | 'custom' | 'community';
 
 export interface AiProviderSettings {
     providerId: AiProviderId;
@@ -184,7 +192,7 @@ export interface ChatMessage {
 export enum SearchEngine {
     EXA = 'exa',
     BRAVE = 'brave',
-    DUCKDUCKGO = 'duckduckgo'
+    DUCKDUCKGO = 'duckduckgo',
 }
 
 export interface SearchConfig {

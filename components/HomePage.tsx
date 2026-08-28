@@ -8,12 +8,26 @@ interface HomePageProps {
     isMakerModeEnabled: boolean;
 }
 
-const ModeCard = ({ title, description, icon, onClick, colorClass }: { title: string, description: string, icon: React.ReactNode, onClick: () => void, colorClass: string }) => (
-    <button 
-        onClick={onClick} 
+const ModeCard = ({
+    title,
+    description,
+    icon,
+    onClick,
+    colorClass,
+}: {
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    onClick: () => void;
+    colorClass: string;
+}) => (
+    <button
+        onClick={onClick}
         className="group bg-gray-800 border border-gray-700 rounded-xl p-6 text-center transition-all duration-300 hover:border-gray-500 hover:bg-gray-700/50 hover:shadow-2xl"
     >
-        <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-colors duration-300 bg-gray-700/50 group-hover:bg-gray-700 ${colorClass}`}>
+        <div
+            className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-colors duration-300 bg-gray-700/50 group-hover:bg-gray-700 ${colorClass}`}
+        >
             {icon}
         </div>
         <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
@@ -25,16 +39,22 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, isMakerModeEnabled }) =
     const { t } = useTranslation();
     return (
         <div className="flex flex-col items-center justify-center h-full p-4 md:p-8 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-orange-400 font-mono mb-4">{t('questCraftTitle')}</h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-orange-400 font-mono mb-4">
+                {t('questCraftTitle')}
+            </h1>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-                {t('welcomeScreenLead')}
-                {' '}
-                <button onClick={() => onNavigate('docs')} className="text-indigo-400 hover:underline">
+                {t('welcomeScreenLead')}{' '}
+                <button
+                    onClick={() => onNavigate('docs')}
+                    className="text-indigo-400 hover:underline"
+                >
                     {t('welcomeScreenLeadLink')}
                 </button>
             </p>
             <h2 className="text-2xl font-bold text-white mb-8">{t('homeTitle')}</h2>
-            <div className={`grid grid-cols-1 ${isMakerModeEnabled ? 'md:grid-cols-2' : ''} gap-8 w-full max-w-4xl`}>
+            <div
+                className={`grid grid-cols-1 ${isMakerModeEnabled ? 'md:grid-cols-2' : ''} gap-8 w-full max-w-4xl`}
+            >
                 <ModeCard
                     onClick={() => onNavigate('welcome')}
                     title={t('playerMode')}

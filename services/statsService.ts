@@ -4,7 +4,7 @@ const STATS_STORAGE_KEY = 'questcraft-usage-stats';
 export const STATS_UPDATED_EVENT = 'statsupdated';
 
 const GEMINI_FLASH_INPUT_COST_PER_MILLION = 0.35;
-const GEMINI_FLASH_OUTPUT_COST_PER_MILLION = 0.70;
+const GEMINI_FLASH_OUTPUT_COST_PER_MILLION = 0.7;
 
 const getTokenLimit = (): number => {
     const limitStr = process.env.TOKEN_LIMIT;
@@ -34,7 +34,7 @@ export const statsService = {
             const statsJson = localStorage.getItem(STATS_STORAGE_KEY);
             return statsJson ? JSON.parse(statsJson) : { ...defaultStats };
         } catch (e) {
-            console.error("Failed to parse usage stats from localStorage", e);
+            console.error('Failed to parse usage stats from localStorage', e);
             return { ...defaultStats };
         }
     },
@@ -42,19 +42,21 @@ export const statsService = {
         if (!usage || (usage.inputTokens === 0 && usage.outputTokens === 0)) return;
 
         const stats = statsService.getStats();
-        
+
         stats.totalInputTokens += usage.inputTokens || 0;
         stats.totalOutputTokens += usage.outputTokens || 0;
 
-        const inputCost = (stats.totalInputTokens / 1_000_000) * GEMINI_FLASH_INPUT_COST_PER_MILLION;
-        const outputCost = (stats.totalOutputTokens / 1_000_000) * GEMINI_FLASH_OUTPUT_COST_PER_MILLION;
+        const inputCost =
+            (stats.totalInputTokens / 1_000_000) * GEMINI_FLASH_INPUT_COST_PER_MILLION;
+        const outputCost =
+            (stats.totalOutputTokens / 1_000_000) * GEMINI_FLASH_OUTPUT_COST_PER_MILLION;
         stats.totalCost = inputCost + outputCost;
 
         try {
             localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save usage stats to localStorage", e);
+            console.error('Failed to save usage stats to localStorage', e);
         }
     },
     incrementTimePlayed: () => {
@@ -64,7 +66,7 @@ export const statsService = {
             localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save usage stats to localStorage", e);
+            console.error('Failed to save usage stats to localStorage', e);
         }
     },
     isTokenLimitExceeded: (): boolean => {
@@ -84,10 +86,10 @@ export const statsService = {
             } else {
                 stats.webSearchResults = (stats.webSearchResults || 0) + resultsCount;
             }
-            
+
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to update web search stats", e);
+            console.error('Failed to update web search stats', e);
         }
     },
 
@@ -96,7 +98,7 @@ export const statsService = {
         return {
             requests: stats.webSearchRequests || 0,
             results: stats.webSearchResults || 0,
-            failures: stats.webSearchFailures || 0
+            failures: stats.webSearchFailures || 0,
         };
     },
 
@@ -120,7 +122,7 @@ export const statsService = {
             localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(defaultStats));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to reset usage stats in localStorage", e);
+            console.error('Failed to reset usage stats in localStorage', e);
         }
-    }
+    },
 };

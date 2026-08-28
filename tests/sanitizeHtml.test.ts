@@ -2,7 +2,11 @@ import { describe, it, expect } from 'vitest';
 import showdown from 'showdown';
 import { sanitizeHtml } from '../utils/sanitizeHtml';
 
-const converter = new showdown.Converter({ ghCompatibleHeaderId: true, simpleLineBreaks: true, tables: true });
+const converter = new showdown.Converter({
+    ghCompatibleHeaderId: true,
+    simpleLineBreaks: true,
+    tables: true,
+});
 
 describe('sanitizeHtml', () => {
     it('removes script tags entirely', () => {
@@ -19,7 +23,9 @@ describe('sanitizeHtml', () => {
     });
 
     it('removes javascript: URIs from links and images', () => {
-        const out = sanitizeHtml('<a href="javascript:alert(1)">click</a><img src="javascript:alert(2)">');
+        const out = sanitizeHtml(
+            '<a href="javascript:alert(1)">click</a><img src="javascript:alert(2)">'
+        );
         expect(out).not.toContain('javascript:');
     });
 
@@ -37,7 +43,9 @@ describe('sanitizeHtml', () => {
     });
 
     it('strips iframe, object, embed, and form elements', () => {
-        const out = sanitizeHtml('<iframe src="https://evil.example"></iframe><object data="x"></object><embed src="x"><form action="x"><input></form>');
+        const out = sanitizeHtml(
+            '<iframe src="https://evil.example"></iframe><object data="x"></object><embed src="x"><form action="x"><input></form>'
+        );
         expect(out).not.toMatch(/<(iframe|object|embed|form|input)\b/i);
     });
 
@@ -48,13 +56,16 @@ describe('sanitizeHtml', () => {
     });
 
     it('removes style attributes and style tags (CSS injection)', () => {
-        const out = sanitizeHtml('<div style="background:url(javascript:alert(1))">t</div><style>body{}</style>');
+        const out = sanitizeHtml(
+            '<div style="background:url(javascript:alert(1))">t</div><style>body{}</style>'
+        );
         expect(out).not.toContain('style=');
         expect(out).not.toContain('<style');
     });
 
     it('preserves safe markdown-rendered HTML', () => {
-        const safe = '<h2 id="title">Title</h2><p>Some <strong>bold</strong> and <a href="https://example.com" rel="noopener">link</a>.</p><ul><li>item</li></ul><pre><code>code</code></pre><table><thead><tr><th>h</th></tr></thead></table>';
+        const safe =
+            '<h2 id="title">Title</h2><p>Some <strong>bold</strong> and <a href="https://example.com" rel="noopener">link</a>.</p><ul><li>item</li></ul><pre><code>code</code></pre><table><thead><tr><th>h</th></tr></thead></table>';
         const out = sanitizeHtml(safe);
         expect(out).toContain('<strong>bold</strong>');
         expect(out).toContain('href="https://example.com"');

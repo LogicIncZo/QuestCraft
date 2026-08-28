@@ -1,802 +1,796 @@
-
 {
-  "board": {
-    "jailPosition": 4,
-    "locations": [
-      {
-        "description": {
-          "en": "The bustling heart of the city, where your mayoral journey begins. Pass here to collect your annual budget.",
-          "es": "El bullicioso corazón de la ciudad, donde comienza su viaje como alcalde. Pasa por aquí para recoger tu presupuesto anual.",
-          "hi": "शहर का हलचल भरा दिल, जहाँ से आपका महापौर का सफर शुरू होता है। अपना वार्षिक बजट एकत्र करने के लिए यहाँ से गुजरें।",
-          "ta": "நகரின் பரபரப்பான மையம், உங்கள் மேயர் பயணம் இங்கு தொடங்குகிறது. உங்கள் ஆண்டு பட்ஜெட்டைப் பெற இங்கு செல்லவும்."
-        },
-        "name": {
-          "en": "Chennai Central Station",
-          "es": "Estación Central de Chennai",
-          "hi": "चेन्नई सेंट्रल स्टेशन",
-          "ta": "சென்னை சென்ட்ரல் ரயில் நிலையம்"
-        },
-        "type": "START"
-      },
-      {
-        "description": {
-          "en": "A historic cultural hub, rich with ancient temples and traditional houses. Balancing preservation with modernization is key to keeping public trust.",
-          "es": "Un centro cultural histórico, rico en templos antiguos y casas tradicionales. Equilibrar la preservación con la modernización es clave para mantener la confianza pública.",
-          "hi": "एक ऐतिहासिक सांस्कृतिक केंद्र, जो प्राचीन मंदिरों और पारंपरिक घरों से समृद्ध है। आधुनिकीकरण के साथ संरक्षण को संतुलित करना सार्वजनिक विश्वास बनाए रखने की कुंजी है।",
-          "ta": "பண்டைய கோயில்கள் மற்றும் பாரம்பரிய வீடுகளுடன் கூடிய ஒரு வரலாற்றுச் சிறப்புமிக்க கலாச்சார மையம். நவீனமயமாக்கலுடன் பாதுகாப்பை சமநிலைப்படுத்துவது பொது நம்பிக்கையைத் தக்கவைக்க முக்கியம்."
-        },
-        "name": {
-          "en": "Mylapore Heritage Zone",
-          "es": "Zona Patrimonial de Mylapore",
-          "hi": "मयिलापुर विरासत क्षेत्र",
-          "ta": "மயிலாப்பூர் பாரம்பரிய மண்டலம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-red-600"
-      },
-      {
-        "description": {
-          "en": "Land here to face an unexpected event requiring your swift decision-making, with outcomes that can shift resources dramatically.",
-          "es": "Aterrice aquí para enfrentar un evento inesperado que requiere su rápida toma de decisiones, con resultados que pueden cambiar drásticamente los recursos.",
-          "hi": "अप्रत्याशित घटना का सामना करने के लिए यहाँ रुकें, जिसमें आपके त्वरित निर्णय की आवश्यकता होगी और इसके परिणाम संसाधनों को नाटकीय रूप से बदल सकते हैं।",
-          "ta": "உங்கள் விரைவான முடிவெடுக்கும் திறன் தேவைப்படும் எதிர்பாராத நிகழ்வை எதிர்கொள்ள இங்கு வாருங்கள். இது உங்கள் வளங்களை வியத்தகு முறையில் மாற்றலாம்."
-        },
-        "name": {
-          "en": "Mayor's Discretion",
-          "es": "Discreción del Alcalde",
-          "hi": "महापौर का विवेक",
-          "ta": "மேயரின் விருப்பம்"
-        },
-        "type": "CHANCE"
-      },
-      {
-        "description": {
-          "en": "Chennai's busiest shopping district, a source of immense commercial opportunity but also notorious for traffic congestion and waste management challenges.",
-          "es": "El distrito comercial más concurrido de Chennai, una fuente de inmensas oportunidades comerciales pero también conocido por la congestión del tráfico y los desafíos de gestión de residuos.",
-          "hi": "चेन्नई का सबसे व्यस्त शॉपिंग जिला, विशाल व्यावसायिक अवसरों का स्रोत है, लेकिन यातायात की भीड़ और अपशिष्ट प्रबंधन चुनौतियों के लिए भी कुख्यात है।",
-          "ta": "சென்னையின் பரபரப்பான வணிக மாவட்டம், வணிக வாய்ப்புகளுக்கு ஒரு ஆதாரம் ஆனால் போக்குவரத்து நெரிசல் மற்றும் கழிவு மேலாண்மை சவால்களுக்கும் பெயர் பெற்றது."
-        },
-        "name": {
-          "en": "T. Nagar Commercial Hub",
-          "es": "Centro Comercial T. Nagar",
-          "hi": "टी. नगर व्यावसायिक केंद्र",
-          "ta": "டி. நகர் வணிக மையம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-red-600"
-      },
-      {
-        "description": {
-          "en": "Caught for a lapse in oversight or public duty? Head to the Police Headquarters to reflect on your policies and the implications of your decisions.",
-          "es": "Atrapado por un descuido en la supervisión o el deber público? Dirígete a la Jefatura de Policía para reflexionar sobre tus políticas y las implicaciones de tus decisiones.",
-          "hi": "पर्यवेक्षण या सार्वजनिक कर्तव्य में चूक के लिए पकड़े गए? अपनी नीतियों और अपने निर्णयों के प्रभावों पर विचार करने के लिए पुलिस मुख्यालय जाएँ।",
-          "ta": "மேற்பார்வை அல்லது பொதுக் கடமையில் தவறியதால் சிக்கினீர்களா? உங்கள் கொள்கைகள் மற்றும் முடிவுகளின் தாக்கங்களைப் பற்றி சிந்திக்க போலீஸ் தலைமையகத்திற்குச் செல்லவும்."
-        },
-        "name": {
-          "en": "Police Headquarters",
-          "es": "Cuartel General de la Policía",
-          "hi": "पुलिस मुख्यालय",
-          "ta": "காவல் தலைமையகம்"
-        },
-        "type": "JAIL"
-      },
-      {
-        "description": {
-          "en": "A vibrant public space and popular recreation spot along the coast. Its upkeep and cleanliness directly reflect on public sentiment and city livability.",
-          "es": "Un espacio público vibrante y un lugar de recreo popular a lo largo de la costa. Su mantenimiento y limpieza se reflejan directamente en el sentimiento público y la habitabilidad de la ciudad.",
-          "hi": "समुद्र तट के किनारे एक जीवंत सार्वजनिक स्थान और लोकप्रिय मनोरंजन स्थल। इसका रखरखाव और स्वच्छता सीधे सार्वजनिक भावना और शहर की रहने की क्षमता पर निर्भर करती है।",
-          "ta": "கடலோரத்தில் அமைந்துள்ள ஒரு துடிப்பான பொது இடம் மற்றும் பிரபலமான பொழுதுபோக்கு இடம். இதன் பராமரிப்பு மற்றும் தூய்மை பொது மக்கள் மனநிலையையும் நகரத்தின் வாழும் திறனையும் நேரடியாகப் பிரதிபலிக்கிறது."
-        },
-        "name": {
-          "en": "Besant Nagar Beachfront",
-          "es": "Frente a la Playa de Besant Nagar",
-          "hi": "बेसंत नगर समुद्र तट",
-          "ta": "பெசன்ட் நகர் கடற்கரை"
-        },
-        "type": "PROPERTY",
-        "color": "bg-yellow-600"
-      },
-      {
-        "description": {
-          "en": "A chance to positively impact the community or benefit from collective efforts, potentially boosting public trust or urban resilience.",
-          "es": "Una oportunidad para impactar positivamente a la comunidad o beneficiarse de los esfuerzos colectivos, lo que podría aumentar la confianza pública o la resiliencia urbana.",
-          "hi": "समुदाय को सकारात्मक रूप से प्रभावित करने या सामूहिक प्रयासों से लाभ उठाने का एक अवसर, संभवतः सार्वजनिक विश्वास या शहरी लचीलेपन को बढ़ावा देना।",
-          "ta": "சமூகத்தை நேர்மறையாகப் பாதிக்கும் அல்லது கூட்டு முயற்சிகளிலிருந்து பயனடையும் ஒரு வாய்ப்பு, இது பொது நம்பிக்கையை அல்லது நகர்ப்புற தாங்குதிறனை அதிகரிக்கலாம்."
-        },
-        "name": {
-          "en": "Public Service Initiative",
-          "es": "Iniciativa de Servicio Público",
-          "hi": "सार्वजनिक सेवा पहल",
-          "ta": "பொதுச் சேவைத் திட்டம்"
-        },
-        "type": "COMMUNITY_CHEST"
-      },
-      {
-        "description": {
-          "en": "The nerve center for fresh produce and goods, vital for the city's supply chain and economy, but also prone to congestion and logistical nightmares.",
-          "es": "El centro neurálgico para productos frescos y bienes, vital para la cadena de suministro y la economía de la ciudad, pero también propenso a la congestión y a pesadillas logísticas.",
-          "hi": "ताजे उत्पादों और सामानों का तंत्रिका केंद्र, शहर की आपूर्ति श्रृंखला और अर्थव्यवस्था के लिए महत्वपूर्ण है, लेकिन भीड़भाड़ और रसद संबंधी समस्याओं के लिए भी प्रवण है।",
-          "ta": "புதிய பொருட்கள் மற்றும் பொருட்களுக்கான மைய நரம்பு, நகரத்தின் விநியோகச் சங்கிலிக்கும் பொருளாதாரத்திற்கும் முக்கியமானது, ஆனால் போக்குவரத்து நெரிசல் மற்றும் தளவாடக் கனவுகளுக்கும் ஆளாகிறது."
-        },
-        "name": {
-          "en": "Koyambedu Wholesale Market",
-          "es": "Mercado Mayorista de Koyambedu",
-          "hi": "कोयंबेडु थोक बाजार",
-          "ta": "கோயம்பேடு மொத்த சந்தை"
-        },
-        "type": "PROPERTY",
-        "color": "bg-yellow-600"
-      },
-      {
-        "description": {
-          "en": "Time to collect property taxes to fund essential city services. Citizens expect efficiency and fairness in how their contributions are managed.",
-          "es": "Es hora de recaudar impuestos sobre la propiedad para financiar servicios esenciales de la ciudad. Los ciudadanos esperan eficiencia y equidad en la gestión de sus contribuciones.",
-          "hi": "आवश्यक शहरी सेवाओं को वित्तपोषित करने के लिए संपत्ति कर एकत्र करने का समय। नागरिक अपनी योगदानों के प्रबंधन में दक्षता और निष्पक्षता की उम्मीद करते हैं।",
-          "ta": "அத்தியாவசிய நகர சேவைகளுக்கு நிதியளிக்க சொத்து வரிகளை வசூலிக்கும் நேரம். தங்கள் பங்களிப்புகள் எவ்வாறு நிர்வகிக்கப்படுகின்றன என்பதில் குடிமக்கள் செயல்திறன் மற்றும் நியாயத்தை எதிர்பார்க்கிறார்கள்."
-        },
-        "name": {
-          "en": "Property Tax Assessment",
-          "es": "Evaluación del Impuesto Predial",
-          "hi": "संपत्ति कर आकलन",
-          "ta": "சொத்து வரி மதிப்பீடு"
-        },
-        "type": "TAX"
-      },
-      {
-        "description": {
-          "en": "A tranquil urban oasis. Take a break from mayoral duties and enjoy the city's green lung. No immediate gains or losses here.",
-          "es": "Un oasis urbano tranquilo. Tómate un descanso de tus deberes de alcalde y disfruta del pulmón verde de la ciudad. Sin ganancias ni pérdidas inmediatas aquí.",
-          "hi": "एक शांत शहरी नखलिस्तान। महापौर के कर्तव्यों से छुट्टी लें और शहर के हरे-भरे फेफड़ों का आनंद लें। यहां कोई तत्काल लाभ या हानि नहीं है।",
-          "ta": "ஒரு அமைதியான நகர்ப்புற சோலை. மேயர் கடமைகளில் இருந்து ஓய்வு எடுத்து நகரத்தின் பசுமைப் பகுதிகளை அனுபவிக்கவும். இங்கு உடனடி லாபமோ நஷ்டமோ இல்லை."
-        },
-        "name": {
-          "en": "Guindy National Park",
-          "es": "Parque Nacional Guindy",
-          "hi": "गिंडी राष्ट्रीय उद्यान",
-          "ta": "கிண்டி தேசிய பூங்கா"
-        },
-        "type": "FREE_PARKING"
-      },
-      {
-        "description": {
-          "en": "A critical facility for processing the city's vast amounts of waste. Modernization of this site significantly improves urban health and environmental quality.",
-          "es": "Una instalación crítica para procesar las vastas cantidades de residuos de la ciudad. La modernización de este sitio mejora significativamente la salud urbana y la calidad ambiental.",
-          "hi": "शहर के विशाल कचरे को संसाधित करने के लिए एक महत्वपूर्ण सुविधा। इस साइट का आधुनिकीकरण शहरी स्वास्थ्य और पर्यावरणीय गुणवत्ता में काफी सुधार करता है।",
-          "ta": "நகரின் அதிக அளவிலான கழிவுகளைச் செயலாக்கும் ஒரு முக்கியமான வசதி. இந்த இடத்தின் நவீனமயமாக்கல் நகர்ப்புற சுகாதாரம் மற்றும் சுற்றுச்சூழல் தரத்தை கணிசமாக மேம்படுத்துகிறது."
-        },
-        "name": {
-          "en": "Perungudi Waste Management Site",
-          "es": "Sitio de Gestión de Residuos de Perungudi",
-          "hi": "पेरुंगुडी अपशिष्ट प्रबंधन स्थल",
-          "ta": "பெருங்குடி கழிவு மேலாண்மை தளம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-green-600"
-      },
-      {
-        "description": {
-          "en": "An unforeseen circumstance demands your attention and strategic response. Be prepared for either a windfall or a setback that affects your resources.",
-          "es": "Una circunstancia imprevista exige su atención y respuesta estratégica. Prepárese para una ganancia inesperada o un contratiempo que afecte sus recursos.",
-          "hi": "एक अप्रत्याशित परिस्थिति आपके ध्यान और रणनीतिक प्रतिक्रिया की मांग करती है। अपने संसाधनों को प्रभावित करने वाले अप्रत्याशित लाभ या झटके के लिए तैयार रहें।",
-          "ta": "எதிர்பாராத சூழ்நிலை உங்கள் கவனத்தையும் மூலோபாய பதிலையும் கோருகிறது. உங்கள் வளங்களை பாதிக்கும் ஒரு எதிர்பாராத லாபத்துக்கோ அல்லது பின்னடைவுக்கோ தயாராக இருங்கள்."
-        },
-        "name": {
-          "en": "Mayor's Discretion",
-          "es": "Discreción del Alcalde",
-          "hi": "महापौर का विवेक",
-          "ta": "மேயரின் விருப்பம்"
-        },
-        "type": "CHANCE"
-      },
-      {
-        "description": {
-          "en": "Essential for Chennai's water security, especially during droughts. Investment here boosts urban resilience and secures the city's future.",
-          "es": "Esencial para la seguridad hídrica de Chennai, especialmente durante las sequías. La inversión aquí aumenta la resiliencia urbana y asegura el futuro de la ciudad.",
-          "hi": "चेन्नई की जल सुरक्षा के लिए आवश्यक, खासकर सूखे के दौरान। यहां निवेश शहरी लचीलेपन को बढ़ावा देता है और शहर के भविष्य को सुरक्षित करता है।",
-          "ta": "சென்னையின் நீர் பாதுகாப்பிற்கு அத்தியாவசியமானது, குறிப்பாக வறட்சி காலங்களில். இங்கு முதலீடு செய்வது நகர்ப்புற தாங்குதிறனை அதிகரிக்கிறது மற்றும் நகரத்தின் எதிர்காலத்தைப் பாதுகாக்கிறது."
-        },
-        "name": {
-          "en": "Water Desalination Plant",
-          "es": "Planta Desalinizadora de Agua",
-          "hi": "जल विलवणीकरण संयंत्र",
-          "ta": "நீர் சுத்திகரிப்பு ஆலை"
-        },
-        "type": "PROPERTY",
-        "color": "bg-green-600"
-      },
-      {
-        "description": {
-          "en": "The backbone of Chennai's public transportation. Upgrading the fleet and expanding routes improves citizen mobility, reduces congestion, and enhances air quality.",
-          "es": "La columna vertebral del transporte público de Chennai. La mejora de la flota y la expansión de rutas mejora la movilidad ciudadana, reduce la congestión y mejora la calidad del aire.",
-          "hi": "चेन्नई के सार्वजनिक परिवहन की रीढ़। बेड़े का उन्नयन और मार्गों का विस्तार नागरिक गतिशीलता में सुधार करता है, भीड़भाड़ कम करता है और वायु गुणवत्ता बढ़ाता है।",
-          "ta": "சென்னையின் பொதுப் போக்குவரத்துக்கான முதுகெலும்பு. வாகனங்களை மேம்படுத்துதல் மற்றும் வழித்தடங்களை விரிவுபடுத்துதல் குடிமக்களின் நடமாட்டத்தை மேம்படுத்துகிறது, நெரிசலைக் குறைக்கிறது மற்றும் காற்றின் தரத்தை அதிகரிக்கிறது."
-        },
-        "name": {
-          "en": "MTC Bus Depot",
-          "es": "Depósito de Autobuses MTC",
-          "hi": "एमटीसी बस डिपो",
-          "ta": "எம்டிசி பேருந்து நிலையம்"
-        },
-        "type": "UTILITY"
-      },
-      {
-        "description": {
-          "en": "Your department is under intense scrutiny. A major audit has revealed irregularities. Go directly to Police Headquarters! Do not pass GO, do not collect budget.",
-          "es": "Tu departamento está bajo intenso escrutinio. Una auditoría importante ha revelado irregularidades. ¡Ve directamente al Cuartel General de la Policía! No pases por GO, no cobres presupuesto.",
-          "hi": "आपका विभाग गहन जांच के दायरे में है। एक बड़े ऑडिट में अनियमितताएं सामने आई हैं। सीधे पुलिस मुख्यालय जाएं! 'गो' से न गुजरें, बजट एकत्र न करें।",
-          "ta": "உங்கள் துறை தீவிர ஆய்வுக்கு உட்படுத்தப்பட்டுள்ளது. ஒரு பெரிய தணிக்கை முறைகேடுகளை வெளிப்படுத்தியுள்ளது. நேரடியாக காவல் தலைமையகத்திற்கு செல்லவும்! 'கோ' வழியாக செல்ல வேண்டாம், பட்ஜெட்டை பெற வேண்டாம்."
-        },
-        "name": {
-          "en": "Public Works Audit",
-          "es": "Auditoría de Obras Públicas",
-          "hi": "लोक निर्माण लेखापरीक्षा",
-          "ta": "பொதுப்பணித் தணிக்கை"
-        },
-        "type": "GO_TO_JAIL"
-      },
-      {
-        "description": {
-          "en": "Expanding the city's modern rapid transit system. This project is high cost, but offers immense long-term benefits for connectivity and environmental sustainability.",
-          "es": "Ampliación del moderno sistema de tránsito rápido de la ciudad. Este proyecto tiene un alto costo, pero ofrece inmensos beneficios a largo plazo para la conectividad y la sostenibilidad ambiental.",
-          "hi": "शहर की आधुनिक रैपिड ट्रांजिट प्रणाली का विस्तार। यह परियोजना उच्च लागत वाली है, लेकिन कनेक्टिविटी और पर्यावरणीय स्थिरता के लिए अत्यधिक दीर्घकालिक लाभ प्रदान करती है।",
-          "ta": "நகரின் நவீன விரைவுப் போக்குவரத்து அமைப்பை விரிவுபடுத்துகிறது. இந்தத் திட்டம் அதிக செலவுடையது, ஆனால் இணைப்பு மற்றும் சுற்றுச்சூழல் நிலைத்தன்மைக்கு நீண்டகால நன்மைகளை வழங்குகிறது."
-        },
-        "name": {
-          "en": "Chennai Metro Rail Expansion",
-          "es": "Expansión del Metro de Chennai",
-          "hi": "चेन्नई मेट्रो रेल विस्तार",
-          "ta": "சென்னை மெட்ரோ ரயில் விரிவாக்கம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-blue-600"
-      },
-      {
-        "description": {
-          "en": "An opportunity to demonstrate civic responsibility and gain public support, possibly through a local initiative or community event.",
-          "es": "Una oportunidad para demostrar responsabilidad cívica y ganar apoyo público, posiblemente a través de una iniciativa local o un evento comunitario.",
-          "hi": "नागरिक जिम्मेदारी प्रदर्शित करने और सार्वजनिक समर्थन प्राप्त करने का एक अवसर, संभवतः एक स्थानीय पहल या सामुदायिक कार्यक्रम के माध्यम से।",
-          "ta": "ஒரு உள்ளூர் முன்முயற்சி அல்லது சமூக நிகழ்வு மூலம் குடிமைப் பொறுப்பை வெளிப்படுத்தவும் பொது ஆதரவைப் பெறவும் ஒரு வாய்ப்பு."
-        },
-        "name": {
-          "en": "Public Service Initiative",
-          "es": "Iniciativa de Servicio Público",
-          "hi": "सार्वजनिक सेवा पहल",
-          "ta": "பொதுச் சேவைத் திட்டம்"
-        },
-        "type": "COMMUNITY_CHEST"
-      },
-      {
-        "description": {
-          "en": "The heart of Chennai's booming IT sector, attracting global investment and creating high-value jobs. A key to the city's economic future.",
-          "es": "El corazón del floreciente sector de TI de Chennai, que atrae inversiones globales y crea empleos de alto valor. Una clave para el futuro económico de la ciudad.",
-          "hi": "चेन्नई के बढ़ते आईटी क्षेत्र का केंद्र, जो वैश्विक निवेश को आकर्षित करता है और उच्च-मूल्य वाली नौकरियाँ पैदा करता है। यह शहर के आर्थिक भविष्य की कुंजी है।",
-          "ta": "சென்னையின் வளர்ந்து வரும் தகவல் தொழில்நுட்பத் துறையின் இதயம், உலகளாவிய முதலீட்டை ஈர்த்து உயர் மதிப்பு வேலைவாய்ப்புகளை உருவாக்குகிறது. நகரத்தின் பொருளாதார எதிர்காலத்திற்கு இது ஒரு முக்கியமாகும்."
-        },
-        "name": {
-          "en": "TIDEL Park IT Corridor",
-          "es": "Corredor de TI de TIDEL Park",
-          "hi": "टाइडल पार्क आईटी कॉरिडोर",
-          "ta": "டைடல் பார்க் தகவல் தொழில்நுட்ப வழித்தடம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-blue-600"
-      },
-      {
-        "description": {
-          "en": "Contribute to the city's long-term growth and resilience by investing in crucial infrastructure projects. This ensures the city can withstand future challenges.",
-          "es": "Contribuya al crecimiento y la resiliencia a largo plazo de la ciudad invirtiendo en proyectos de infraestructura cruciales. Esto asegura que la ciudad pueda resistir futuros desafíos.",
-          "hi": "महत्वपूर्ण बुनियादी ढांचा परियोजनाओं में निवेश करके शहर के दीर्घकालिक विकास और लचीलेपन में योगदान करें। यह सुनिश्चित करता है कि शहर भविष्य की चुनौतियों का सामना कर सके।",
-          "ta": "முக்கியமான உள்கட்டமைப்பு திட்டங்களில் முதலீடு செய்வதன் மூலம் நகரத்தின் நீண்டகால வளர்ச்சி மற்றும் தாங்குதிறனுக்கு பங்களிக்கவும். இது எதிர்கால சவால்களை நகரம் எதிர்கொள்ள முடியும் என்பதை உறுதிப்படுத்துகிறது."
-        },
-        "name": {
-          "en": "Infrastructure Development Fund",
-          "es": "Fondo de Desarrollo de Infraestructura",
-          "hi": "बुनियादी ढांचा विकास निधि",
-          "ta": "உள்கட்டமைப்பு மேம்பாட்டு நிதி"
-        },
-        "type": "TAX"
-      },
-      {
-        "description": {
-          "en": "The seat of municipal power. Owning this signifies your absolute control over city administration and the ability to enact major policy changes.",
-          "es": "La sede del poder municipal. Poseer esto significa su control absoluto sobre la administración de la ciudad y la capacidad de promulgar cambios importantes en las políticas.",
-          "hi": "नगरपालिका शक्ति का आसन। इसका स्वामित्व शहर प्रशासन पर आपके पूर्ण नियंत्रण और प्रमुख नीतिगत परिवर्तनों को लागू करने की क्षमता को दर्शाता है।",
-          "ta": "நகர ஆட்சியின் இருக்கை. இதை வைத்திருப்பது நகர நிர்வாகத்தின் மீதான உங்கள் முழுமையான கட்டுப்பாட்டையும், முக்கிய கொள்கை மாற்றங்களைச் செயல்படுத்தும் திறனையும் குறிக்கிறது."
-        },
-        "name": {
-          "en": "Chennai Corporation Building",
-          "es": "Edificio de la Corporación de Chennai",
-          "hi": "चेन्नई निगम भवन",
-          "ta": "சென்னை மாநகராட்சி கட்டிடம்"
-        },
-        "type": "PROPERTY",
-        "color": "bg-purple-600"
-      }
-    ]
-  },
-  "chanceCards": [
-    {
-      "description": {
-        "en": "You successfully implemented early warning systems and flood mitigation projects. Chennai is better prepared for the monsoon deluge!",
-        "es": "Implementaste con éxito sistemas de alerta temprana y proyectos de mitigación de inundaciones. ¡Chennai está mejor preparada para el diluvio monzónico!",
-        "hi": "आपने सफलतापूर्वक प्रारंभिक चेतावनी प्रणाली और बाढ़ शमन परियोजनाओं को लागू किया। चेन्नई अब मानसून की बाढ़ के लिए बेहतर ढंग से तैयार है!",
-        "ta": "நீங்கள் ஆரம்ப எச்சரிக்கை அமைப்புகளையும் வெள்ள தணிப்பு திட்டங்களையும் வெற்றிகரமாக செயல்படுத்தினீர்கள். சென்னை இப்போது பருவமழை வெள்ளத்திற்கு சிறப்பாக தயாராக உள்ளது!"
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": 10
-        },
-        {
-          "name": "public trust",
-          "value": 15
-        },
-        {
-          "name": "city funds",
-          "value": -200
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "An aging flyover in a major artery collapsed due to lack of maintenance. Urgent repairs are needed, causing traffic nightmares.",
-        "es": "Un paso elevado antiguo en una arteria principal colapsó por falta de mantenimiento. Se necesitan reparaciones urgentes, causando pesadillas de tráfico.",
-        "hi": "एक प्रमुख धमनी में एक पुराना फ्लाईओवर रखरखाव की कमी के कारण ढह गया। तत्काल मरम्मत की आवश्यकता है, जिससे यातायात में भारी बाधा उत्पन्न हो रही है।",
-        "ta": "ஒரு பெரிய போக்குவரத்து தமனியில் பழுதடைந்த மேம்பாலம் பராமரிப்பு இல்லாததால் இடிந்து விழுந்தது. அவசர பழுதுபார்ப்பு தேவை, இதனால் போக்குவரத்து நெரிசல் ஏற்படுகிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": -15
-        },
-        {
-          "name": "public trust",
-          "value": -10
-        },
-        {
-          "name": "city funds",
-          "value": -400
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Chennai hosted a major Global Investor Summit, attracting significant foreign direct investment and boosting the city's economic outlook.",
-        "es": "Chennai acogió una importante Cumbre Global de Inversores, atrayendo una inversión extranjera directa significativa y mejorando las perspectivas económicas de la ciudad.",
-        "hi": "चेन्नई ने एक प्रमुख वैश्विक निवेशक शिखर सम्मेलन की मेजबानी की, जिसने महत्वपूर्ण प्रत्यक्ष विदेशी निवेश आकर्षित किया और शहर के आर्थिक दृष्टिकोण को बढ़ावा दिया।",
-        "ta": "சென்னையில் ஒரு பெரிய உலகளாவிய முதலீட்டாளர் உச்சிமாநாடு நடைபெற்றது, இது குறிப்பிடத்தக்க வெளிநாட்டு நேரடி முதலீட்டை ஈர்த்து நகரத்தின் பொருளாதார எதிர்காலத்தை மேம்படுத்தியது."
-      },
-      "resourceChanges": [
-        {
-          "name": "city funds",
-          "value": 500
-        },
-        {
-          "name": "public trust",
-          "value": 20
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "A sudden power grid failure plunges large parts of the city into darkness, causing widespread disruption and frustration.",
-        "es": "Una falla repentina en la red eléctrica sumerge grandes partes de la ciudad en la oscuridad, causando interrupciones y frustración generalizadas.",
-        "hi": "एक अचानक बिजली ग्रिड फेल होने से शहर के बड़े हिस्से अंधेरे में डूब गए, जिससे व्यापक व्यवधान और निराशा हुई।",
-        "ta": "திடீர் மின் கட்டமைப்பு தோல்வி நகரத்தின் பெரும்பகுதியை இருளில் மூழ்கடித்து, பரவலான இடையூறு மற்றும் விரக்தியை ஏற்படுத்துகிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": -10
-        },
-        {
-          "name": "public trust",
-          "value": -15
-        },
-        {
-          "name": "city funds",
-          "value": -100
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Your administration secured a prestigious national grant for the restoration and preservation of a historical landmark, enhancing cultural pride.",
-        "es": "Su administración obtuvo una prestigiosa subvención nacional para la restauración y preservación de un hito histórico, lo que mejoró el orgullo cultural.",
-        "hi": "आपके प्रशासन ने एक ऐतिहासिक स्थल के जीर्णोद्धार और संरक्षण के लिए एक प्रतिष्ठित राष्ट्रीय अनुदान प्राप्त किया, जिससे सांस्कृतिक गौरव बढ़ा।",
-        "ta": "உங்கள் நிர்வாகம் ஒரு வரலாற்றுச் சிறப்புமிக்க இடத்தின் மறுசீரமைப்பு மற்றும் பாதுகாப்புக்காக ஒரு மதிப்புமிக்க தேசிய மானியத்தைப் பெற்றது, இது கலாச்சாரப் பெருமையை மேம்படுத்தியது."
-      },
-      "resourceChanges": [
-        {
-          "name": "city funds",
-          "value": 150
-        },
-        {
-          "name": "public trust",
-          "value": 10
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Fisherfolk protest new port development impacting traditional livelihoods. Requires careful negotiation and potential compensation.",
-        "es": "Los pescadores protestan contra el nuevo desarrollo portuario que afecta sus medios de vida tradicionales. Requiere una negociación cuidadosa y una posible compensación.",
-        "hi": "मछुआरे पारंपरिक आजीविका को प्रभावित करने वाले नए बंदरगाह विकास का विरोध करते हैं। इसके लिए सावधानीपूर्वक बातचीत और संभावित मुआवजे की आवश्यकता है।",
-        "ta": "புதிய துறைமுக வளர்ச்சி பாரம்பரிய வாழ்வாதாரங்களைப் பாதிப்பதாக மீனவர்கள் எதிர்ப்பு தெரிவிக்கின்றனர். கவனமான பேச்சுவார்த்தை மற்றும் சாத்தியமான இழப்பீடு தேவை."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": -20
-        },
-        {
-          "name": "city funds",
-          "value": -50
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "A severe dengue outbreak challenges public health systems. Urgent public awareness campaigns and mosquito control measures are initiated.",
-        "es": "Un grave brote de dengue desafía los sistemas de salud pública. Se inician campañas urgentes de concientización pública y medidas de control de mosquitos.",
-        "hi": "डेंगू का एक गंभीर प्रकोप सार्वजनिक स्वास्थ्य प्रणालियों को चुनौती देता है। तत्काल सार्वजनिक जागरूकता अभियान और मच्छर नियंत्रण उपाय शुरू किए जाते हैं।",
-        "ta": "ஒரு தீவிர டெங்கு நோய் பரவல் பொது சுகாதார அமைப்புகளுக்கு சவாலாக உள்ளது. அவசர பொது விழிப்புணர்வு பிரச்சாரங்கள் மற்றும் கொசு கட்டுப்பாட்டு நடவடிக்கைகள் தொடங்கப்பட்டுள்ளன."
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": -10
-        },
-        {
-          "name": "public trust",
-          "value": -10
-        },
-        {
-          "name": "city funds",
-          "value": -250
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Your innovative waste-to-energy project successfully launches, generating revenue for the city and significantly reducing landfill burden.",
-        "es": "Su innovador proyecto de conversión de residuos en energía se lanza con éxito, generando ingresos para la ciudad y reduciendo significativamente la carga de los vertederos.",
-        "hi": "आपका अभिनव अपशिष्ट-से-ऊर्जा परियोजना सफलतापूर्वक शुरू हो गई है, जो शहर के लिए राजस्व उत्पन्न कर रही है और लैंडफिल के बोझ को काफी कम कर रही है।",
-        "ta": "உங்கள் புதுமையான கழிவிலிருந்து மின்சாரம் உற்பத்தி செய்யும் திட்டம் வெற்றிகரமாக தொடங்கப்பட்டது, இது நகரத்திற்கு வருவாயை ஈட்டி நிலப்பரப்பு சுமையைக் கணிசமாக குறைக்கிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": 15
-        },
-        {
-          "name": "city funds",
-          "value": 100
-        },
-        {
-          "name": "public trust",
-          "value": 10
-        }
-      ]
-    }
-  ],
-  "description": {
-    "en": "Embody the Mayor of Chennai, balancing critical resources to transform the city into a beacon of progress and livability.",
-    "es": "Encarna al Alcalde de Chennai, equilibrando recursos críticos para transformar la ciudad en un faro de progreso y habitabilidad.",
-    "hi": "चेन्नई के महापौर का रूप धारण करें, शहर को प्रगति और रहने योग्यता का प्रतीक बनाने के लिए महत्वपूर्ण संसाधनों को संतुलित करें।",
-    "ta": "சென்னையின் மேயராக, நகரத்தை வளர்ச்சி மற்றும் வாழக்கூடிய இடமாக மாற்ற அத்தியாவசிய வளங்களை சமநிலைப்படுத்துங்கள்."
-  },
-  "footerSections": [
-    {
-      "content": {
-        "en": "<ul><li><strong>Objective:</strong> Be the most successful Mayor by acquiring properties, managing city resources, and earning public trust. The game ends when a player goes bankrupt (any resource reaches 0).</li><li><strong>Gameplay:</strong> Roll the dice and move your token. Land on properties to acquire them or pay rent. Land on special spaces for events or taxes.</li><li><strong>Resources:</strong> Manage Public Trust, City Funds, and Urban Resilience. Keep them above zero!</li><li><strong>Winning:</strong> The last player remaining with all resources above zero wins.</li><li><strong>Bankruptcy:</strong> If any resource reaches 0, you lose and are declared bankrupt.</li></ul>",
-        "es": "<ul><li><strong>Objetivo:</strong> Sé el alcalde más exitoso adquiriendo propiedades, gestionando los recursos de la ciudad y ganando la confianza pública. El juego termina cuando un jugador quiebra (cualquier recurso llega a 0).</li><li><strong>Jugabilidad:</strong> Tira los dados y mueve tu ficha. Aterriza en propiedades para adquirirlas o pagar alquiler. Aterriza en espacios especiales para eventos o impuestos.</li><li><strong>Recursos:</strong> Gestiona la Confianza Pública, los Fondos de la Ciudad y la Resiliencia Urbana. ¡Mantenlos por encima de cero!</li><li><strong>Victoria:</strong> El último jugador que quede con todos los recursos por encima de cero gana.</li><li><strong>Bancarrota:</strong> Si algún recurso llega a 0, pierdes y eres declarado en quiebra.</li></ul>",
-        "hi": "<ul><li><strong>उद्देश्य:</strong> संपत्तियों का अधिग्रहण करके, शहर के संसाधनों का प्रबंधन करके और सार्वजनिक विश्वास अर्जित करके सबसे सफल महापौर बनें। खेल तब समाप्त होता है जब कोई खिलाड़ी दिवालिया हो जाता है (कोई भी संसाधन 0 तक पहुँच जाता है)।</li><li><strong>गेमप्ले:</strong> पासे फेंकें और अपने टोकन को आगे बढ़ाएं। संपत्तियों को खरीदने या किराया देने के लिए उन पर उतरें। घटनाओं या करों के लिए विशेष स्थानों पर उतरें।</li><li><strong>संसाधन:</strong> सार्वजनिक विश्वास, शहर के फंड और शहरी लचीलेपन का प्रबंधन करें। उन्हें शून्य से ऊपर रखें!</li><li><strong>जीतना:</strong> सभी संसाधनों को शून्य से ऊपर रखने वाला अंतिम खिलाड़ी जीतता है।</li><li><strong>दिवालियापन:</strong> यदि कोई संसाधन 0 तक पहुंच जाता है, तो आप हार जाते हैं और दिवालिया घोषित कर दिए जाते हैं।</li></ul>",
-        "ta": "<ul><li><strong>நோக்கம்:</strong> சொத்துக்களைப் பெற்று, நகர வளங்களை நிர்வகித்து, பொது நம்பிக்கையைப் பெற்று மிகவும் வெற்றிகரமான மேயராக இருங்கள். ஒரு வீரர் திவாலாகும்போது (எந்த வளமும் 0 ஐ அடையும்போது) விளையாட்டு முடிவடையும்.</li><li><strong>விளையாட்டு முறை:</strong> பகடைகளை உருட்டி உங்கள் டோக்கனை நகர்த்தவும். சொத்துக்களை வாங்க அல்லது வாடகை செலுத்த அவற்றில் இறங்கவும். நிகழ்வுகள் அல்லது வரிகளுக்கான சிறப்பு இடங்களில் இறங்கவும்.</li><li><strong>வளங்கள்:</strong> பொது நம்பிக்கை, நகர நிதி மற்றும் நகர்ப்புற தாங்குதிறன் ஆகியவற்றை நிர்வகிக்கவும். அவற்றை பூஜ்ஜியத்திற்கு மேல் வைத்திருக்கவும்!</li><li><strong>வெற்றி:</strong> அனைத்து வளங்களும் பூஜ்ஜியத்திற்கு மேல் உள்ள கடைசி வீரர் வெற்றி பெறுகிறார்.</li><li><strong>திவால்:</strong> ஏதேனும் ஒரு வளம் 0 ஐ அடைந்தால், நீங்கள் தோல்வியடைந்து திவாலாக அறிவிக்கப்படுவீர்கள்.</li></ul>"
-      },
-      "title": {
-        "en": "Rules",
-        "es": "Reglas",
-        "hi": "नियम",
-        "ta": "விதிகள்"
-      }
-    },
-    {
-      "content": {
-        "en": "<p><strong>Chennai: City of Mayors</strong> is a strategic board game where players take on the challenging role of Chennai's Mayor. Navigate the vibrant landscape of this major Indian metropolis, making tough decisions to balance Public Trust, City Funds, and Urban Resilience.</p><p>From preparing for the monsoon to expanding the Metro and managing waste, every choice impacts your city's future. Will you prioritize economic development, heritage preservation, or environmental sustainability? Your leadership will define Chennai's destiny!</p>",
-        "es": "<p><strong>Chennai: Ciudad de Alcaldes</strong> es un juego de mesa estratégico donde los jugadores asumen el desafiante papel del Alcalde de Chennai. Navega por el vibrante paisaje de esta importante metrópolis india, tomando decisiones difíciles para equilibrar la Confianza Pública, los Fondos de la Ciudad y la Resiliencia Urbana.</p><p>Desde la preparación para el monzón hasta la expansión del Metro y la gestión de residuos, cada elección impacta el futuro de tu ciudad. ¿Priorizarás el desarrollo económico, la preservación del patrimonio o la sostenibilidad ambiental? ¡Tu liderazgo definirá el destino de Chennai!</p>",
-        "hi": "<p><strong>चेन्नई: महापौरों का शहर</strong> एक रणनीतिक बोर्ड गेम है जहाँ खिलाड़ी चेन्नई के महापौर की चुनौतीपूर्ण भूमिका निभाते हैं। इस प्रमुख भारतीय महानगर के जीवंत परिदृश्य में नेविगेट करें, सार्वजनिक विश्वास, शहर के फंड और शहरी लचीलेपन को संतुलित करने के लिए कठिन निर्णय लें।</p><p>मानसून की तैयारी से लेकर मेट्रो के विस्तार और कचरा प्रबंधन तक, हर विकल्प आपके शहर के भविष्य को प्रभावित करता है। क्या आप आर्थिक विकास, विरासत संरक्षण या पर्यावरणीय स्थिरता को प्राथमिकता देंगे? आपका नेतृत्व चेन्नई के भाग्य को परिभाषित करेगा!</p>",
-        "ta": "<p><strong>சென்னை: மேயர்களின் நகரம்</strong> என்பது சென்னை மேயரின் சவாலான பாத்திரத்தை வீரர்கள் ஏற்கும் ஒரு மூலோபாய பலகை விளையாட்டு. பொது நம்பிக்கை, நகர நிதி மற்றும் நகர்ப்புற தாங்குதிறன் ஆகியவற்றை சமநிலைப்படுத்த கடினமான முடிவுகளை எடுத்து, இந்த பெரிய இந்திய பெருநகரத்தின் துடிப்பான நிலப்பரப்பில் செல்லவும்.</p><p>பருவமழைக்கான தயாரிப்பு முதல் மெட்ரோவை விரிவுபடுத்துதல் மற்றும் கழிவு மேலாண்மை வரை, ஒவ்வொரு தேர்வும் உங்கள் நகரத்தின் எதிர்காலத்தை பாதிக்கிறது. பொருளாதார வளர்ச்சி, பாரம்பரிய பாதுகாப்பு அல்லது சுற்றுச்சூழல் நிலைத்தன்மைக்கு முன்னுரிமை அளிப்பீர்களா? உங்கள் தலைமை சென்னையின் தலைவிதியை தீர்மானிக்கும்!</p>"
-      },
-      "title": {
-        "en": "About",
-        "es": "Acerca de",
-        "hi": "के बारे में",
-        "ta": "பற்றி"
-      }
-    }
-  ],
-  "name": {
-    "en": "Chennai: City of Mayors",
-    "es": "Chennai: Ciudad de Alcaldes",
-    "hi": "चेन्नई: महापौरों का शहर",
-    "ta": "சென்னை: மேயர்களின் நகரம்"
-  },
-  "playerColors": [
-    "text-red-600",
-    "text-blue-600",
-    "text-green-600",
-    "text-yellow-600"
-  ],
-  "resources": [
-    {
-      "barColor": "bg-blue-500",
-      "icon": "InfoIcon",
-      "initialValue": 100,
-      "name": {
-        "en": "Public Trust",
-        "es": "Confianza Pública",
-        "hi": "सार्वजनिक विश्वास",
-        "ta": "பொது நம்பிக்கை"
-      },
-      "maximumValue": 200,
-      "minimumValue": 0
-    },
-    {
-      "barColor": "bg-green-500",
-      "icon": "MoneyIcon",
-      "initialValue": 2000,
-      "name": {
-        "en": "City Funds",
-        "es": "Fondos de la Ciudad",
-        "hi": "शहर निधि",
-        "ta": "நகர நிதி"
-      },
-      "maximumValue": 4000,
-      "minimumValue": 0
-    },
-    {
-      "barColor": "bg-orange-500",
-      "icon": "TimeIcon",
-      "initialValue": 50,
-      "name": {
-        "en": "Urban Resilience",
-        "es": "Resiliencia Urbana",
-        "hi": "शहरी लचीलापन",
-        "ta": "நகர்ப்புற தாங்குதிறன்"
-      },
-      "maximumValue": 100,
-      "minimumValue": 0
-    }
-  ],
-  "communityChestCards": [
-    {
-      "description": {
-        "en": "Thousands of citizens participated in a city-wide cleanup drive, boosting morale and the city's appearance.",
-        "es": "Miles de ciudadanos participaron en una campaña de limpieza en toda la ciudad, lo que aumentó la moral y la apariencia de la ciudad.",
-        "hi": "शहरव्यापी सफाई अभियान में हजारों नागरिकों ने भाग लिया, जिससे मनोबल और शहर की उपस्थिति में वृद्धि हुई।",
-        "ta": "ஆயிரக்கணக்கான குடிமக்கள் நகர அளவிலான துப்புரவு இயக்கத்தில் பங்கேற்றனர், இது மன உறுதியையும் நகரத்தின் தோற்றத்தையும் மேம்படுத்தியது."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 25
-        },
-        {
-          "name": "urban resilience",
-          "value": 5
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "You invested in new public libraries and learning centers, enhancing educational opportunities for citizens.",
-        "es": "Invertiste en nuevas bibliotecas públicas y centros de aprendizaje, mejorando las oportunidades educativas para los ciudadanos.",
-        "hi": "आपने नई सार्वजनिक पुस्तकालयों और शिक्षण केंद्रों में निवेश किया, जिससे नागरिकों के लिए शैक्षिक अवसरों में वृद्धि हुई।",
-        "ta": "புதிய பொது நூலகங்கள் மற்றும் கற்றல் மையங்களில் நீங்கள் முதலீடு செய்துள்ளீர்கள், குடிமக்களுக்கான கல்வி வாய்ப்புகளை மேம்படுத்தியுள்ளீர்கள்."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 15
-        },
-        {
-          "name": "city funds",
-          "value": -150
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "A public health campaign against plastic use or for hygiene shows remarkable results, leading to a healthier city.",
-        "es": "Una campaña de salud pública contra el uso de plástico o a favor de la higiene muestra resultados notables, lo que lleva a una ciudad más saludable.",
-        "hi": "प्लास्टिक के उपयोग के खिलाफ या स्वच्छता के लिए एक सार्वजनिक स्वास्थ्य अभियान उल्लेखनीय परिणाम दिखाता है, जिससे एक स्वस्थ शहर बनता है।",
-        "ta": "பிளாஸ்டிக் பயன்பாட்டிற்கு எதிரான அல்லது சுகாதாரத்திற்கான ஒரு பொது சுகாதார பிரச்சாரம் குறிப்பிடத்தக்க முடிவுகளைக் காட்டுகிறது, இது ஒரு ஆரோக்கியமான நகரத்திற்கு வழிவகுக்கிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 10
-        },
-        {
-          "name": "urban resilience",
-          "value": 10
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Due to efficient spending and higher than projected revenues, the city experiences an unexpected budget surplus!",
-        "es": "Debido a un gasto eficiente y a ingresos superiores a los proyectados, ¡la ciudad experimenta un superávit presupuestario inesperado!",
-        "hi": "कुशल खर्च और अनुमानित राजस्व से अधिक के कारण, शहर को अप्रत्याशित बजट अधिशेष का अनुभव होता है!",
-        "ta": "திறமையான செலவு மற்றும் திட்டமிடப்பட்டதை விட அதிக வருவாய் காரணமாக, நகரத்திற்கு எதிர்பாராத பட்ஜெட் உபரி ஏற்படுகிறது!"
-      },
-      "resourceChanges": [
-        {
-          "name": "city funds",
-          "value": 300
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "A successful local arts and culture festival celebrates Chennai's vibrant traditions, drawing crowds and boosting community spirit.",
-        "es": "Un exitoso festival local de arte y cultura celebra las vibrantes tradiciones de Chennai, atrayendo multitudes y fomentando el espíritu comunitario.",
-        "hi": "चेन्नई की जीवंत परंपराओं का जश्न मनाने वाला एक सफल स्थानीय कला और संस्कृति उत्सव, भीड़ खींचता है और सामुदायिक भावना को बढ़ावा देता है।",
-        "ta": "சென்னையின் துடிப்பான மரபுகளைக் கொண்டாடும் ஒரு வெற்றிகரமான உள்ளூர் கலை மற்றும் கலாச்சார விழா, கூட்டத்தை ஈர்த்து சமூக உணர்வை மேம்படுத்துகிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 15
-        },
-        {
-          "name": "city funds",
-          "value": -50
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Your administration receives national recognition for transparent governance and citizen-centric policies.",
-        "es": "Su administración recibe reconocimiento nacional por su gobernanza transparente y políticas centradas en el ciudadano.",
-        "hi": "आपके प्रशासन को पारदर्शी शासन और नागरिक-केंद्रित नीतियों के लिए राष्ट्रीय मान्यता मिलती है।",
-        "ta": "உங்கள் நிர்வாகம் வெளிப்படையான நிர்வாகம் மற்றும் குடிமக்களை மையப்படுத்திய கொள்கைகளுக்காக தேசிய அங்கீகாரத்தைப் பெறுகிறது."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 30
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Urgent road repairs completed ahead of schedule, significantly improving traffic flow, safety, and public satisfaction.",
-        "es": "Reparaciones urgentes de carreteras completadas antes de lo previsto, mejorando significativamente el flujo de tráfico, la seguridad y la satisfacción pública.",
-        "hi": "समय से पहले पूरी हुई सड़क की तत्काल मरम्मत, यातायात प्रवाह, सुरक्षा और सार्वजनिक संतुष्टि में महत्वपूर्ण सुधार।",
-        "ta": "அவசர சாலை பழுதுபார்ப்புகள் திட்டமிட்டதற்கு முன்னதாகவே முடிக்கப்பட்டன, போக்குவரத்து நெரிசல், பாதுகாப்பு மற்றும் பொது திருப்தி ஆகியவற்றில் குறிப்பிடத்தக்க முன்னேற்றம் ஏற்பட்டது."
-      },
-      "resourceChanges": [
-        {
-          "name": "urban resilience",
-          "value": 10
-        },
-        {
-          "name": "city funds",
-          "value": -200
-        }
-      ]
-    },
-    {
-      "description": {
-        "en": "Transformed a neglected urban space into a beautiful and functional public park, enhancing livability and community well-being.",
-        "es": "Transformaste un espacio urbano descuidado en un hermoso y funcional parque público, mejorando la habitabilidad y el bienestar de la comunidad.",
-        "hi": "एक उपेक्षित शहरी स्थान को एक सुंदर और कार्यात्मक सार्वजनिक पार्क में बदल दिया गया, जिससे रहने की क्षमता और सामुदायिक कल्याण में वृद्धि हुई।",
-        "ta": "புறக்கணிக்கப்பட்ட நகர்ப்புற இடத்தை ஒரு அழகான மற்றும் செயல்படும் பொது பூங்காவாக மாற்றியது, வாழும் திறனையும் சமூக நல்வாழ்வையும் மேம்படுத்தியது."
-      },
-      "resourceChanges": [
-        {
-          "name": "public trust",
-          "value": 20
-        },
-        {
-          "name": "city funds",
-          "value": -100
-        }
-      ]
-    }
-  ],
-  "groundingInReality": true,
-  "positivity": 0.5,
-  "pregeneratedScenarios": {
-    "Mylapore Heritage Zone": [
-      {
-        "title": {
-          "en": "The Fading Echoes of Agraharams",
-          "es": "Los Ecos Desvanecidos de los Agraharams",
-          "hi": "अग्रहारम की फीकी पड़ती गूँज",
-          "ta": "அக்ரஹாரங்களின் மங்கிவரும் எதிரொலிகள்"
-        },
-        "description": {
-          "en": "You stand before a cluster of aging Agraharam houses in Mylapore, properties owned by the venerable Kapaleeshwarar Temple Trust. These traditional homes, with their unique architectural style, are showing significant signs of wear and tear. A proposal has been put forth: demolish these structures and build modern, multi-storey apartments that could house more families and generate substantial revenue for city development. However, heritage conservationists and many long-time residents are passionately advocating for their preservation, fearing the irreversible loss of Mylapore's cultural soul.",
-          "es": "Te encuentras ante un conjunto de antiguas casas Agraharam en Mylapore, propiedades de la venerable Fideicomiso del Templo Kapaleeshwarar. Estas casas tradicionales, con su estilo arquitectónico único, muestran importantes signos de deterioro. Se ha presentado una propuesta: demoler estas estructuras y construir apartamentos modernos de varios pisos que podrían albergar a más familias y generar ingresos sustanciales para el desarrollo de la ciudad. Sin embargo, los conservacionistas del patrimonio y muchos residentes de toda la vida abogan apasionadamente por su preservación, temiendo la pérdida irreversible del alma cultural de Mylapore.",
-          "hi": "आप मायलापुर में अग्रहारम के पुराने घरों के एक समूह के सामने खड़े हैं, जो पूजनीय कपालेश्वर मंदिर ट्रस्ट की संपत्ति हैं। ये पारंपरिक घर, अपनी अनूठी स्थापत्य शैली के साथ, जीर्ण-शीर्णता के महत्वपूर्ण संकेत दिखा रहे हैं। एक प्रस्ताव रखा गया है: इन संरचनाओं को ध्वस्त कर आधुनिक, बहुमंजिला अपार्टमेंट बनाना जो अधिक परिवारों को समायोजित कर सकें और शहर के विकास के लिए पर्याप्त राजस्व उत्पन्न कर सकें। हालांकि, विरासत संरक्षणवादी और कई लंबे समय से रहने वाले निवासी उनके संरक्षण के लिए passionately वकालत कर रहे हैं, मायलापुर की सांस्कृतिक आत्मा के अपरिवर्तनीय नुकसान के डर से।",
-          "ta": "நீங்கள் மயிலாப்பூரில் உள்ள பழைமையான அக்ரஹார வீடுகளின் தொகுப்பிற்கு முன் நிற்கிறீர்கள், இவை புகழ்பெற்ற கபாலீஸ்வரர் கோவில் அறக்கட்டளைக்கு சொந்தமானவை. தனித்துவமான கட்டிடக்கலை பாணியுடன் கூடிய இந்த பாரம்பரிய வீடுகள், கணிசமான சிதைவு அறிகுறிகளைக் காட்டுகின்றன. இந்த கட்டமைப்புகளை இடித்துவிட்டு, அதிகமான குடும்பங்களுக்கு இடமளித்து, நகர வளர்ச்சிக்கு கணிசமான வருவாயை ஈட்டக்கூடிய நவீன, பல மாடி குடியிருப்புகளை கட்ட ஒரு முன்மொழிவு வைக்கப்பட்டுள்ளது. இருப்பினும், பாரம்பரிய ஆர்வலர்களும் பல நீண்டகால குடியிருப்பாளர்களும் மயிலாப்பூரின் கலாச்சார அடையாளத்தை ஈடுசெய்ய முடியாத இழப்பிற்கு அஞ்சி, அவற்றைப் பாதுகாக்க passionately வாதிடுகின்றனர்."
-        },
-        "choices": [
-          {
-            "text": {
-              "en": "Champion Modern Redevelopment.",
-              "es": "Apoyar la Reurbanización Moderna.",
-              "hi": "आधुनिक पुनर्विकास का समर्थन करें।",
-              "ta": "நவீன மறுவடிவமைப்பை ஆதரிக்கவும்."
+    "board": {
+        "jailPosition": 4,
+        "locations": [
+            {
+                "description": {
+                    "en": "The bustling heart of the city, where your mayoral journey begins. Pass here to collect your annual budget.",
+                    "es": "El bullicioso corazón de la ciudad, donde comienza su viaje como alcalde. Pasa por aquí para recoger tu presupuesto anual.",
+                    "hi": "शहर का हलचल भरा दिल, जहाँ से आपका महापौर का सफर शुरू होता है। अपना वार्षिक बजट एकत्र करने के लिए यहाँ से गुजरें।",
+                    "ta": "நகரின் பரபரப்பான மையம், உங்கள் மேயர் பயணம் இங்கு தொடங்குகிறது. உங்கள் ஆண்டு பட்ஜெட்டைப் பெற இங்கு செல்லவும்."
+                },
+                "name": {
+                    "en": "Chennai Central Station",
+                    "es": "Estación Central de Chennai",
+                    "hi": "चेन्नई सेंट्रल स्टेशन",
+                    "ta": "சென்னை சென்ட்ரல் ரயில் நிலையம்"
+                },
+                "type": "START"
             },
-            "outcome": {
-              "explanation": {
-                "en": "The old structures are replaced with new, efficient buildings, addressing housing needs and bringing in more funds. However, a significant part of Mylapore's unique architectural heritage is lost, and some residents feel disconnected from their past.",
-                "es": "Las estructuras antiguas son reemplazadas por edificios nuevos y eficientes, abordando las necesidades de vivienda y generando más fondos. Sin embargo, una parte significativa del patrimonio arquitectónico único de Mylapore se pierde, y algunos residentes se sienten desconectados de su pasado.",
-                "hi": "पुरानी संरचनाओं को नए, कुशल भवनों से बदल दिया जाता है, जिससे आवास आवश्यकताओं को पूरा किया जाता है और अधिक धन आता है। हालांकि, मायलापुर की अनूठी स्थापत्य विरासत का एक महत्वपूर्ण हिस्सा खो जाता है, और कुछ निवासी अपने अतीत से कटा हुआ महसूस करते हैं।",
-                "ta": "பழைய கட்டமைப்புகள் புதிய, திறமையான கட்டிடங்களால் மாற்றப்பட்டு, வீட்டுத் தேவைகளைப் பூர்த்தி செய்து அதிக நிதியைக் கொண்டு வருகின்றன. இருப்பினும், மயிலாப்பூரின் தனித்துவமான கட்டிடக்கலை பாரம்பரியத்தின் கணிசமான பகுதி இழக்கப்படுகிறது, மேலும் சில குடியிருப்பாளர்கள் தங்கள் கடந்த காலத்திலிருந்து துண்டிக்கப்பட்டதாக உணர்கிறார்கள்."
-              },
-              "resourceChanges": [
-                {
-                  "name": "city funds",
-                  "value": 30
+            {
+                "description": {
+                    "en": "A historic cultural hub, rich with ancient temples and traditional houses. Balancing preservation with modernization is key to keeping public trust.",
+                    "es": "Un centro cultural histórico, rico en templos antiguos y casas tradicionales. Equilibrar la preservación con la modernización es clave para mantener la confianza pública.",
+                    "hi": "एक ऐतिहासिक सांस्कृतिक केंद्र, जो प्राचीन मंदिरों और पारंपरिक घरों से समृद्ध है। आधुनिकीकरण के साथ संरक्षण को संतुलित करना सार्वजनिक विश्वास बनाए रखने की कुंजी है।",
+                    "ta": "பண்டைய கோயில்கள் மற்றும் பாரம்பரிய வீடுகளுடன் கூடிய ஒரு வரலாற்றுச் சிறப்புமிக்க கலாச்சார மையம். நவீனமயமாக்கலுடன் பாதுகாப்பை சமநிலைப்படுத்துவது பொது நம்பிக்கையைத் தக்கவைக்க முக்கியம்."
                 },
-                {
-                  "name": "public trust",
-                  "value": -20
+                "name": {
+                    "en": "Mylapore Heritage Zone",
+                    "es": "Zona Patrimonial de Mylapore",
+                    "hi": "मयिलापुर विरासत क्षेत्र",
+                    "ta": "மயிலாப்பூர் பாரம்பரிய மண்டலம்"
                 },
-                {
-                  "name": "urban resilience",
-                  "value": 10
-                }
-              ]
-            }
-          },
-          {
-            "text": {
-              "en": "Invest in Heritage Restoration.",
-              "es": "Invertir en Restauración del Patrimonio.",
-              "hi": "विरासत बहाली में निवेश करें।",
-              "ta": "பாரம்பரிய மறுசீரமைப்பில் முதலீடு செய்யவும்."
+                "type": "PROPERTY",
+                "color": "bg-red-600"
             },
-            "outcome": {
-              "explanation": {
-                "en": "The historic Agraharam houses are beautifully restored, preserving Mylapore's unique charm and cultural identity. While this requires a significant investment and may not maximize housing capacity, it strengthens community bonds and attracts heritage tourism.",
-                "es": "Las históricas casas Agraharam son bellamente restauradas, preservando el encanto único y la identidad cultural de Mylapore. Aunque esto requiere una inversión significativa y puede que no maximice la capacidad de vivienda, fortalece los lazos comunitarios y atrae el turismo cultural.",
-                "hi": "ऐतिहासिक अग्रहारम घरों को खूबसूरती से बहाल किया जाता है, जिससे मायलापुर का अनूठा आकर्षण और सांस्कृतिक पहचान बनी रहती है। हालांकि इसमें एक महत्वपूर्ण निवेश की आवश्यकता होती है और यह आवास क्षमता को अधिकतम नहीं कर सकता है, यह सामुदायिक संबंधों को मजबूत करता है और विरासत पर्यटन को आकर्षित करता है।",
-                "ta": "வரலாற்று சிறப்புமிக்க அக்ரஹார வீடுகள் அழகாக மீட்டெடுக்கப்பட்டு, மயிலாப்பூரின் தனித்துவமான வசீகரத்தையும் கலாச்சார அடையாளத்தையும் பாதுகாக்கின்றன. இதற்கு கணிசமான முதலீடு தேவைப்படலாம் மற்றும் வீட்டு வசதி திறனை அதிகரிக்காமல் போகலாம் என்றாலும், இது சமூக பிணைப்புகளை வலுப்படுத்துகிறது மற்றும் பாரம்பரிய சுற்றுலாவை ஈர்க்கிறது."
-              },
-              "resourceChanges": [
-                {
-                  "name": "city funds",
-                  "value": -25
+            {
+                "description": {
+                    "en": "Land here to face an unexpected event requiring your swift decision-making, with outcomes that can shift resources dramatically.",
+                    "es": "Aterrice aquí para enfrentar un evento inesperado que requiere su rápida toma de decisiones, con resultados que pueden cambiar drásticamente los recursos.",
+                    "hi": "अप्रत्याशित घटना का सामना करने के लिए यहाँ रुकें, जिसमें आपके त्वरित निर्णय की आवश्यकता होगी और इसके परिणाम संसाधनों को नाटकीय रूप से बदल सकते हैं।",
+                    "ta": "உங்கள் விரைவான முடிவெடுக்கும் திறன் தேவைப்படும் எதிர்பாராத நிகழ்வை எதிர்கொள்ள இங்கு வாருங்கள். இது உங்கள் வளங்களை வியத்தகு முறையில் மாற்றலாம்."
                 },
-                {
-                  "name": "public trust",
-                  "value": 30
+                "name": {
+                    "en": "Mayor's Discretion",
+                    "es": "Discreción del Alcalde",
+                    "hi": "महापौर का विवेक",
+                    "ta": "மேயரின் விருப்பம்"
                 },
-                {
-                  "name": "urban resilience",
-                  "value": 5
-                }
-              ]
+                "type": "CHANCE"
+            },
+            {
+                "description": {
+                    "en": "Chennai's busiest shopping district, a source of immense commercial opportunity but also notorious for traffic congestion and waste management challenges.",
+                    "es": "El distrito comercial más concurrido de Chennai, una fuente de inmensas oportunidades comerciales pero también conocido por la congestión del tráfico y los desafíos de gestión de residuos.",
+                    "hi": "चेन्नई का सबसे व्यस्त शॉपिंग जिला, विशाल व्यावसायिक अवसरों का स्रोत है, लेकिन यातायात की भीड़ और अपशिष्ट प्रबंधन चुनौतियों के लिए भी कुख्यात है।",
+                    "ta": "சென்னையின் பரபரப்பான வணிக மாவட்டம், வணிக வாய்ப்புகளுக்கு ஒரு ஆதாரம் ஆனால் போக்குவரத்து நெரிசல் மற்றும் கழிவு மேலாண்மை சவால்களுக்கும் பெயர் பெற்றது."
+                },
+                "name": {
+                    "en": "T. Nagar Commercial Hub",
+                    "es": "Centro Comercial T. Nagar",
+                    "hi": "टी. नगर व्यावसायिक केंद्र",
+                    "ta": "டி. நகர் வணிக மையம்"
+                },
+                "type": "PROPERTY",
+                "color": "bg-red-600"
+            },
+            {
+                "description": {
+                    "en": "Caught for a lapse in oversight or public duty? Head to the Police Headquarters to reflect on your policies and the implications of your decisions.",
+                    "es": "Atrapado por un descuido en la supervisión o el deber público? Dirígete a la Jefatura de Policía para reflexionar sobre tus políticas y las implicaciones de tus decisiones.",
+                    "hi": "पर्यवेक्षण या सार्वजनिक कर्तव्य में चूक के लिए पकड़े गए? अपनी नीतियों और अपने निर्णयों के प्रभावों पर विचार करने के लिए पुलिस मुख्यालय जाएँ।",
+                    "ta": "மேற்பார்வை அல்லது பொதுக் கடமையில் தவறியதால் சிக்கினீர்களா? உங்கள் கொள்கைகள் மற்றும் முடிவுகளின் தாக்கங்களைப் பற்றி சிந்திக்க போலீஸ் தலைமையகத்திற்குச் செல்லவும்."
+                },
+                "name": {
+                    "en": "Police Headquarters",
+                    "es": "Cuartel General de la Policía",
+                    "hi": "पुलिस मुख्यालय",
+                    "ta": "காவல் தலைமையகம்"
+                },
+                "type": "JAIL"
+            },
+            {
+                "description": {
+                    "en": "A vibrant public space and popular recreation spot along the coast. Its upkeep and cleanliness directly reflect on public sentiment and city livability.",
+                    "es": "Un espacio público vibrante y un lugar de recreo popular a lo largo de la costa. Su mantenimiento y limpieza se reflejan directamente en el sentimiento público y la habitabilidad de la ciudad.",
+                    "hi": "समुद्र तट के किनारे एक जीवंत सार्वजनिक स्थान और लोकप्रिय मनोरंजन स्थल। इसका रखरखाव और स्वच्छता सीधे सार्वजनिक भावना और शहर की रहने की क्षमता पर निर्भर करती है।",
+                    "ta": "கடலோரத்தில் அமைந்துள்ள ஒரு துடிப்பான பொது இடம் மற்றும் பிரபலமான பொழுதுபோக்கு இடம். இதன் பராமரிப்பு மற்றும் தூய்மை பொது மக்கள் மனநிலையையும் நகரத்தின் வாழும் திறனையும் நேரடியாகப் பிரதிபலிக்கிறது."
+                },
+                "name": {
+                    "en": "Besant Nagar Beachfront",
+                    "es": "Frente a la Playa de Besant Nagar",
+                    "hi": "बेसंत नगर समुद्र तट",
+                    "ta": "பெசன்ட் நகர் கடற்கரை"
+                },
+                "type": "PROPERTY",
+                "color": "bg-yellow-600"
+            },
+            {
+                "description": {
+                    "en": "A chance to positively impact the community or benefit from collective efforts, potentially boosting public trust or urban resilience.",
+                    "es": "Una oportunidad para impactar positivamente a la comunidad o beneficiarse de los esfuerzos colectivos, lo que podría aumentar la confianza pública o la resiliencia urbana.",
+                    "hi": "समुदाय को सकारात्मक रूप से प्रभावित करने या सामूहिक प्रयासों से लाभ उठाने का एक अवसर, संभवतः सार्वजनिक विश्वास या शहरी लचीलेपन को बढ़ावा देना।",
+                    "ta": "சமூகத்தை நேர்மறையாகப் பாதிக்கும் அல்லது கூட்டு முயற்சிகளிலிருந்து பயனடையும் ஒரு வாய்ப்பு, இது பொது நம்பிக்கையை அல்லது நகர்ப்புற தாங்குதிறனை அதிகரிக்கலாம்."
+                },
+                "name": {
+                    "en": "Public Service Initiative",
+                    "es": "Iniciativa de Servicio Público",
+                    "hi": "सार्वजनिक सेवा पहल",
+                    "ta": "பொதுச் சேவைத் திட்டம்"
+                },
+                "type": "COMMUNITY_CHEST"
+            },
+            {
+                "description": {
+                    "en": "The nerve center for fresh produce and goods, vital for the city's supply chain and economy, but also prone to congestion and logistical nightmares.",
+                    "es": "El centro neurálgico para productos frescos y bienes, vital para la cadena de suministro y la economía de la ciudad, pero también propenso a la congestión y a pesadillas logísticas.",
+                    "hi": "ताजे उत्पादों और सामानों का तंत्रिका केंद्र, शहर की आपूर्ति श्रृंखला और अर्थव्यवस्था के लिए महत्वपूर्ण है, लेकिन भीड़भाड़ और रसद संबंधी समस्याओं के लिए भी प्रवण है।",
+                    "ta": "புதிய பொருட்கள் மற்றும் பொருட்களுக்கான மைய நரம்பு, நகரத்தின் விநியோகச் சங்கிலிக்கும் பொருளாதாரத்திற்கும் முக்கியமானது, ஆனால் போக்குவரத்து நெரிசல் மற்றும் தளவாடக் கனவுகளுக்கும் ஆளாகிறது."
+                },
+                "name": {
+                    "en": "Koyambedu Wholesale Market",
+                    "es": "Mercado Mayorista de Koyambedu",
+                    "hi": "कोयंबेडु थोक बाजार",
+                    "ta": "கோயம்பேடு மொத்த சந்தை"
+                },
+                "type": "PROPERTY",
+                "color": "bg-yellow-600"
+            },
+            {
+                "description": {
+                    "en": "Time to collect property taxes to fund essential city services. Citizens expect efficiency and fairness in how their contributions are managed.",
+                    "es": "Es hora de recaudar impuestos sobre la propiedad para financiar servicios esenciales de la ciudad. Los ciudadanos esperan eficiencia y equidad en la gestión de sus contribuciones.",
+                    "hi": "आवश्यक शहरी सेवाओं को वित्तपोषित करने के लिए संपत्ति कर एकत्र करने का समय। नागरिक अपनी योगदानों के प्रबंधन में दक्षता और निष्पक्षता की उम्मीद करते हैं।",
+                    "ta": "அத்தியாவசிய நகர சேவைகளுக்கு நிதியளிக்க சொத்து வரிகளை வசூலிக்கும் நேரம். தங்கள் பங்களிப்புகள் எவ்வாறு நிர்வகிக்கப்படுகின்றன என்பதில் குடிமக்கள் செயல்திறன் மற்றும் நியாயத்தை எதிர்பார்க்கிறார்கள்."
+                },
+                "name": {
+                    "en": "Property Tax Assessment",
+                    "es": "Evaluación del Impuesto Predial",
+                    "hi": "संपत्ति कर आकलन",
+                    "ta": "சொத்து வரி மதிப்பீடு"
+                },
+                "type": "TAX"
+            },
+            {
+                "description": {
+                    "en": "A tranquil urban oasis. Take a break from mayoral duties and enjoy the city's green lung. No immediate gains or losses here.",
+                    "es": "Un oasis urbano tranquilo. Tómate un descanso de tus deberes de alcalde y disfruta del pulmón verde de la ciudad. Sin ganancias ni pérdidas inmediatas aquí.",
+                    "hi": "एक शांत शहरी नखलिस्तान। महापौर के कर्तव्यों से छुट्टी लें और शहर के हरे-भरे फेफड़ों का आनंद लें। यहां कोई तत्काल लाभ या हानि नहीं है।",
+                    "ta": "ஒரு அமைதியான நகர்ப்புற சோலை. மேயர் கடமைகளில் இருந்து ஓய்வு எடுத்து நகரத்தின் பசுமைப் பகுதிகளை அனுபவிக்கவும். இங்கு உடனடி லாபமோ நஷ்டமோ இல்லை."
+                },
+                "name": {
+                    "en": "Guindy National Park",
+                    "es": "Parque Nacional Guindy",
+                    "hi": "गिंडी राष्ट्रीय उद्यान",
+                    "ta": "கிண்டி தேசிய பூங்கா"
+                },
+                "type": "FREE_PARKING"
+            },
+            {
+                "description": {
+                    "en": "A critical facility for processing the city's vast amounts of waste. Modernization of this site significantly improves urban health and environmental quality.",
+                    "es": "Una instalación crítica para procesar las vastas cantidades de residuos de la ciudad. La modernización de este sitio mejora significativamente la salud urbana y la calidad ambiental.",
+                    "hi": "शहर के विशाल कचरे को संसाधित करने के लिए एक महत्वपूर्ण सुविधा। इस साइट का आधुनिकीकरण शहरी स्वास्थ्य और पर्यावरणीय गुणवत्ता में काफी सुधार करता है।",
+                    "ta": "நகரின் அதிக அளவிலான கழிவுகளைச் செயலாக்கும் ஒரு முக்கியமான வசதி. இந்த இடத்தின் நவீனமயமாக்கல் நகர்ப்புற சுகாதாரம் மற்றும் சுற்றுச்சூழல் தரத்தை கணிசமாக மேம்படுத்துகிறது."
+                },
+                "name": {
+                    "en": "Perungudi Waste Management Site",
+                    "es": "Sitio de Gestión de Residuos de Perungudi",
+                    "hi": "पेरुंगुडी अपशिष्ट प्रबंधन स्थल",
+                    "ta": "பெருங்குடி கழிவு மேலாண்மை தளம்"
+                },
+                "type": "PROPERTY",
+                "color": "bg-green-600"
+            },
+            {
+                "description": {
+                    "en": "An unforeseen circumstance demands your attention and strategic response. Be prepared for either a windfall or a setback that affects your resources.",
+                    "es": "Una circunstancia imprevista exige su atención y respuesta estratégica. Prepárese para una ganancia inesperada o un contratiempo que afecte sus recursos.",
+                    "hi": "एक अप्रत्याशित परिस्थिति आपके ध्यान और रणनीतिक प्रतिक्रिया की मांग करती है। अपने संसाधनों को प्रभावित करने वाले अप्रत्याशित लाभ या झटके के लिए तैयार रहें।",
+                    "ta": "எதிர்பாராத சூழ்நிலை உங்கள் கவனத்தையும் மூலோபாய பதிலையும் கோருகிறது. உங்கள் வளங்களை பாதிக்கும் ஒரு எதிர்பாராத லாபத்துக்கோ அல்லது பின்னடைவுக்கோ தயாராக இருங்கள்."
+                },
+                "name": {
+                    "en": "Mayor's Discretion",
+                    "es": "Discreción del Alcalde",
+                    "hi": "महापौर का विवेक",
+                    "ta": "மேயரின் விருப்பம்"
+                },
+                "type": "CHANCE"
+            },
+            {
+                "description": {
+                    "en": "Essential for Chennai's water security, especially during droughts. Investment here boosts urban resilience and secures the city's future.",
+                    "es": "Esencial para la seguridad hídrica de Chennai, especialmente durante las sequías. La inversión aquí aumenta la resiliencia urbana y asegura el futuro de la ciudad.",
+                    "hi": "चेन्नई की जल सुरक्षा के लिए आवश्यक, खासकर सूखे के दौरान। यहां निवेश शहरी लचीलेपन को बढ़ावा देता है और शहर के भविष्य को सुरक्षित करता है।",
+                    "ta": "சென்னையின் நீர் பாதுகாப்பிற்கு அத்தியாவசியமானது, குறிப்பாக வறட்சி காலங்களில். இங்கு முதலீடு செய்வது நகர்ப்புற தாங்குதிறனை அதிகரிக்கிறது மற்றும் நகரத்தின் எதிர்காலத்தைப் பாதுகாக்கிறது."
+                },
+                "name": {
+                    "en": "Water Desalination Plant",
+                    "es": "Planta Desalinizadora de Agua",
+                    "hi": "जल विलवणीकरण संयंत्र",
+                    "ta": "நீர் சுத்திகரிப்பு ஆலை"
+                },
+                "type": "PROPERTY",
+                "color": "bg-green-600"
+            },
+            {
+                "description": {
+                    "en": "The backbone of Chennai's public transportation. Upgrading the fleet and expanding routes improves citizen mobility, reduces congestion, and enhances air quality.",
+                    "es": "La columna vertebral del transporte público de Chennai. La mejora de la flota y la expansión de rutas mejora la movilidad ciudadana, reduce la congestión y mejora la calidad del aire.",
+                    "hi": "चेन्नई के सार्वजनिक परिवहन की रीढ़। बेड़े का उन्नयन और मार्गों का विस्तार नागरिक गतिशीलता में सुधार करता है, भीड़भाड़ कम करता है और वायु गुणवत्ता बढ़ाता है।",
+                    "ta": "சென்னையின் பொதுப் போக்குவரத்துக்கான முதுகெலும்பு. வாகனங்களை மேம்படுத்துதல் மற்றும் வழித்தடங்களை விரிவுபடுத்துதல் குடிமக்களின் நடமாட்டத்தை மேம்படுத்துகிறது, நெரிசலைக் குறைக்கிறது மற்றும் காற்றின் தரத்தை அதிகரிக்கிறது."
+                },
+                "name": {
+                    "en": "MTC Bus Depot",
+                    "es": "Depósito de Autobuses MTC",
+                    "hi": "एमटीसी बस डिपो",
+                    "ta": "எம்டிசி பேருந்து நிலையம்"
+                },
+                "type": "UTILITY"
+            },
+            {
+                "description": {
+                    "en": "Your department is under intense scrutiny. A major audit has revealed irregularities. Go directly to Police Headquarters! Do not pass GO, do not collect budget.",
+                    "es": "Tu departamento está bajo intenso escrutinio. Una auditoría importante ha revelado irregularidades. ¡Ve directamente al Cuartel General de la Policía! No pases por GO, no cobres presupuesto.",
+                    "hi": "आपका विभाग गहन जांच के दायरे में है। एक बड़े ऑडिट में अनियमितताएं सामने आई हैं। सीधे पुलिस मुख्यालय जाएं! 'गो' से न गुजरें, बजट एकत्र न करें।",
+                    "ta": "உங்கள் துறை தீவிர ஆய்வுக்கு உட்படுத்தப்பட்டுள்ளது. ஒரு பெரிய தணிக்கை முறைகேடுகளை வெளிப்படுத்தியுள்ளது. நேரடியாக காவல் தலைமையகத்திற்கு செல்லவும்! 'கோ' வழியாக செல்ல வேண்டாம், பட்ஜெட்டை பெற வேண்டாம்."
+                },
+                "name": {
+                    "en": "Public Works Audit",
+                    "es": "Auditoría de Obras Públicas",
+                    "hi": "लोक निर्माण लेखापरीक्षा",
+                    "ta": "பொதுப்பணித் தணிக்கை"
+                },
+                "type": "GO_TO_JAIL"
+            },
+            {
+                "description": {
+                    "en": "Expanding the city's modern rapid transit system. This project is high cost, but offers immense long-term benefits for connectivity and environmental sustainability.",
+                    "es": "Ampliación del moderno sistema de tránsito rápido de la ciudad. Este proyecto tiene un alto costo, pero ofrece inmensos beneficios a largo plazo para la conectividad y la sostenibilidad ambiental.",
+                    "hi": "शहर की आधुनिक रैपिड ट्रांजिट प्रणाली का विस्तार। यह परियोजना उच्च लागत वाली है, लेकिन कनेक्टिविटी और पर्यावरणीय स्थिरता के लिए अत्यधिक दीर्घकालिक लाभ प्रदान करती है।",
+                    "ta": "நகரின் நவீன விரைவுப் போக்குவரத்து அமைப்பை விரிவுபடுத்துகிறது. இந்தத் திட்டம் அதிக செலவுடையது, ஆனால் இணைப்பு மற்றும் சுற்றுச்சூழல் நிலைத்தன்மைக்கு நீண்டகால நன்மைகளை வழங்குகிறது."
+                },
+                "name": {
+                    "en": "Chennai Metro Rail Expansion",
+                    "es": "Expansión del Metro de Chennai",
+                    "hi": "चेन्नई मेट्रो रेल विस्तार",
+                    "ta": "சென்னை மெட்ரோ ரயில் விரிவாக்கம்"
+                },
+                "type": "PROPERTY",
+                "color": "bg-blue-600"
+            },
+            {
+                "description": {
+                    "en": "An opportunity to demonstrate civic responsibility and gain public support, possibly through a local initiative or community event.",
+                    "es": "Una oportunidad para demostrar responsabilidad cívica y ganar apoyo público, posiblemente a través de una iniciativa local o un evento comunitario.",
+                    "hi": "नागरिक जिम्मेदारी प्रदर्शित करने और सार्वजनिक समर्थन प्राप्त करने का एक अवसर, संभवतः एक स्थानीय पहल या सामुदायिक कार्यक्रम के माध्यम से।",
+                    "ta": "ஒரு உள்ளூர் முன்முயற்சி அல்லது சமூக நிகழ்வு மூலம் குடிமைப் பொறுப்பை வெளிப்படுத்தவும் பொது ஆதரவைப் பெறவும் ஒரு வாய்ப்பு."
+                },
+                "name": {
+                    "en": "Public Service Initiative",
+                    "es": "Iniciativa de Servicio Público",
+                    "hi": "सार्वजनिक सेवा पहल",
+                    "ta": "பொதுச் சேவைத் திட்டம்"
+                },
+                "type": "COMMUNITY_CHEST"
+            },
+            {
+                "description": {
+                    "en": "The heart of Chennai's booming IT sector, attracting global investment and creating high-value jobs. A key to the city's economic future.",
+                    "es": "El corazón del floreciente sector de TI de Chennai, que atrae inversiones globales y crea empleos de alto valor. Una clave para el futuro económico de la ciudad.",
+                    "hi": "चेन्नई के बढ़ते आईटी क्षेत्र का केंद्र, जो वैश्विक निवेश को आकर्षित करता है और उच्च-मूल्य वाली नौकरियाँ पैदा करता है। यह शहर के आर्थिक भविष्य की कुंजी है।",
+                    "ta": "சென்னையின் வளர்ந்து வரும் தகவல் தொழில்நுட்பத் துறையின் இதயம், உலகளாவிய முதலீட்டை ஈர்த்து உயர் மதிப்பு வேலைவாய்ப்புகளை உருவாக்குகிறது. நகரத்தின் பொருளாதார எதிர்காலத்திற்கு இது ஒரு முக்கியமாகும்."
+                },
+                "name": {
+                    "en": "TIDEL Park IT Corridor",
+                    "es": "Corredor de TI de TIDEL Park",
+                    "hi": "टाइडल पार्क आईटी कॉरिडोर",
+                    "ta": "டைடல் பார்க் தகவல் தொழில்நுட்ப வழித்தடம்"
+                },
+                "type": "PROPERTY",
+                "color": "bg-blue-600"
+            },
+            {
+                "description": {
+                    "en": "Contribute to the city's long-term growth and resilience by investing in crucial infrastructure projects. This ensures the city can withstand future challenges.",
+                    "es": "Contribuya al crecimiento y la resiliencia a largo plazo de la ciudad invirtiendo en proyectos de infraestructura cruciales. Esto asegura que la ciudad pueda resistir futuros desafíos.",
+                    "hi": "महत्वपूर्ण बुनियादी ढांचा परियोजनाओं में निवेश करके शहर के दीर्घकालिक विकास और लचीलेपन में योगदान करें। यह सुनिश्चित करता है कि शहर भविष्य की चुनौतियों का सामना कर सके।",
+                    "ta": "முக்கியமான உள்கட்டமைப்பு திட்டங்களில் முதலீடு செய்வதன் மூலம் நகரத்தின் நீண்டகால வளர்ச்சி மற்றும் தாங்குதிறனுக்கு பங்களிக்கவும். இது எதிர்கால சவால்களை நகரம் எதிர்கொள்ள முடியும் என்பதை உறுதிப்படுத்துகிறது."
+                },
+                "name": {
+                    "en": "Infrastructure Development Fund",
+                    "es": "Fondo de Desarrollo de Infraestructura",
+                    "hi": "बुनियादी ढांचा विकास निधि",
+                    "ta": "உள்கட்டமைப்பு மேம்பாட்டு நிதி"
+                },
+                "type": "TAX"
+            },
+            {
+                "description": {
+                    "en": "The seat of municipal power. Owning this signifies your absolute control over city administration and the ability to enact major policy changes.",
+                    "es": "La sede del poder municipal. Poseer esto significa su control absoluto sobre la administración de la ciudad y la capacidad de promulgar cambios importantes en las políticas.",
+                    "hi": "नगरपालिका शक्ति का आसन। इसका स्वामित्व शहर प्रशासन पर आपके पूर्ण नियंत्रण और प्रमुख नीतिगत परिवर्तनों को लागू करने की क्षमता को दर्शाता है।",
+                    "ta": "நகர ஆட்சியின் இருக்கை. இதை வைத்திருப்பது நகர நிர்வாகத்தின் மீதான உங்கள் முழுமையான கட்டுப்பாட்டையும், முக்கிய கொள்கை மாற்றங்களைச் செயல்படுத்தும் திறனையும் குறிக்கிறது."
+                },
+                "name": {
+                    "en": "Chennai Corporation Building",
+                    "es": "Edificio de la Corporación de Chennai",
+                    "hi": "चेन्नई निगम भवन",
+                    "ta": "சென்னை மாநகராட்சி கட்டிடம்"
+                },
+                "type": "PROPERTY",
+                "color": "bg-purple-600"
             }
-          }
-        ],
-        "sourceUrl": "https://www.mylaporetimes.com/2021/09/mylapore-end-of-a-heritage-precinct/",
-        "sourceTitle": {
-          "en": "Mylapore -End of a heritage precinct?, The gems Mylapore has, but rarely notices, Social sustainability in a culturally sound but disrupted urban fabric: The case of Mylapore",
-          "es": "Mylapore - Fin de un recinto patrimonial?, Las gemas que Mylapore tiene, pero rara vez nota, Sostenibilidad social en un tejido urbano culturalmente sólido pero alterado: el caso de Mylapore",
-          "hi": "मायलापुर - एक विरासत क्षेत्र का अंत?, मायलापुर में मौजूद रत्न, लेकिन जिन पर शायद ही कभी ध्यान दिया जाता है, सांस्कृतिक रूप से सुदृढ़ लेकिन बाधित शहरी ताने-बाने में सामाजिक स्थिरता: मायलापुर का एक केस स्टडी",
-          "ta": "மயிலாப்பூர் - ஒரு பாரம்பரியப் பகுதியின் முடிவு?, மயிலாப்பூரில் உள்ள ரத்தினங்கள், ஆனால் அரிதாகவே கவனிக்கப்படுபவை, கலாச்சார ரீதியாக ஒலிக்கும் ஆனால் சீர்குலைந்த நகர்ப்புற அமைப்பில் சமூக நிலைத்தன்மை: மயிலாப்பூர் ஒரு வழக்கு ஆய்வு"
+        ]
+    },
+    "chanceCards": [
+        {
+            "description": {
+                "en": "You successfully implemented early warning systems and flood mitigation projects. Chennai is better prepared for the monsoon deluge!",
+                "es": "Implementaste con éxito sistemas de alerta temprana y proyectos de mitigación de inundaciones. ¡Chennai está mejor preparada para el diluvio monzónico!",
+                "hi": "आपने सफलतापूर्वक प्रारंभिक चेतावनी प्रणाली और बाढ़ शमन परियोजनाओं को लागू किया। चेन्नई अब मानसून की बाढ़ के लिए बेहतर ढंग से तैयार है!",
+                "ta": "நீங்கள் ஆரம்ப எச்சரிக்கை அமைப்புகளையும் வெள்ள தணிப்பு திட்டங்களையும் வெற்றிகரமாக செயல்படுத்தினீர்கள். சென்னை இப்போது பருவமழை வெள்ளத்திற்கு சிறப்பாக தயாராக உள்ளது!"
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": 10
+                },
+                {
+                    "name": "public trust",
+                    "value": 15
+                },
+                {
+                    "name": "city funds",
+                    "value": -200
+                }
+            ]
         },
-        "id": "mylapore-heritage-zone-0",
-        "custom": false,
-        "enabled": true
-      }
-    ]
-  }
+        {
+            "description": {
+                "en": "An aging flyover in a major artery collapsed due to lack of maintenance. Urgent repairs are needed, causing traffic nightmares.",
+                "es": "Un paso elevado antiguo en una arteria principal colapsó por falta de mantenimiento. Se necesitan reparaciones urgentes, causando pesadillas de tráfico.",
+                "hi": "एक प्रमुख धमनी में एक पुराना फ्लाईओवर रखरखाव की कमी के कारण ढह गया। तत्काल मरम्मत की आवश्यकता है, जिससे यातायात में भारी बाधा उत्पन्न हो रही है।",
+                "ta": "ஒரு பெரிய போக்குவரத்து தமனியில் பழுதடைந்த மேம்பாலம் பராமரிப்பு இல்லாததால் இடிந்து விழுந்தது. அவசர பழுதுபார்ப்பு தேவை, இதனால் போக்குவரத்து நெரிசல் ஏற்படுகிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": -15
+                },
+                {
+                    "name": "public trust",
+                    "value": -10
+                },
+                {
+                    "name": "city funds",
+                    "value": -400
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Chennai hosted a major Global Investor Summit, attracting significant foreign direct investment and boosting the city's economic outlook.",
+                "es": "Chennai acogió una importante Cumbre Global de Inversores, atrayendo una inversión extranjera directa significativa y mejorando las perspectivas económicas de la ciudad.",
+                "hi": "चेन्नई ने एक प्रमुख वैश्विक निवेशक शिखर सम्मेलन की मेजबानी की, जिसने महत्वपूर्ण प्रत्यक्ष विदेशी निवेश आकर्षित किया और शहर के आर्थिक दृष्टिकोण को बढ़ावा दिया।",
+                "ta": "சென்னையில் ஒரு பெரிய உலகளாவிய முதலீட்டாளர் உச்சிமாநாடு நடைபெற்றது, இது குறிப்பிடத்தக்க வெளிநாட்டு நேரடி முதலீட்டை ஈர்த்து நகரத்தின் பொருளாதார எதிர்காலத்தை மேம்படுத்தியது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "city funds",
+                    "value": 500
+                },
+                {
+                    "name": "public trust",
+                    "value": 20
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "A sudden power grid failure plunges large parts of the city into darkness, causing widespread disruption and frustration.",
+                "es": "Una falla repentina en la red eléctrica sumerge grandes partes de la ciudad en la oscuridad, causando interrupciones y frustración generalizadas.",
+                "hi": "एक अचानक बिजली ग्रिड फेल होने से शहर के बड़े हिस्से अंधेरे में डूब गए, जिससे व्यापक व्यवधान और निराशा हुई।",
+                "ta": "திடீர் மின் கட்டமைப்பு தோல்வி நகரத்தின் பெரும்பகுதியை இருளில் மூழ்கடித்து, பரவலான இடையூறு மற்றும் விரக்தியை ஏற்படுத்துகிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": -10
+                },
+                {
+                    "name": "public trust",
+                    "value": -15
+                },
+                {
+                    "name": "city funds",
+                    "value": -100
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Your administration secured a prestigious national grant for the restoration and preservation of a historical landmark, enhancing cultural pride.",
+                "es": "Su administración obtuvo una prestigiosa subvención nacional para la restauración y preservación de un hito histórico, lo que mejoró el orgullo cultural.",
+                "hi": "आपके प्रशासन ने एक ऐतिहासिक स्थल के जीर्णोद्धार और संरक्षण के लिए एक प्रतिष्ठित राष्ट्रीय अनुदान प्राप्त किया, जिससे सांस्कृतिक गौरव बढ़ा।",
+                "ta": "உங்கள் நிர்வாகம் ஒரு வரலாற்றுச் சிறப்புமிக்க இடத்தின் மறுசீரமைப்பு மற்றும் பாதுகாப்புக்காக ஒரு மதிப்புமிக்க தேசிய மானியத்தைப் பெற்றது, இது கலாச்சாரப் பெருமையை மேம்படுத்தியது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "city funds",
+                    "value": 150
+                },
+                {
+                    "name": "public trust",
+                    "value": 10
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Fisherfolk protest new port development impacting traditional livelihoods. Requires careful negotiation and potential compensation.",
+                "es": "Los pescadores protestan contra el nuevo desarrollo portuario que afecta sus medios de vida tradicionales. Requiere una negociación cuidadosa y una posible compensación.",
+                "hi": "मछुआरे पारंपरिक आजीविका को प्रभावित करने वाले नए बंदरगाह विकास का विरोध करते हैं। इसके लिए सावधानीपूर्वक बातचीत और संभावित मुआवजे की आवश्यकता है।",
+                "ta": "புதிய துறைமுக வளர்ச்சி பாரம்பரிய வாழ்வாதாரங்களைப் பாதிப்பதாக மீனவர்கள் எதிர்ப்பு தெரிவிக்கின்றனர். கவனமான பேச்சுவார்த்தை மற்றும் சாத்தியமான இழப்பீடு தேவை."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": -20
+                },
+                {
+                    "name": "city funds",
+                    "value": -50
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "A severe dengue outbreak challenges public health systems. Urgent public awareness campaigns and mosquito control measures are initiated.",
+                "es": "Un grave brote de dengue desafía los sistemas de salud pública. Se inician campañas urgentes de concientización pública y medidas de control de mosquitos.",
+                "hi": "डेंगू का एक गंभीर प्रकोप सार्वजनिक स्वास्थ्य प्रणालियों को चुनौती देता है। तत्काल सार्वजनिक जागरूकता अभियान और मच्छर नियंत्रण उपाय शुरू किए जाते हैं।",
+                "ta": "ஒரு தீவிர டெங்கு நோய் பரவல் பொது சுகாதார அமைப்புகளுக்கு சவாலாக உள்ளது. அவசர பொது விழிப்புணர்வு பிரச்சாரங்கள் மற்றும் கொசு கட்டுப்பாட்டு நடவடிக்கைகள் தொடங்கப்பட்டுள்ளன."
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": -10
+                },
+                {
+                    "name": "public trust",
+                    "value": -10
+                },
+                {
+                    "name": "city funds",
+                    "value": -250
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Your innovative waste-to-energy project successfully launches, generating revenue for the city and significantly reducing landfill burden.",
+                "es": "Su innovador proyecto de conversión de residuos en energía se lanza con éxito, generando ingresos para la ciudad y reduciendo significativamente la carga de los vertederos.",
+                "hi": "आपका अभिनव अपशिष्ट-से-ऊर्जा परियोजना सफलतापूर्वक शुरू हो गई है, जो शहर के लिए राजस्व उत्पन्न कर रही है और लैंडफिल के बोझ को काफी कम कर रही है।",
+                "ta": "உங்கள் புதுமையான கழிவிலிருந்து மின்சாரம் உற்பத்தி செய்யும் திட்டம் வெற்றிகரமாக தொடங்கப்பட்டது, இது நகரத்திற்கு வருவாயை ஈட்டி நிலப்பரப்பு சுமையைக் கணிசமாக குறைக்கிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": 15
+                },
+                {
+                    "name": "city funds",
+                    "value": 100
+                },
+                {
+                    "name": "public trust",
+                    "value": 10
+                }
+            ]
+        }
+    ],
+    "description": {
+        "en": "Embody the Mayor of Chennai, balancing critical resources to transform the city into a beacon of progress and livability.",
+        "es": "Encarna al Alcalde de Chennai, equilibrando recursos críticos para transformar la ciudad en un faro de progreso y habitabilidad.",
+        "hi": "चेन्नई के महापौर का रूप धारण करें, शहर को प्रगति और रहने योग्यता का प्रतीक बनाने के लिए महत्वपूर्ण संसाधनों को संतुलित करें।",
+        "ta": "சென்னையின் மேயராக, நகரத்தை வளர்ச்சி மற்றும் வாழக்கூடிய இடமாக மாற்ற அத்தியாவசிய வளங்களை சமநிலைப்படுத்துங்கள்."
+    },
+    "footerSections": [
+        {
+            "content": {
+                "en": "<ul><li><strong>Objective:</strong> Be the most successful Mayor by acquiring properties, managing city resources, and earning public trust. The game ends when a player goes bankrupt (any resource reaches 0).</li><li><strong>Gameplay:</strong> Roll the dice and move your token. Land on properties to acquire them or pay rent. Land on special spaces for events or taxes.</li><li><strong>Resources:</strong> Manage Public Trust, City Funds, and Urban Resilience. Keep them above zero!</li><li><strong>Winning:</strong> The last player remaining with all resources above zero wins.</li><li><strong>Bankruptcy:</strong> If any resource reaches 0, you lose and are declared bankrupt.</li></ul>",
+                "es": "<ul><li><strong>Objetivo:</strong> Sé el alcalde más exitoso adquiriendo propiedades, gestionando los recursos de la ciudad y ganando la confianza pública. El juego termina cuando un jugador quiebra (cualquier recurso llega a 0).</li><li><strong>Jugabilidad:</strong> Tira los dados y mueve tu ficha. Aterriza en propiedades para adquirirlas o pagar alquiler. Aterriza en espacios especiales para eventos o impuestos.</li><li><strong>Recursos:</strong> Gestiona la Confianza Pública, los Fondos de la Ciudad y la Resiliencia Urbana. ¡Mantenlos por encima de cero!</li><li><strong>Victoria:</strong> El último jugador que quede con todos los recursos por encima de cero gana.</li><li><strong>Bancarrota:</strong> Si algún recurso llega a 0, pierdes y eres declarado en quiebra.</li></ul>",
+                "hi": "<ul><li><strong>उद्देश्य:</strong> संपत्तियों का अधिग्रहण करके, शहर के संसाधनों का प्रबंधन करके और सार्वजनिक विश्वास अर्जित करके सबसे सफल महापौर बनें। खेल तब समाप्त होता है जब कोई खिलाड़ी दिवालिया हो जाता है (कोई भी संसाधन 0 तक पहुँच जाता है)।</li><li><strong>गेमप्ले:</strong> पासे फेंकें और अपने टोकन को आगे बढ़ाएं। संपत्तियों को खरीदने या किराया देने के लिए उन पर उतरें। घटनाओं या करों के लिए विशेष स्थानों पर उतरें।</li><li><strong>संसाधन:</strong> सार्वजनिक विश्वास, शहर के फंड और शहरी लचीलेपन का प्रबंधन करें। उन्हें शून्य से ऊपर रखें!</li><li><strong>जीतना:</strong> सभी संसाधनों को शून्य से ऊपर रखने वाला अंतिम खिलाड़ी जीतता है।</li><li><strong>दिवालियापन:</strong> यदि कोई संसाधन 0 तक पहुंच जाता है, तो आप हार जाते हैं और दिवालिया घोषित कर दिए जाते हैं।</li></ul>",
+                "ta": "<ul><li><strong>நோக்கம்:</strong> சொத்துக்களைப் பெற்று, நகர வளங்களை நிர்வகித்து, பொது நம்பிக்கையைப் பெற்று மிகவும் வெற்றிகரமான மேயராக இருங்கள். ஒரு வீரர் திவாலாகும்போது (எந்த வளமும் 0 ஐ அடையும்போது) விளையாட்டு முடிவடையும்.</li><li><strong>விளையாட்டு முறை:</strong> பகடைகளை உருட்டி உங்கள் டோக்கனை நகர்த்தவும். சொத்துக்களை வாங்க அல்லது வாடகை செலுத்த அவற்றில் இறங்கவும். நிகழ்வுகள் அல்லது வரிகளுக்கான சிறப்பு இடங்களில் இறங்கவும்.</li><li><strong>வளங்கள்:</strong> பொது நம்பிக்கை, நகர நிதி மற்றும் நகர்ப்புற தாங்குதிறன் ஆகியவற்றை நிர்வகிக்கவும். அவற்றை பூஜ்ஜியத்திற்கு மேல் வைத்திருக்கவும்!</li><li><strong>வெற்றி:</strong> அனைத்து வளங்களும் பூஜ்ஜியத்திற்கு மேல் உள்ள கடைசி வீரர் வெற்றி பெறுகிறார்.</li><li><strong>திவால்:</strong> ஏதேனும் ஒரு வளம் 0 ஐ அடைந்தால், நீங்கள் தோல்வியடைந்து திவாலாக அறிவிக்கப்படுவீர்கள்.</li></ul>"
+            },
+            "title": {
+                "en": "Rules",
+                "es": "Reglas",
+                "hi": "नियम",
+                "ta": "விதிகள்"
+            }
+        },
+        {
+            "content": {
+                "en": "<p><strong>Chennai: City of Mayors</strong> is a strategic board game where players take on the challenging role of Chennai's Mayor. Navigate the vibrant landscape of this major Indian metropolis, making tough decisions to balance Public Trust, City Funds, and Urban Resilience.</p><p>From preparing for the monsoon to expanding the Metro and managing waste, every choice impacts your city's future. Will you prioritize economic development, heritage preservation, or environmental sustainability? Your leadership will define Chennai's destiny!</p>",
+                "es": "<p><strong>Chennai: Ciudad de Alcaldes</strong> es un juego de mesa estratégico donde los jugadores asumen el desafiante papel del Alcalde de Chennai. Navega por el vibrante paisaje de esta importante metrópolis india, tomando decisiones difíciles para equilibrar la Confianza Pública, los Fondos de la Ciudad y la Resiliencia Urbana.</p><p>Desde la preparación para el monzón hasta la expansión del Metro y la gestión de residuos, cada elección impacta el futuro de tu ciudad. ¿Priorizarás el desarrollo económico, la preservación del patrimonio o la sostenibilidad ambiental? ¡Tu liderazgo definirá el destino de Chennai!</p>",
+                "hi": "<p><strong>चेन्नई: महापौरों का शहर</strong> एक रणनीतिक बोर्ड गेम है जहाँ खिलाड़ी चेन्नई के महापौर की चुनौतीपूर्ण भूमिका निभाते हैं। इस प्रमुख भारतीय महानगर के जीवंत परिदृश्य में नेविगेट करें, सार्वजनिक विश्वास, शहर के फंड और शहरी लचीलेपन को संतुलित करने के लिए कठिन निर्णय लें।</p><p>मानसून की तैयारी से लेकर मेट्रो के विस्तार और कचरा प्रबंधन तक, हर विकल्प आपके शहर के भविष्य को प्रभावित करता है। क्या आप आर्थिक विकास, विरासत संरक्षण या पर्यावरणीय स्थिरता को प्राथमिकता देंगे? आपका नेतृत्व चेन्नई के भाग्य को परिभाषित करेगा!</p>",
+                "ta": "<p><strong>சென்னை: மேயர்களின் நகரம்</strong> என்பது சென்னை மேயரின் சவாலான பாத்திரத்தை வீரர்கள் ஏற்கும் ஒரு மூலோபாய பலகை விளையாட்டு. பொது நம்பிக்கை, நகர நிதி மற்றும் நகர்ப்புற தாங்குதிறன் ஆகியவற்றை சமநிலைப்படுத்த கடினமான முடிவுகளை எடுத்து, இந்த பெரிய இந்திய பெருநகரத்தின் துடிப்பான நிலப்பரப்பில் செல்லவும்.</p><p>பருவமழைக்கான தயாரிப்பு முதல் மெட்ரோவை விரிவுபடுத்துதல் மற்றும் கழிவு மேலாண்மை வரை, ஒவ்வொரு தேர்வும் உங்கள் நகரத்தின் எதிர்காலத்தை பாதிக்கிறது. பொருளாதார வளர்ச்சி, பாரம்பரிய பாதுகாப்பு அல்லது சுற்றுச்சூழல் நிலைத்தன்மைக்கு முன்னுரிமை அளிப்பீர்களா? உங்கள் தலைமை சென்னையின் தலைவிதியை தீர்மானிக்கும்!</p>"
+            },
+            "title": {
+                "en": "About",
+                "es": "Acerca de",
+                "hi": "के बारे में",
+                "ta": "பற்றி"
+            }
+        }
+    ],
+    "name": {
+        "en": "Chennai: City of Mayors",
+        "es": "Chennai: Ciudad de Alcaldes",
+        "hi": "चेन्नई: महापौरों का शहर",
+        "ta": "சென்னை: மேயர்களின் நகரம்"
+    },
+    "playerColors": ["text-red-600", "text-blue-600", "text-green-600", "text-yellow-600"],
+    "resources": [
+        {
+            "barColor": "bg-blue-500",
+            "icon": "InfoIcon",
+            "initialValue": 100,
+            "name": {
+                "en": "Public Trust",
+                "es": "Confianza Pública",
+                "hi": "सार्वजनिक विश्वास",
+                "ta": "பொது நம்பிக்கை"
+            },
+            "maximumValue": 200,
+            "minimumValue": 0
+        },
+        {
+            "barColor": "bg-green-500",
+            "icon": "MoneyIcon",
+            "initialValue": 2000,
+            "name": {
+                "en": "City Funds",
+                "es": "Fondos de la Ciudad",
+                "hi": "शहर निधि",
+                "ta": "நகர நிதி"
+            },
+            "maximumValue": 4000,
+            "minimumValue": 0
+        },
+        {
+            "barColor": "bg-orange-500",
+            "icon": "TimeIcon",
+            "initialValue": 50,
+            "name": {
+                "en": "Urban Resilience",
+                "es": "Resiliencia Urbana",
+                "hi": "शहरी लचीलापन",
+                "ta": "நகர்ப்புற தாங்குதிறன்"
+            },
+            "maximumValue": 100,
+            "minimumValue": 0
+        }
+    ],
+    "communityChestCards": [
+        {
+            "description": {
+                "en": "Thousands of citizens participated in a city-wide cleanup drive, boosting morale and the city's appearance.",
+                "es": "Miles de ciudadanos participaron en una campaña de limpieza en toda la ciudad, lo que aumentó la moral y la apariencia de la ciudad.",
+                "hi": "शहरव्यापी सफाई अभियान में हजारों नागरिकों ने भाग लिया, जिससे मनोबल और शहर की उपस्थिति में वृद्धि हुई।",
+                "ta": "ஆயிரக்கணக்கான குடிமக்கள் நகர அளவிலான துப்புரவு இயக்கத்தில் பங்கேற்றனர், இது மன உறுதியையும் நகரத்தின் தோற்றத்தையும் மேம்படுத்தியது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 25
+                },
+                {
+                    "name": "urban resilience",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "You invested in new public libraries and learning centers, enhancing educational opportunities for citizens.",
+                "es": "Invertiste en nuevas bibliotecas públicas y centros de aprendizaje, mejorando las oportunidades educativas para los ciudadanos.",
+                "hi": "आपने नई सार्वजनिक पुस्तकालयों और शिक्षण केंद्रों में निवेश किया, जिससे नागरिकों के लिए शैक्षिक अवसरों में वृद्धि हुई।",
+                "ta": "புதிய பொது நூலகங்கள் மற்றும் கற்றல் மையங்களில் நீங்கள் முதலீடு செய்துள்ளீர்கள், குடிமக்களுக்கான கல்வி வாய்ப்புகளை மேம்படுத்தியுள்ளீர்கள்."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 15
+                },
+                {
+                    "name": "city funds",
+                    "value": -150
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "A public health campaign against plastic use or for hygiene shows remarkable results, leading to a healthier city.",
+                "es": "Una campaña de salud pública contra el uso de plástico o a favor de la higiene muestra resultados notables, lo que lleva a una ciudad más saludable.",
+                "hi": "प्लास्टिक के उपयोग के खिलाफ या स्वच्छता के लिए एक सार्वजनिक स्वास्थ्य अभियान उल्लेखनीय परिणाम दिखाता है, जिससे एक स्वस्थ शहर बनता है।",
+                "ta": "பிளாஸ்டிக் பயன்பாட்டிற்கு எதிரான அல்லது சுகாதாரத்திற்கான ஒரு பொது சுகாதார பிரச்சாரம் குறிப்பிடத்தக்க முடிவுகளைக் காட்டுகிறது, இது ஒரு ஆரோக்கியமான நகரத்திற்கு வழிவகுக்கிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 10
+                },
+                {
+                    "name": "urban resilience",
+                    "value": 10
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Due to efficient spending and higher than projected revenues, the city experiences an unexpected budget surplus!",
+                "es": "Debido a un gasto eficiente y a ingresos superiores a los proyectados, ¡la ciudad experimenta un superávit presupuestario inesperado!",
+                "hi": "कुशल खर्च और अनुमानित राजस्व से अधिक के कारण, शहर को अप्रत्याशित बजट अधिशेष का अनुभव होता है!",
+                "ta": "திறமையான செலவு மற்றும் திட்டமிடப்பட்டதை விட அதிக வருவாய் காரணமாக, நகரத்திற்கு எதிர்பாராத பட்ஜெட் உபரி ஏற்படுகிறது!"
+            },
+            "resourceChanges": [
+                {
+                    "name": "city funds",
+                    "value": 300
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "A successful local arts and culture festival celebrates Chennai's vibrant traditions, drawing crowds and boosting community spirit.",
+                "es": "Un exitoso festival local de arte y cultura celebra las vibrantes tradiciones de Chennai, atrayendo multitudes y fomentando el espíritu comunitario.",
+                "hi": "चेन्नई की जीवंत परंपराओं का जश्न मनाने वाला एक सफल स्थानीय कला और संस्कृति उत्सव, भीड़ खींचता है और सामुदायिक भावना को बढ़ावा देता है।",
+                "ta": "சென்னையின் துடிப்பான மரபுகளைக் கொண்டாடும் ஒரு வெற்றிகரமான உள்ளூர் கலை மற்றும் கலாச்சார விழா, கூட்டத்தை ஈர்த்து சமூக உணர்வை மேம்படுத்துகிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 15
+                },
+                {
+                    "name": "city funds",
+                    "value": -50
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Your administration receives national recognition for transparent governance and citizen-centric policies.",
+                "es": "Su administración recibe reconocimiento nacional por su gobernanza transparente y políticas centradas en el ciudadano.",
+                "hi": "आपके प्रशासन को पारदर्शी शासन और नागरिक-केंद्रित नीतियों के लिए राष्ट्रीय मान्यता मिलती है।",
+                "ta": "உங்கள் நிர்வாகம் வெளிப்படையான நிர்வாகம் மற்றும் குடிமக்களை மையப்படுத்திய கொள்கைகளுக்காக தேசிய அங்கீகாரத்தைப் பெறுகிறது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 30
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Urgent road repairs completed ahead of schedule, significantly improving traffic flow, safety, and public satisfaction.",
+                "es": "Reparaciones urgentes de carreteras completadas antes de lo previsto, mejorando significativamente el flujo de tráfico, la seguridad y la satisfacción pública.",
+                "hi": "समय से पहले पूरी हुई सड़क की तत्काल मरम्मत, यातायात प्रवाह, सुरक्षा और सार्वजनिक संतुष्टि में महत्वपूर्ण सुधार।",
+                "ta": "அவசர சாலை பழுதுபார்ப்புகள் திட்டமிட்டதற்கு முன்னதாகவே முடிக்கப்பட்டன, போக்குவரத்து நெரிசல், பாதுகாப்பு மற்றும் பொது திருப்தி ஆகியவற்றில் குறிப்பிடத்தக்க முன்னேற்றம் ஏற்பட்டது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "urban resilience",
+                    "value": 10
+                },
+                {
+                    "name": "city funds",
+                    "value": -200
+                }
+            ]
+        },
+        {
+            "description": {
+                "en": "Transformed a neglected urban space into a beautiful and functional public park, enhancing livability and community well-being.",
+                "es": "Transformaste un espacio urbano descuidado en un hermoso y funcional parque público, mejorando la habitabilidad y el bienestar de la comunidad.",
+                "hi": "एक उपेक्षित शहरी स्थान को एक सुंदर और कार्यात्मक सार्वजनिक पार्क में बदल दिया गया, जिससे रहने की क्षमता और सामुदायिक कल्याण में वृद्धि हुई।",
+                "ta": "புறக்கணிக்கப்பட்ட நகர்ப்புற இடத்தை ஒரு அழகான மற்றும் செயல்படும் பொது பூங்காவாக மாற்றியது, வாழும் திறனையும் சமூக நல்வாழ்வையும் மேம்படுத்தியது."
+            },
+            "resourceChanges": [
+                {
+                    "name": "public trust",
+                    "value": 20
+                },
+                {
+                    "name": "city funds",
+                    "value": -100
+                }
+            ]
+        }
+    ],
+    "groundingInReality": true,
+    "positivity": 0.5,
+    "pregeneratedScenarios": {
+        "Mylapore Heritage Zone": [
+            {
+                "title": {
+                    "en": "The Fading Echoes of Agraharams",
+                    "es": "Los Ecos Desvanecidos de los Agraharams",
+                    "hi": "अग्रहारम की फीकी पड़ती गूँज",
+                    "ta": "அக்ரஹாரங்களின் மங்கிவரும் எதிரொலிகள்"
+                },
+                "description": {
+                    "en": "You stand before a cluster of aging Agraharam houses in Mylapore, properties owned by the venerable Kapaleeshwarar Temple Trust. These traditional homes, with their unique architectural style, are showing significant signs of wear and tear. A proposal has been put forth: demolish these structures and build modern, multi-storey apartments that could house more families and generate substantial revenue for city development. However, heritage conservationists and many long-time residents are passionately advocating for their preservation, fearing the irreversible loss of Mylapore's cultural soul.",
+                    "es": "Te encuentras ante un conjunto de antiguas casas Agraharam en Mylapore, propiedades de la venerable Fideicomiso del Templo Kapaleeshwarar. Estas casas tradicionales, con su estilo arquitectónico único, muestran importantes signos de deterioro. Se ha presentado una propuesta: demoler estas estructuras y construir apartamentos modernos de varios pisos que podrían albergar a más familias y generar ingresos sustanciales para el desarrollo de la ciudad. Sin embargo, los conservacionistas del patrimonio y muchos residentes de toda la vida abogan apasionadamente por su preservación, temiendo la pérdida irreversible del alma cultural de Mylapore.",
+                    "hi": "आप मायलापुर में अग्रहारम के पुराने घरों के एक समूह के सामने खड़े हैं, जो पूजनीय कपालेश्वर मंदिर ट्रस्ट की संपत्ति हैं। ये पारंपरिक घर, अपनी अनूठी स्थापत्य शैली के साथ, जीर्ण-शीर्णता के महत्वपूर्ण संकेत दिखा रहे हैं। एक प्रस्ताव रखा गया है: इन संरचनाओं को ध्वस्त कर आधुनिक, बहुमंजिला अपार्टमेंट बनाना जो अधिक परिवारों को समायोजित कर सकें और शहर के विकास के लिए पर्याप्त राजस्व उत्पन्न कर सकें। हालांकि, विरासत संरक्षणवादी और कई लंबे समय से रहने वाले निवासी उनके संरक्षण के लिए passionately वकालत कर रहे हैं, मायलापुर की सांस्कृतिक आत्मा के अपरिवर्तनीय नुकसान के डर से।",
+                    "ta": "நீங்கள் மயிலாப்பூரில் உள்ள பழைமையான அக்ரஹார வீடுகளின் தொகுப்பிற்கு முன் நிற்கிறீர்கள், இவை புகழ்பெற்ற கபாலீஸ்வரர் கோவில் அறக்கட்டளைக்கு சொந்தமானவை. தனித்துவமான கட்டிடக்கலை பாணியுடன் கூடிய இந்த பாரம்பரிய வீடுகள், கணிசமான சிதைவு அறிகுறிகளைக் காட்டுகின்றன. இந்த கட்டமைப்புகளை இடித்துவிட்டு, அதிகமான குடும்பங்களுக்கு இடமளித்து, நகர வளர்ச்சிக்கு கணிசமான வருவாயை ஈட்டக்கூடிய நவீன, பல மாடி குடியிருப்புகளை கட்ட ஒரு முன்மொழிவு வைக்கப்பட்டுள்ளது. இருப்பினும், பாரம்பரிய ஆர்வலர்களும் பல நீண்டகால குடியிருப்பாளர்களும் மயிலாப்பூரின் கலாச்சார அடையாளத்தை ஈடுசெய்ய முடியாத இழப்பிற்கு அஞ்சி, அவற்றைப் பாதுகாக்க passionately வாதிடுகின்றனர்."
+                },
+                "choices": [
+                    {
+                        "text": {
+                            "en": "Champion Modern Redevelopment.",
+                            "es": "Apoyar la Reurbanización Moderna.",
+                            "hi": "आधुनिक पुनर्विकास का समर्थन करें।",
+                            "ta": "நவீன மறுவடிவமைப்பை ஆதரிக்கவும்."
+                        },
+                        "outcome": {
+                            "explanation": {
+                                "en": "The old structures are replaced with new, efficient buildings, addressing housing needs and bringing in more funds. However, a significant part of Mylapore's unique architectural heritage is lost, and some residents feel disconnected from their past.",
+                                "es": "Las estructuras antiguas son reemplazadas por edificios nuevos y eficientes, abordando las necesidades de vivienda y generando más fondos. Sin embargo, una parte significativa del patrimonio arquitectónico único de Mylapore se pierde, y algunos residentes se sienten desconectados de su pasado.",
+                                "hi": "पुरानी संरचनाओं को नए, कुशल भवनों से बदल दिया जाता है, जिससे आवास आवश्यकताओं को पूरा किया जाता है और अधिक धन आता है। हालांकि, मायलापुर की अनूठी स्थापत्य विरासत का एक महत्वपूर्ण हिस्सा खो जाता है, और कुछ निवासी अपने अतीत से कटा हुआ महसूस करते हैं।",
+                                "ta": "பழைய கட்டமைப்புகள் புதிய, திறமையான கட்டிடங்களால் மாற்றப்பட்டு, வீட்டுத் தேவைகளைப் பூர்த்தி செய்து அதிக நிதியைக் கொண்டு வருகின்றன. இருப்பினும், மயிலாப்பூரின் தனித்துவமான கட்டிடக்கலை பாரம்பரியத்தின் கணிசமான பகுதி இழக்கப்படுகிறது, மேலும் சில குடியிருப்பாளர்கள் தங்கள் கடந்த காலத்திலிருந்து துண்டிக்கப்பட்டதாக உணர்கிறார்கள்."
+                            },
+                            "resourceChanges": [
+                                {
+                                    "name": "city funds",
+                                    "value": 30
+                                },
+                                {
+                                    "name": "public trust",
+                                    "value": -20
+                                },
+                                {
+                                    "name": "urban resilience",
+                                    "value": 10
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "text": {
+                            "en": "Invest in Heritage Restoration.",
+                            "es": "Invertir en Restauración del Patrimonio.",
+                            "hi": "विरासत बहाली में निवेश करें।",
+                            "ta": "பாரம்பரிய மறுசீரமைப்பில் முதலீடு செய்யவும்."
+                        },
+                        "outcome": {
+                            "explanation": {
+                                "en": "The historic Agraharam houses are beautifully restored, preserving Mylapore's unique charm and cultural identity. While this requires a significant investment and may not maximize housing capacity, it strengthens community bonds and attracts heritage tourism.",
+                                "es": "Las históricas casas Agraharam son bellamente restauradas, preservando el encanto único y la identidad cultural de Mylapore. Aunque esto requiere una inversión significativa y puede que no maximice la capacidad de vivienda, fortalece los lazos comunitarios y atrae el turismo cultural.",
+                                "hi": "ऐतिहासिक अग्रहारम घरों को खूबसूरती से बहाल किया जाता है, जिससे मायलापुर का अनूठा आकर्षण और सांस्कृतिक पहचान बनी रहती है। हालांकि इसमें एक महत्वपूर्ण निवेश की आवश्यकता होती है और यह आवास क्षमता को अधिकतम नहीं कर सकता है, यह सामुदायिक संबंधों को मजबूत करता है और विरासत पर्यटन को आकर्षित करता है।",
+                                "ta": "வரலாற்று சிறப்புமிக்க அக்ரஹார வீடுகள் அழகாக மீட்டெடுக்கப்பட்டு, மயிலாப்பூரின் தனித்துவமான வசீகரத்தையும் கலாச்சார அடையாளத்தையும் பாதுகாக்கின்றன. இதற்கு கணிசமான முதலீடு தேவைப்படலாம் மற்றும் வீட்டு வசதி திறனை அதிகரிக்காமல் போகலாம் என்றாலும், இது சமூக பிணைப்புகளை வலுப்படுத்துகிறது மற்றும் பாரம்பரிய சுற்றுலாவை ஈர்க்கிறது."
+                            },
+                            "resourceChanges": [
+                                {
+                                    "name": "city funds",
+                                    "value": -25
+                                },
+                                {
+                                    "name": "public trust",
+                                    "value": 30
+                                },
+                                {
+                                    "name": "urban resilience",
+                                    "value": 5
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "sourceUrl": "https://www.mylaporetimes.com/2021/09/mylapore-end-of-a-heritage-precinct/",
+                "sourceTitle": {
+                    "en": "Mylapore -End of a heritage precinct?, The gems Mylapore has, but rarely notices, Social sustainability in a culturally sound but disrupted urban fabric: The case of Mylapore",
+                    "es": "Mylapore - Fin de un recinto patrimonial?, Las gemas que Mylapore tiene, pero rara vez nota, Sostenibilidad social en un tejido urbano culturalmente sólido pero alterado: el caso de Mylapore",
+                    "hi": "मायलापुर - एक विरासत क्षेत्र का अंत?, मायलापुर में मौजूद रत्न, लेकिन जिन पर शायद ही कभी ध्यान दिया जाता है, सांस्कृतिक रूप से सुदृढ़ लेकिन बाधित शहरी ताने-बाने में सामाजिक स्थिरता: मायलापुर का एक केस स्टडी",
+                    "ta": "மயிலாப்பூர் - ஒரு பாரம்பரியப் பகுதியின் முடிவு?, மயிலாப்பூரில் உள்ள ரத்தினங்கள், ஆனால் அரிதாகவே கவனிக்கப்படுபவை, கலாச்சார ரீதியாக ஒலிக்கும் ஆனால் சீர்குலைந்த நகர்ப்புற அமைப்பில் சமூக நிலைத்தன்மை: மயிலாப்பூர் ஒரு வழக்கு ஆய்வு"
+                },
+                "id": "mylapore-heritage-zone-0",
+                "custom": false,
+                "enabled": true
+            }
+        ]
+    }
 }

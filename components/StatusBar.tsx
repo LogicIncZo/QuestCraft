@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import type { AppStats } from '../types';
 import { TokenIcon, MoneyIcon, TimeIcon, AuditLogIcon, ChatIcon, ChipIcon } from '../constants';
@@ -18,23 +16,42 @@ interface StatusBarProps {
 
 const formatTime = (totalSeconds: number): string => {
     if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00:00';
-    const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-    const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+    const hours = Math.floor(totalSeconds / 3600)
+        .toString()
+        .padStart(2, '0');
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+        .toString()
+        .padStart(2, '0');
     const seconds = (totalSeconds % 60).toString().padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
 };
 
-const StatItem: React.FC<{ icon: React.ReactNode; label?: string; value: string | number; tooltip: string; valueClass?: string; }> = ({ icon, label, value, tooltip, valueClass = 'text-orange-300' }) => (
+const StatItem: React.FC<{
+    icon: React.ReactNode;
+    label?: string;
+    value: string | number;
+    tooltip: string;
+    valueClass?: string;
+}> = ({ icon, label, value, tooltip, valueClass = 'text-orange-300' }) => (
     <div className="flex items-center gap-2" title={tooltip}>
         <div className="text-gray-400">{icon}</div>
         <div className="flex items-baseline gap-1.5">
-            {label && <span className="hidden sm:inline text-sm font-medium text-gray-200">{label}:</span>}
+            {label && (
+                <span className="hidden sm:inline text-sm font-medium text-gray-200">{label}:</span>
+            )}
             <span className={`text-sm font-semibold font-mono ${valueClass}`}>{value}</span>
         </div>
     </div>
 );
 
-const StatusBar: React.FC<StatusBarProps> = ({ stats, modelName, isAiConnected, onNavigateToSettings, onOpenAuditLog, onOpenChat }) => {
+const StatusBar: React.FC<StatusBarProps> = ({
+    stats,
+    modelName,
+    isAiConnected,
+    onNavigateToSettings,
+    onOpenAuditLog,
+    onOpenChat,
+}) => {
     const { t } = useTranslation();
     if (!stats) return null;
 
@@ -50,7 +67,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ stats, modelName, isAiConnected, 
         tokenColorClass = 'text-yellow-400';
     }
 
-    const tokenTooltip = isUsingOverrideKey 
+    const tokenTooltip = isUsingOverrideKey
         ? `Using personal API key. Usage not tracked against shared limit.`
         : `Shared Limit: ${tokenUsage.used.toLocaleString()} / ${tokenUsage.limit.toLocaleString()} tokens used.`;
 
@@ -59,7 +76,9 @@ const StatusBar: React.FC<StatusBarProps> = ({ stats, modelName, isAiConnected, 
             <div className="container mx-auto h-full flex items-center justify-between px-4">
                 {/* Left Side */}
                 <div className="flex items-center gap-3">
-                    <span title={t('aiStatusTitle')} className="text-lg">✨</span>
+                    <span title={t('aiStatusTitle')} className="text-lg">
+                        ✨
+                    </span>
                     {isAiConnected && modelName && (
                         <button
                             onClick={onNavigateToSettings}
@@ -75,10 +94,18 @@ const StatusBar: React.FC<StatusBarProps> = ({ stats, modelName, isAiConnected, 
                         </button>
                     )}
                     <div className="w-px h-5 bg-gray-700"></div>
-                    <button onClick={onOpenChat} title={t('chatTitle')} className="text-gray-400 hover:text-white">
+                    <button
+                        onClick={onOpenChat}
+                        title={t('chatTitle')}
+                        className="text-gray-400 hover:text-white"
+                    >
                         <ChatIcon className="w-5 h-5" />
                     </button>
-                    <button onClick={onOpenAuditLog} title={t('auditLogTitle')} className="text-gray-400 hover:text-white">
+                    <button
+                        onClick={onOpenAuditLog}
+                        title={t('auditLogTitle')}
+                        className="text-gray-400 hover:text-white"
+                    >
                         <AuditLogIcon className="w-5 h-5" />
                     </button>
                 </div>
@@ -93,7 +120,11 @@ const StatusBar: React.FC<StatusBarProps> = ({ stats, modelName, isAiConnected, 
                     <div className="hidden sm:flex">
                         <StatItem
                             icon={<MoneyIcon className="w-4 h-4" />}
-                            value={stats.totalCost.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 4 })}
+                            value={stats.totalCost.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 4,
+                            })}
                             tooltip="Estimated cost based on gemini-2.5-flash pricing. Other models may vary."
                         />
                     </div>

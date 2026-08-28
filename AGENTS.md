@@ -37,7 +37,7 @@ import type { QuestConfig, Player, GamePhase } from './types';
 import React, { useState, useCallback, useEffect } from 'react';
 
 // External dependencies
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from '@google/genai';
 
 // Local imports (group by directory)
 import { statsService } from './services/statsService';
@@ -58,7 +58,7 @@ import { getLocalizedString } from '../utils/localization';
 ```typescript
 const Component: React.FC<Props> = ({ prop1, prop2, prop3 }) => {
     const [state, setState] = useState<Type>(defaultValue);
-    
+
     return (
         <div className="flex flex-col space-y-4">
             {/* JSX content */}
@@ -131,16 +131,22 @@ const loadFromStorage = <T>(key: string, defaultValue: T): T => {
 ### State Management Patterns
 
 **React State:**
+
 - Use `useState` for component-local state
 - Use `useCallback` for event handlers to prevent unnecessary re-renders
 - Use `useEffect` for side effects with proper cleanup
 
 **Persistent State:**
+
 ```typescript
 // Service pattern - singletons exported as objects
 export const settingsService = {
-    getSettings: (): AppSettings => { /* ... */ },
-    saveSettings: (settings: AppSettings): void => { /* ... */ },
+    getSettings: (): AppSettings => {
+        /* ... */
+    },
+    saveSettings: (settings: AppSettings): void => {
+        /* ... */
+    },
 };
 
 // Event-driven updates
@@ -150,6 +156,7 @@ const dispatchUpdateEvent = () => {
 ```
 
 **Best Practices:**
+
 - **Never store API keys** in localStorage - use sessionStorage or environment variables
 - **Dispatch events** when service state changes (see `STATS_UPDATED_EVENT`, `SETTINGS_UPDATED_EVENT`)
 - **Use TypeScript interfaces** for all state objects
@@ -169,6 +176,7 @@ const questName = getLocalizedString(config.name, language); // Fallbacks to 'en
 ```
 
 **Key Points:**
+
 - **Supported languages:** en, es, hi, ta (defined in types.ts:149)
 - **Translation files:** JSON files in `locales/` directory
 - **Fallback strategy:** Always fall back to English ('en') if current language lacks translation
@@ -186,19 +194,19 @@ interface ComponentProps {
 
 const Component: React.FC<ComponentProps> = ({ requiredProp, optionalProp, onAction }) => {
     const [localState, setLocalState] = useState<Type>(initialValue);
-    
+
     const handleAction = useCallback((data: SomeType) => {
         // Handler logic
         onAction(data);
     }, [onAction]);
-    
+
     useEffect(() => {
         // Side effect logic
         return () => {
             // Cleanup
         };
     }, [dependencies]);
-    
+
     return (
         <div className="tailwind-classes">
             {/* JSX content */}
@@ -208,6 +216,7 @@ const Component: React.FC<ComponentProps> = ({ requiredProp, optionalProp, onAct
 ```
 
 **Requirements:**
+
 - Use `React.FC` type annotation for functional components
 - Define props interfaces at the top of component files
 - Use `useCallback` for event handlers passed to children
@@ -244,33 +253,40 @@ const Component: React.FC<ComponentProps> = ({ requiredProp, optionalProp, onAct
 ## Important Notes
 
 ### No Testing Framework
+
 - **No tests exist** in this repository
 - **No testing commands** are available
 - **Recommendation:** Consider adding Vitest or Jest + React Testing Library
 
 ### No Linting/Formatting
+
 - **No ESLint configuration** exists
 - **No Prettier configuration** exists
 - **Recommendation:** Add code quality tools
 
 ### API Security
+
 - **Never commit API keys** to the repository
 - **Use environment variables** for development keys
 - **Use sessionStorage** for user-provided API keys
 - **Mask API keys in logs** using the `maskApiKey` utility function
 
 ### Logger Usage
+
 - Import from `services/logger.ts`
 - Respects `DEV_MODE` and `DEBUG_LEVEL` environment variables
 - Use appropriate log levels: `logger.info()`, `logger.warn()`, `logger.error()`
 
 ### Event System
+
 Services dispatch custom events for state changes:
+
 - `STATS_UPDATED_EVENT` - When usage statistics change
 - `SETTINGS_UPDATED_EVENT` - When app settings change
 - `CONNECTIVITY_UPDATED_EVENT` - When AI connectivity status changes
 
 ### Performance Considerations
+
 - React components use `useCallback` and `useMemo` where appropriate
 - Event listeners are properly cleaned up in useEffect returns
 - localStorage operations are minimized and cached when possible

@@ -63,7 +63,9 @@ export function getVersionedItem<T>(storage: Storage, key: string): T | null {
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object' && 'schemaVersion' in parsed) {
             if (parsed.schemaVersion !== CURRENT_SCHEMA_VERSION) {
-                logger.warn(`[Storage] "${key}" has schemaVersion ${parsed.schemaVersion}, expected ${CURRENT_SCHEMA_VERSION}. Discarding stale data.`);
+                logger.warn(
+                    `[Storage] "${key}" has schemaVersion ${parsed.schemaVersion}, expected ${CURRENT_SCHEMA_VERSION}. Discarding stale data.`
+                );
                 safeRemoveItem(storage, key);
                 return null;
             }

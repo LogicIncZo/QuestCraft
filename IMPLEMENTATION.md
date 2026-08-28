@@ -21,22 +21,26 @@ This implementation provides:
 ### New Files Created
 
 **Core Services:**
+
 - `services/modelCapabilityDetector.ts` - Model capability registry and detection
 - `services/promptManager.ts` - Adaptive prompt loading with fallback mechanisms
 - `services/webSearchService.ts` - Universal web search abstraction (Exa + DuckDuckGo fallback)
 - `services/statsService.ts` - Enhanced with web search tracking
 
 **Testing Infrastructure:**
+
 - `services/promptTester.ts` - Automated test suite runner
 - `services/modelEvalService.ts` - Model evaluation and scoring
 - `services/questPreGenerator.ts` - Batch pre-generation with progress tracking
 - `tests/promptTestCases.ts` - Test case definitions
 
 **Scripts:**
+
 - `scripts/test-prompts.sh` - Shell script for running test suites
 - `scripts/generate-test-report.js` - Test report generator
 
 **Modified Files:**
+
 - `types.ts` - Added web search interfaces
 - `services/statsService.ts` - Added web search tracking methods
 - `package.json` - Added test scripts
@@ -48,6 +52,7 @@ This implementation provides:
 ### 1. Model-Aware Prompts
 
 **Capability Detection:**
+
 ```typescript
 const capabilities = detectCapabilities('openai/gpt-4o');
 // Returns: {
@@ -60,12 +65,14 @@ const capabilities = detectCapabilities('openai/gpt-4o');
 ```
 
 **Adaptive Prompt Variants:**
+
 - Removes JSON schema references for models that don't support them
 - Adds tool instructions for models with capability
 - Adds thinking instructions for models with `supportsThinking`
 - Language constraint warnings for limited multilingual support
 
 **Robust JSON Extraction:**
+
 - Direct JSON.parse (fastest)
 - Markdown code block extraction
 - Bracket boundary extraction
@@ -74,6 +81,7 @@ const capabilities = detectCapabilities('openai/gpt-4o');
 ### 2. Universal Web Search (BYOLLM Only)
 
 **Multi-Engine Support:**
+
 ```typescript
 webSearchService.search(query, {
     engine: SearchEngine.EXA,      // $4/1000 results
@@ -83,17 +91,19 @@ webSearchService.search(query, {
 ```
 
 **Grounding Integration:**
+
 ```typescript
 const prompt = webSearchService.generateGroundedPrompt(
     basePrompt,
-    searchResults,  // Top 3 results
-    2000            // Context limit
+    searchResults, // Top 3 results
+    2000 // Context limit
 );
 
 // Automatically injects search results into prompt
 ```
 
 **Cost Tracking:**
+
 ```typescript
 statsService.trackWebSearch(resultsCount, failed);
 // Tracks: webSearchRequests, webSearchResults, webSearchFailures
@@ -102,15 +112,17 @@ statsService.trackWebSearch(resultsCount, failed);
 ### 3. Pre-Generation Strategy
 
 **Batch Search Approach:**
+
 ```typescript
 // All searches run in parallel (no user waiting)
-const searchPromises = propertyLocations.map(loc => 
+const searchPromises = propertyLocations.map((loc) =>
     webSearchService.search(query, { engine: 'exa' })
 );
 const searchResultsArray = await Promise.all(searchPromises);
 ```
 
 **Progress Feedback:**
+
 ```
 onProgress('Starting web searches...', 5);
 onProgress('Generating scenarios...', 25);
@@ -118,6 +130,7 @@ onProgress('Pre-generation complete!', 100);
 ```
 
 **Graceful Fallback:**
+
 - If web search fails for a location, automatically retries without grounding
 - Creates placeholder scenarios with clear user feedback
 - Tracks failures for monitoring
@@ -125,12 +138,14 @@ onProgress('Pre-generation complete!', 100);
 ### 4. Testing Framework
 
 **Automated Test Suite:**
+
 ```bash
 npm run test:prompts --models model1,model2,model3 --no-search
 npm run test:prompts --models gpt-4o,gemini-2.5-pro --with-search
 ```
 
 **Test Coverage:**
+
 - Basic scenario structure
 - JSON vs text output
 - Single vs dual choice
@@ -139,12 +154,14 @@ npm run test:prompts --models gpt-4o,gemini-2.5-pro --with-search
 - Required field validation
 
 **Scoring System:**
+
 - Quality score (40% weight) - Pass rate
 - Latency score (30% weight) - Response time
 - Cost score (30% weight) - Token usage
 - Overall score (0-100) - Combined metric
 
 **Report Generation:**
+
 - Summary statistics
 - Model-by-model breakdown
 - Best performing model recommendation
@@ -171,16 +188,19 @@ npm run test:prompts --models gpt-4o,gemini-2.5-pro --with-search
 ### BYOLLM Tier (User-Provided Keys)
 
 **Engines Available:**
+
 1. **Exa** - $4 per 1,000 results (recommended for facts)
 2. **DuckDuckGo** - Free, no API key (good fallback)
 3. **Brave** - Free, requires API key (optional)
 
 **Cost Structure:**
+
 - Exa: ~$0.004 per result
 - Average scenario (3 results × 2 locations): ~$0.024
 - Full quest (20 locations): ~$0.16
 
 **Search Result Format:**
+
 ```typescript
 interface SearchResult {
     title: string;
@@ -194,12 +214,14 @@ interface SearchResult {
 ### Community Tier (Free, No Web Search)
 
 **Important:**
+
 - `:online` variant is NOT used (per requirements)
 - All scenarios generated in FICTIONAL mode only
 - No web search costs incurred
 - Clear user experience: No waiting for searches
 
 **Alternative:**
+
 - If user wants reality grounding, prompt to provide own API key (BYOLLM tier)
 
 ---
@@ -209,6 +231,7 @@ interface SearchResult {
 ### For Developers
 
 **Testing a new prompt:**
+
 ```typescript
 const testCases = require('../tests/promptTestCases').scenarioGenerationTests;
 
@@ -220,16 +243,18 @@ const results = await promptTester.runTestSuite(
 ```
 
 **Enabling web search for a quest:**
+
 ```typescript
 // In Quest Maker Wizard or GamePage
 const result = await questPreGenerator.preGenerateQuest(
     questConfig,
     languageCode,
-    true  // Enable reality grounding
+    true // Enable reality grounding
 );
 ```
 
 **Tracking web search costs:**
+
 ```typescript
 const stats = statsService.getWebSearchStats();
 console.log(`Web searches: ${stats.requests}`);
