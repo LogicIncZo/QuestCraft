@@ -10,6 +10,7 @@ import {
     aiChoiceSchema
 } from './schemas';
 import { getLocalizedString } from "../utils/localization";
+import { apiRequestBody } from "../shared/actions";
 import { logger } from "./logger";
 
 export class TokenLimitExceededError extends Error {
@@ -250,7 +251,7 @@ export const testConnection = async (settings: AiProviderSettings): Promise<void
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'testConnection' })
+            body: JSON.stringify(apiRequestBody('testConnection', undefined))
         });
         if (!response.ok) {
             const errorText = await response.text();
@@ -313,7 +314,7 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'enhanceQuestIdea', payload: { idea, ageGroup } })
+                    body: JSON.stringify(apiRequestBody('enhanceQuestIdea', { idea, ageGroup }))
                 });
                 const text = await processCommunityGatewayStream(response);
                 // Token usage from community tier is not available due to streaming
@@ -395,7 +396,7 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'generateRandomQuestIdea', payload: { ageGroup } })
+                    body: JSON.stringify(apiRequestBody('generateRandomQuestIdea', { ageGroup }))
                 });
                 const text = await processCommunityGatewayStream(response);
                 return text;
@@ -486,10 +487,7 @@ export const generateQuestOutline = async (
                  const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'generateQuestOutline', 
-                        payload: { idea, numLocations, positivity, groundingInReality, supportedLanguages, languageCode } 
-                    })
+                    body: JSON.stringify(apiRequestBody('generateQuestOutline', { idea, numLocations, positivity, groundingInReality, supportedLanguages, languageCode }))
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
@@ -602,10 +600,7 @@ export const generatePregeneratedScenarios = async (
                  const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'generatePregeneratedScenarios', 
-                        payload: { questConfig, location, numScenarios, languageCode } 
-                    })
+                    body: JSON.stringify(apiRequestBody('generatePregeneratedScenarios', { questConfig, location, numScenarios, languageCode }))
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
@@ -751,10 +746,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        action: 'generateDynamicScenario', 
-                        payload: { questConfig, player, location, languageCode } 
-                    })
+                    body: JSON.stringify(apiRequestBody('generateDynamicScenario', { questConfig, player, location, languageCode }))
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
@@ -1023,10 +1015,7 @@ export const chatManager = {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'chat',
-                        payload: { message, history, systemInstruction: currentSystemInstruction }
-                    })
+                    body: JSON.stringify(apiRequestBody('chat', { message, history, systemInstruction: currentSystemInstruction }))
                 });
                 if (!response.ok || !response.body) {
                     throw new Error(`Community Gateway Error: ${await response.text()}`);
