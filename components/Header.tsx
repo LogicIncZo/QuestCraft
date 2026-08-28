@@ -70,7 +70,11 @@ const Header: React.FC<HeaderProps> = ({
     return (
         <header className="flex-shrink-0 bg-gray-900/80 backdrop-blur-sm border-b border-gray-700 h-16 flex items-center justify-between px-4 z-30">
             <div className="flex items-center gap-4">
-                <button onClick={onMenuClick} className="text-gray-300 hover:text-white">
+                <button
+                    onClick={onMenuClick}
+                    className="text-gray-300 hover:text-white"
+                    aria-label="Open navigation menu"
+                >
                     <MenuIcon />
                 </button>
                 <button
