@@ -8,6 +8,7 @@ import type { ChatMessage, Page, QuestConfig } from '../types';
 import { useTranslation } from '../services/i18n';
 import { getLocalizedString } from '../utils/localization';
 import { DOC_LINKS } from '../constants';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 const converter = new showdown.Converter({
     ghCompatibleHeaderId: true,
@@ -193,7 +194,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ show, onClose, page, questConfi
                                         <div className="w-full text-center text-xs text-gray-400 italic py-2 border-b border-gray-700">{msg.content}</div>
                                    ) : (
                                      <div className={`p-3 rounded-lg ${isMaximized ? 'max-w-4xl' : 'max-w-lg'} ${msg.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-200'}`}>
-                                        <div className="prose prose-invert prose-p:my-0" dangerouslySetInnerHTML={{ __html: converter.makeHtml(msg.content) || (isLoading && msg.role === 'model' ? '...' : '') }} />
+                                        <div className="prose prose-invert prose-p:my-0" dangerouslySetInnerHTML={{ __html: sanitizeHtml(converter.makeHtml(msg.content)) || (isLoading && msg.role === 'model' ? '...' : '') }} />
                                         {msg.updatedQuestJson && page === 'maker' && (
                                             <div className="mt-2 pt-2 border-t border-gray-600">
                                                 <button

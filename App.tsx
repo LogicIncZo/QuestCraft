@@ -20,6 +20,7 @@ import AIAuditLogDrawer from './components/AIAuditLogDrawer';
 import ChatDrawer from './components/ChatDrawer';
 import HomePage from './components/HomePage';
 import { getLocalizedString } from './utils/localization';
+import { sanitizeHtml } from './utils/sanitizeHtml';
 import { useTranslation } from './services/i18n';
 import { logger } from './services/logger';
 
@@ -321,7 +322,7 @@ const App: React.FC = () => {
                 onClose={() => setOpenDrawerContent(null)}
             >
                 {() => (
-                    <div dangerouslySetInnerHTML={{ __html: openDrawerContent?.content || '' }} />
+                    <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(openDrawerContent?.content || '') }} />
                 )}
             </Drawer>
             <AIAuditLogDrawer show={showAuditLog} onClose={() => setShowAuditLog(false)} />
