@@ -289,6 +289,42 @@ function loadPrompt(fileName: keyof typeof promptTemplates, replacements: Record
     }, template);
 }
 
+
+// --- Security hardening (issue #56) ---
+
+const DEFAULT_ALLOWED_ORIGINS = [
+    'https://aipoly.vercel.app',
+    'https://quest-craft.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:4173',
+];
+
+const getAllowedOrigins = (): string[] => {
+    const extra = (process.env.ALLOWED_ORIGINS || '')
+        .split(',')
+        .map((o) => o.trim())
+        .filter(Boolean);
+    return [...DEFAULT_ALLOWED_ORIGINS, ...extra];
+};
+
+const isAllowedOrigin = (origin: string | null): boolean => {
+    if (!origin) return true; // non-browser clients (curl, server-to-server)
+    return getAllowedOrigins().includes(origin);
+};
+
+const corsHeaders = (origin: string | null): Record<string, string> => ({
+    'Access-Control-Allow-Origin': isAllowedOrigin(origin) && origin ? origin : '',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    Vary: 'Origin',
+});
+
+const MAX_CHAT_HISTORY_MESSAGES = 40;
+const MAX_CHAT_MESSAGE_CHARS = 8_000;
+const MAX_CHAT_HISTORY_CHARS = 32_000;
+
 const getOpenAIClient = () => {
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
@@ -416,12 +452,31 @@ async function handleGenerateScenarios(openai: OpenAI, payload: any, action: str
 
 async function handleChat(openai: OpenAI, payload: any) {
     const { message, history, systemInstruction } = payload;
+    const userMessage = String(message ?? '').slice(0, MAX_CHAT_MESSAGE_CHARS);
+
+    const validHistory = Array.isArray(history)
+        ? history.filter((m: any) =>
+              m &&
+              (m.role === 'user' || m.role === 'model') &&
+              typeof m.content === 'string')
+        : [];
+
+    // Server-side caps: keep the most recent messages within count + char budgets.
+    const kept: { role: string; content: string }[] = [];
+    let totalChars = 0;
+    for (let i = validHistory.length - 1; i >= 0; i--) {
+        const m = validHistory[i];
+        if (kept.length >= MAX_CHAT_HISTORY_MESSAGES || totalChars + m.content.length > MAX_CHAT_HISTORY_CHARS) break;
+        totalChars += m.content.length;
+        kept.unshift({ role: m.role, content: m.content.slice(0, MAX_CHAT_MESSAGE_CHARS) });
+    }
+
     const messages = [
-        { role: 'system', content: systemInstruction },
-        ...history.filter((m: any) => m.role === 'user' || m.role === 'model'),
-        { role: 'user', content: message }
+        { role: 'system', content: typeof systemInstruction === 'string' ? systemInstruction.slice(0, MAX_CHAT_MESSAGE_CHARS * 2) : '' },
+        ...kept,
+        { role: 'user', content: userMessage }
     ];
-    
+
     const response = await openai.chat.completions.create({
         model: COMMUNITY_MODEL,
         stream: true,
@@ -435,41 +490,68 @@ async function handleChat(openai: OpenAI, payload: any) {
 // --- Main Handler ---
 
 export default async function handler(req: Request) {
+  const origin = req.headers.get('origin');
+
+  if (req.method === 'OPTIONS') {
+    if (!isAllowedOrigin(origin)) {
+      return new Response('Forbidden', { status: 403 });
+    }
+    return new Response(null, {
+      status: 204,
+      headers: {
+        ...corsHeaders(origin),
+        'Access-Control-Max-Age': '86400',
+      },
+    });
+  }
+
   if (req.method !== 'POST') {
     return new Response('Method Not Allowed', { status: 405 });
   }
 
+  if (!isAllowedOrigin(origin)) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  let body: { action?: string; payload?: any };
   try {
-    const { action, payload } = await req.json();
+    body = await req.json();
+  } catch {
+    return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin) });
+  }
+
+  try {
+    const { action, payload } = body;
     const openai = getOpenAIClient();
 
     switch (action) {
       case 'testConnection':
-        return handleTestConnection(openai);
+        return await handleTestConnection(openai);
 
       case 'enhanceQuestIdea':
-        return handleEnhanceQuestIdea(openai, payload);
-      
+        return await handleEnhanceQuestIdea(openai, payload);
+
       case 'generateRandomQuestIdea':
-        return handleGenerateRandomQuestIdea(openai, payload);
+        return await handleGenerateRandomQuestIdea(openai, payload);
 
       case 'generateQuestOutline':
-        return handleGenerateQuestOutline(openai, payload);
+        return await handleGenerateQuestOutline(openai, payload);
 
       case 'generatePregeneratedScenarios':
       case 'generateDynamicScenario':
-        return handleGenerateScenarios(openai, payload, action);
-      
+        return await handleGenerateScenarios(openai, payload, action);
+
       case 'chat':
-        return handleChat(openai, payload);
+        return await handleChat(openai, payload);
 
       default:
-        return new Response(`Unknown action: ${action}`, { status: 400 });
+        return new Response(`Unknown action: ${action}`, { status: 400, headers: corsHeaders(origin) });
     }
   } catch (error: any) {
-    console.error(`Error in action handler for '${(await req.clone().json()).action}':`, error);
-    return new Response(error.message || 'An unexpected error occurred.', {
+    console.error(`Error in action handler for '${body?.action || 'unknown'}':`, error);
+    return new Response('An unexpected error occurred. Please try again later.', {
       status: 500,
+      headers: corsHeaders(origin),
     });
   }
 }
