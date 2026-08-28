@@ -232,5 +232,6 @@
     "ageTeens": "Adolescentes (13-17)",
     "ageYoungAdults": "Jóvenes Adultos (18-25)",
     "ageAdults": "Adultos (26-64)",
-    "ageSeniors": "Mayores (65+)"
+    "ageSeniors": "Mayores (65+)",
+    "chatSend": "Enviar mensaje"
 }

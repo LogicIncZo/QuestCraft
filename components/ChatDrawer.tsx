@@ -283,6 +283,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                                 />
                                 <button
                                     type="submit"
+                                    aria-label={t('chatSend')}
                                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 rounded-lg disabled:bg-gray-600"
                                     disabled={isLoading || !input.trim() || !isChatEnabled}
                                 >
