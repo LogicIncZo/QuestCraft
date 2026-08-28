@@ -85,7 +85,7 @@ async function processCommunityGatewayStream(response: Response): Promise<string
     const decoder = new TextDecoder();
     let fullResponseText = '';
 
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
         const { done, value } = await reader.read();
         if (done) break;
         fullResponseText += decoder.decode(value, { stream: true });
@@ -126,7 +126,7 @@ const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, initialDe
     let retries = 0;
     let delay = initialDelay;
 
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
         try {
             return await apiCall();
         } catch (e: any) {
@@ -456,7 +456,7 @@ export const generateQuestOutline = async (
                 logDetails.outputTokens = undefined;
                 return jsonText;
             } else if (!isGemini) {
-                const schemaString = JSON.stringify(questConfigSchema, null, 2).replace(/"/g, '\"');
+                const schemaString = JSON.stringify(questConfigSchema, null, 2).replace(/"/g, '"');
                 const systemInstruction = await loadPrompt('prompts/quest-outline-system-openai.txt', { ...promptReplacements, schema: schemaString });
                 logDetails.systemInstruction = systemInstruction;
                 logger.info(`[AI] Calling OpenAI-compatible model for quest outline: ${settings.model}`);
@@ -604,7 +604,7 @@ export const generatePregeneratedScenarios = async (
                     }
                     return response.text;
                  } else {
-                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '\"');
+                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/pregenerated-scenarios-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
                     logDetails.prompt = systemInstruction;
                     logger.info(`[AI] Calling OpenAI-compatible (grounded) for pre-gen scenarios: ${settings.model}`);
@@ -623,7 +623,7 @@ export const generatePregeneratedScenarios = async (
 
             } else { // Fictional flow
                 if (!isGemini) {
-                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '\"');
+                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/pregenerated-scenarios-fictional-openai.txt', { ...promptReplacements, schema: schemaString });
                     logDetails.prompt = systemInstruction;
                     logger.info(`[AI] Calling OpenAI-compatible (fictional) for pre-gen scenarios: ${settings.model}`);
@@ -703,7 +703,6 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
     };
 
     try {
-        let scenarioData: any;
         let source: any = null;
 
         const apiCall = async (): Promise<string> => {
@@ -756,7 +755,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                     source = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.[0]?.web;
                     return response.text;
                 } else { // Grounded, OpenAI-compatible
-                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '\"');
+                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/dynamic-scenario-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
                     logDetails.prompt = systemInstruction;
                     logger.info(`[AI] Calling OpenAI-compatible (grounded) for dynamic scenario: ${settings.model}`);
@@ -770,7 +769,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                 }
             } else { // Fictional flow
                 if (!isGemini) {
-                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '\"');
+                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/dynamic-scenario-fictional-openai.txt', { ...promptReplacements, schema: schemaString });
                     logDetails.prompt = systemInstruction;
                     logger.info(`[AI] Calling OpenAI-compatible (fictional) for dynamic scenario: ${settings.model}`);
@@ -811,7 +810,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
         auditLogService.addLog({ ...logDetails, response: text, error: null });
         const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
         const jsonText = jsonMatch ? jsonMatch[1] : text;
-        scenarioData = JSON.parse(jsonText);
+        const scenarioData = JSON.parse(jsonText) as any;
         
         if (isGrounded && !isGemini && scenarioData.sourceUrl) {
             source = { uri: scenarioData.sourceUrl, title: scenarioData.sourceTitle };

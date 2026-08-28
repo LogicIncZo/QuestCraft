@@ -13,17 +13,27 @@
     "test:prompts:all": "npm run test:prompts && npm run test:prompts:all"
   },
   "dependencies": {
+    "@google/genai": "^1.13.0",
+    "openai": "^5.12.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "@google/genai": "^1.13.0",
-    "showdown": "2.1.0",
-    "openai": "^5.12.2"
+    "showdown": "2.1.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^22.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.6",
     "typescript": "~5.8.2",
     "vite": "^7.1.2",
-    "@vitejs/plugin-react": "^5.0.0",
-    "vite-plugin-static-copy": "^3.1.1"
+    "vite-plugin-static-copy": "^3.1.1",
+    "vitest": "^4.1.11"
   }
 }
