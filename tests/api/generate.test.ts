@@ -35,18 +35,18 @@ describe('api/generate security hardening (issue #56)', () => {
     });
 
     it('allows requests from an allowlisted origin', async () => {
-        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [] } }));
+        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [], systemInstruction: 'You are a helpful game master.' } }));
         expect(res.status).toBe(200);
         expect(typedMockCreate).toHaveBeenCalled();
     });
 
     it('allows requests without an Origin header (non-browser clients)', async () => {
-        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [] } }, null));
+        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [], systemInstruction: 'You are a helpful game master.' } }, null));
         expect(res.status).toBe(200);
     });
 
     it('blocks requests from a non-allowlisted origin with 403', async () => {
-        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [] } }, 'https://evil.example'));
+        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [], systemInstruction: 'You are a helpful game master.' } }, 'https://evil.example'));
         expect(res.status).toBe(403);
         expect(typedMockCreate).not.toHaveBeenCalled();
     });
@@ -71,7 +71,7 @@ describe('api/generate security hardening (issue #56)', () => {
             role: 'user',
             content: `msg-${i}-${'x'.repeat(2000)}`,
         }));
-        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history } }));
+        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history, systemInstruction: 'You are a helpful game master.' } }));
         expect(res.status).toBe(200);
 
         expect(typedMockCreate).toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('api/generate security hardening (issue #56)', () => {
             throw new Error('OpenRouter quota exceeded for account billing@example.com');
         });
 
-        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [] } }));
+        const res = await handler(postRequest({ action: 'chat', payload: { message: 'hi', history: [], systemInstruction: 'You are a helpful game master.' } }));
         const text = await res.text();
         expect(text).not.toContain('quota');
         expect(text).not.toContain('billing@example.com');

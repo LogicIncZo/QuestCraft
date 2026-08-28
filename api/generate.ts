@@ -1,4 +1,7 @@
 import OpenAI from 'openai';
+import type { z } from 'zod';
+import { type ApiAction, actionPayloadSchemas } from '../shared/actions';
+import { type PromptTemplateName, fillPromptTemplate } from '../shared/prompts';
 import type { Stream } from 'openai/streaming';
 
 export const config = {
@@ -173,7 +176,7 @@ const questConfigSchemaForOpenAI = {
 };
 
 // --- Prompts are now embedded to support Vercel Edge runtime ---
-const promptTemplates = {
+const promptTemplates: Record<PromptTemplateName, string> = {
   'enhance-idea.txt': `You are an expert game designer and prompt engineer specializing in educational board games.
 
 Your task is to take the user's simple idea below and enhance it into a more detailed and evocative prompt that will help an AI game designer generate a rich and thematic quest.
@@ -284,9 +287,7 @@ function loadPrompt(fileName: keyof typeof promptTemplates, replacements: Record
         console.error(errorMsg);
         return errorMsg;
     }
-    return Object.entries(replacements).reduce((prompt, [key, value]) => {
-        return prompt.replace(new RegExp(`{${key}}`, 'g'), String(value));
-    }, template);
+    return fillPromptTemplate(template, replacements);
 }
 
 
@@ -520,8 +521,23 @@ export default async function handler(req: Request) {
     return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin) });
   }
 
+  const action = body?.action as ApiAction;
+  const rawPayload = body?.payload;
+  const payloadSchema = actionPayloadSchemas[action];
+  if (!payloadSchema) {
+    return new Response(`Unknown action: ${String(action)}`, { status: 400, headers: corsHeaders(origin) });
+  }
+  const parsed = payloadSchema.safeParse(rawPayload);
+  if (!parsed.success) {
+    return new Response(
+      `Invalid payload for action '${String(action)}': ${parsed.error.issues.map((i: z.ZodIssue) => `${i.path.join('.') || '(root)'} ${i.message}`).join('; ')}`,
+      { status: 400, headers: corsHeaders(origin) },
+    );
+  }
+
+  const payload = parsed.data;
+
   try {
-    const { action, payload } = body;
     const openai = getOpenAIClient();
 
     switch (action) {

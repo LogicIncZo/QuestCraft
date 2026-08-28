@@ -22,7 +22,8 @@
     "openai": "^5.12.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "showdown": "2.1.0"
+    "showdown": "2.1.0",
+    "zod": "^4.5.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
