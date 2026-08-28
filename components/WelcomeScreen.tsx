@@ -33,7 +33,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
     
         try {
             let questConfigUrl = urlInput;
-            const gistIdMatch = urlInput.match(/(?:https?:\/\/)?gist\.github\.com\/(?:[^\/]+\/)?([a-f0-9]+)/);
+            const gistIdMatch = urlInput.match(/(?:https?:\/\/)?gist\.github\.com\/(?:[^/]+\/)?([a-f0-9]+)/);
             if (gistIdMatch?.[1]) {
                 const gistId = gistIdMatch[1];
                 const apiResponse = await fetch(`https://api.github.com/gists/${gistId}`);

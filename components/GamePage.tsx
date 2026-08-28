@@ -256,7 +256,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
      const handleLocationAction = useCallback(async (location: BoardLocation) => {
         switch (location.type) {
             case BoardLocationType.PROPERTY:
-            case BoardLocationType.UTILITY:
+            case BoardLocationType.UTILITY: {
                 const locationNameEn = getLocalizedString(location.name, 'en');
                 const pregenScenarios = questConfig.pregeneratedScenarios?.[locationNameEn];
                 const hasPregen = pregenScenarios && pregenScenarios.length > 0;
@@ -272,6 +272,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                     }
                 }
                 break;
+            }
             case BoardLocationType.CHANCE:
                  if (questConfig.chanceCards.length > 0) {
                     const card = questConfig.chanceCards[Math.floor(Math.random() * questConfig.chanceCards.length)];
@@ -375,7 +376,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                 } else { nextTurn(); }
             }
             return;
-        };
+        }
         
         const locationNameEn = getLocalizedString(activeLocation.name, 'en');
 
