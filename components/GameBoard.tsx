@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { Board, Player, LanguageCode } from '../types';
 import { BoardLocationType } from '../types';
@@ -10,10 +9,9 @@ import {
     ChanceIcon,
     CommunityChestIcon,
     TaxIcon,
-    UtilityIcon
+    UtilityIcon,
 } from '../constants';
 import { getLocalizedString } from '../utils/localization';
-
 
 interface GameBoardProps {
     board: Board;
@@ -44,17 +42,26 @@ const getGridPosition = (index: number, total: number) => {
 };
 
 const LocationContent = ({ location }: { location: Board['locations'][0] }) => {
-    const baseIconClass = "w-8 h-8 md:w-10 md:h-10 mx-auto opacity-80";
+    const baseIconClass = 'w-8 h-8 md:w-10 md:h-10 mx-auto opacity-80';
     switch (location.type) {
-        case BoardLocationType.START: return <StartIcon className={baseIconClass} />;
-        case BoardLocationType.JAIL: return <JailIcon className={baseIconClass} />;
-        case BoardLocationType.FREE_PARKING: return <FreeParkingIcon className={baseIconClass} />;
-        case BoardLocationType.GO_TO_JAIL: return <GoToJailIcon className={baseIconClass} />;
-        case BoardLocationType.CHANCE: return <ChanceIcon className={baseIconClass} />;
-        case BoardLocationType.COMMUNITY_CHEST: return <CommunityChestIcon className={baseIconClass} />;
-        case BoardLocationType.TAX: return <TaxIcon className={baseIconClass} />;
-        case BoardLocationType.UTILITY: return <UtilityIcon className={baseIconClass} />;
-        default: return null;
+        case BoardLocationType.START:
+            return <StartIcon className={baseIconClass} />;
+        case BoardLocationType.JAIL:
+            return <JailIcon className={baseIconClass} />;
+        case BoardLocationType.FREE_PARKING:
+            return <FreeParkingIcon className={baseIconClass} />;
+        case BoardLocationType.GO_TO_JAIL:
+            return <GoToJailIcon className={baseIconClass} />;
+        case BoardLocationType.CHANCE:
+            return <ChanceIcon className={baseIconClass} />;
+        case BoardLocationType.COMMUNITY_CHEST:
+            return <CommunityChestIcon className={baseIconClass} />;
+        case BoardLocationType.TAX:
+            return <TaxIcon className={baseIconClass} />;
+        case BoardLocationType.UTILITY:
+            return <UtilityIcon className={baseIconClass} />;
+        default:
+            return null;
     }
 };
 
@@ -83,26 +90,40 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                             className={`relative flex flex-col justify-between p-1.5 md:p-2 rounded-md shadow-inner bg-gray-200 text-gray-800 text-center ${isCorner ? 'items-center justify-center' : ''}`}
                         >
                             {location.type === 'PROPERTY' && location.color && (
-                                <div className={`h-4 md:h-6 w-full ${location.color} rounded-t-sm -mx-1.5 -mt-1.5 md:-mx-2 md:-mt-2 mb-1`}></div>
+                                <div
+                                    className={`h-4 md:h-6 w-full ${location.color} rounded-t-sm -mx-1.5 -mt-1.5 md:-mx-2 md:-mt-2 mb-1`}
+                                ></div>
                             )}
-                            <div className={`flex-grow flex flex-col ${isCorner ? 'justify-center items-center' : 'justify-start'}`}>
+                            <div
+                                className={`flex-grow flex flex-col ${isCorner ? 'justify-center items-center' : 'justify-start'}`}
+                            >
                                 <p className="text-[8px] md:text-xs font-bold uppercase leading-tight tracking-tighter">
                                     {getLocalizedString(location.name, language)}
                                 </p>
-                                {isCorner && <div className="mt-1"><LocationContent location={location} /></div>}
+                                {isCorner && (
+                                    <div className="mt-1">
+                                        <LocationContent location={location} />
+                                    </div>
+                                )}
                             </div>
-                             {!isCorner && <div className="mt-1"><LocationContent location={location} /></div>}
+                            {!isCorner && (
+                                <div className="mt-1">
+                                    <LocationContent location={location} />
+                                </div>
+                            )}
 
                             {/* Player Tokens */}
-                             <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1">
-                                {players.filter(p => p.position === index && !p.isBankrupt).map((p) => (
-                                    <div
-                                        key={`token-${p.id}`}
-                                        className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-white shadow-lg animate-token-move`}
-                                        style={{ animationDelay: `${p.id * 100}ms` }}
-                                        title={`Player ${p.id + 1}`}
-                                    />
-                                ))}
+                            <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1">
+                                {players
+                                    .filter((p) => p.position === index && !p.isBankrupt)
+                                    .map((p) => (
+                                        <div
+                                            key={`token-${p.id}`}
+                                            className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-white shadow-lg animate-token-move`}
+                                            style={{ animationDelay: `${p.id * 100}ms` }}
+                                            title={`Player ${p.id + 1}`}
+                                        />
+                                    ))}
                             </div>
                         </div>
                     );
@@ -111,7 +132,10 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                 {/* Center Area */}
                 <div
                     className="flex flex-col items-center justify-center bg-gray-900/50 rounded-lg shadow-xl"
-                    style={{ gridColumn: `2 / ${sideLength + 1}`, gridRow: `2 / ${sideLength + 1}` }}
+                    style={{
+                        gridColumn: `2 / ${sideLength + 1}`,
+                        gridRow: `2 / ${sideLength + 1}`,
+                    }}
                 >
                     <h1 className="text-4xl md:text-6xl font-bold font-mono text-center text-orange-400 transform -rotate-6">
                         {questName}

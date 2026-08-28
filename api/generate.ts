@@ -5,7 +5,7 @@ import { type PromptTemplateName, fillPromptTemplate } from '../shared/prompts';
 import type { Stream } from 'openai/streaming';
 
 export const config = {
-  runtime: 'edge',
+    runtime: 'edge',
 };
 
 // --- Custom stream helpers to replace removed 'ai' package exports ---
@@ -16,19 +16,21 @@ export const config = {
  * @param res The stream from the OpenAI API response.
  * @returns A ReadableStream of Uint8Array encoded text chunks.
  */
-function OpenAIStream(res: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>): ReadableStream<Uint8Array> {
-  const encoder = new TextEncoder();
-  return new ReadableStream({
-    async start(controller) {
-      for await (const chunk of res) {
-        const text = chunk.choices[0]?.delta?.content;
-        if (text) {
-          controller.enqueue(encoder.encode(text));
-        }
-      }
-      controller.close();
-    },
-  });
+function OpenAIStream(
+    res: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>
+): ReadableStream<Uint8Array> {
+    const encoder = new TextEncoder();
+    return new ReadableStream({
+        async start(controller) {
+            for await (const chunk of res) {
+                const text = chunk.choices[0]?.delta?.content;
+                if (text) {
+                    controller.enqueue(encoder.encode(text));
+                }
+            }
+            controller.close();
+        },
+    });
 }
 
 /**
@@ -36,18 +38,17 @@ function OpenAIStream(res: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>):
  * streaming Response object with appropriate headers for text streaming.
  */
 class StreamingTextResponse extends Response {
-  constructor(stream: ReadableStream, init?: ResponseInit) {
-    super(stream, {
-      ...init,
-      status: 200,
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        ...init?.headers,
-      },
-    });
-  }
+    constructor(stream: ReadableStream, init?: ResponseInit) {
+        super(stream, {
+            ...init,
+            status: 200,
+            headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+                ...init?.headers,
+            },
+        });
+    }
 }
-
 
 // --- Model Configuration ---
 const COMMUNITY_MODEL = 'openai/gpt-oss-20b:free';
@@ -66,7 +67,7 @@ const localizedStringSchema = {
 const resourceChangeSchema = {
     type: 'object',
     properties: {
-        name: { type: 'string', description: "The lowercase English name of the resource." },
+        name: { type: 'string', description: 'The lowercase English name of the resource.' },
         value: { type: 'number' },
     },
     required: ['name', 'value'],
@@ -128,7 +129,20 @@ const boardLocationSchema = {
     properties: {
         name: localizedStringSchema,
         description: localizedStringSchema,
-        type: { type: 'string', enum: ['START', 'PROPERTY', 'CHANCE', 'COMMUNITY_CHEST', 'UTILITY', 'TAX', 'JAIL', 'FREE_PARKING', 'GO_TO_JAIL'] },
+        type: {
+            type: 'string',
+            enum: [
+                'START',
+                'PROPERTY',
+                'CHANCE',
+                'COMMUNITY_CHEST',
+                'UTILITY',
+                'TAX',
+                'JAIL',
+                'FREE_PARKING',
+                'GO_TO_JAIL',
+            ],
+        },
         color: { type: 'string' },
     },
     required: ['name', 'description', 'type'],
@@ -172,12 +186,20 @@ const questConfigSchemaForOpenAI = {
         communityChestCards: { type: 'array', items: chanceCardSchema },
         footerSections: { type: 'array', items: footerSectionSchema },
     },
-    required: ['name', 'description', 'resources', 'playerColors', 'board', 'chanceCards', 'footerSections'],
+    required: [
+        'name',
+        'description',
+        'resources',
+        'playerColors',
+        'board',
+        'chanceCards',
+        'footerSections',
+    ],
 };
 
 // --- Prompts are now embedded to support Vercel Edge runtime ---
 const promptTemplates: Record<PromptTemplateName, string> = {
-  'enhance-idea.txt': `You are an expert game designer and prompt engineer specializing in educational board games.
+    'enhance-idea.txt': `You are an expert game designer and prompt engineer specializing in educational board games.
 
 Your task is to take the user's simple idea below and enhance it into a more detailed and evocative prompt that will help an AI game designer generate a rich and thematic quest.
 
@@ -197,7 +219,7 @@ If the original user idea was "A game about the challenges of being a freelance 
 
 "Create a game about the life of a freelance artist navigating the gig economy. Players must balance three key resources: **Money** for bills and supplies, **Creativity** to produce high-quality work, and **Well-being** to avoid burnout. The board should feature locations like 'Client Pitch Meeting', 'Inspiration Slump', 'Art Supply Store', and 'Networking Event'. Chance cards could represent unexpected commissions or creative blocks. The overall tone should be a realistic but hopeful look at the freelance journey."`,
 
-  'quest-outline-system-openai.txt': `You are a creative game designer specializing in educational board games. Your task is to generate a complete configuration for a Monopoly-style game based on a user's idea. The output must be a valid JSON object that adheres to the schema provided below.
+    'quest-outline-system-openai.txt': `You are a creative game designer specializing in educational board games. Your task is to generate a complete configuration for a Monopoly-style game based on a user's idea. The output must be a valid JSON object that adheres to the schema provided below.
 
 **LANGUAGE INSTRUCTIONS:**
 - The primary language for this quest is {languageName} ({languageCode}).
@@ -225,8 +247,8 @@ Key Instructions:
 
 JSON Schema:
 {schema}`,
-  
-  'pregenerated-scenarios-fictional-openai.txt': `You are a creative game master specializing in engaging, educational scenarios.
+
+    'pregenerated-scenarios-fictional-openai.txt': `You are a creative game master specializing in engaging, educational scenarios.
 
 # Game Context
 - **Quest Theme:** {questDescription}
@@ -245,7 +267,7 @@ Focus on creating engaging, educational, and family-friendly content. Avoid sens
 
 # JSON Schema
 {schema}`,
-'dynamic-scenario-fictional-openai.txt': `You are a creative game master specializing in engaging, educational scenarios.
+    'dynamic-scenario-fictional-openai.txt': `You are a creative game master specializing in engaging, educational scenarios.
 
 # Game Context
 - **Quest Theme:** {questDescription}
@@ -264,7 +286,7 @@ Focus on creating engaging, educational, and family-friendly content. Avoid sens
 
 # JSON Schema
 {schema}`,
-'random-idea.txt': `You are an expert creative game designer specializing in educational and thematic board games related to real world.
+    'random-idea.txt': `You are an expert creative game designer specializing in educational and thematic board games related to real world.
 
 Your task is to generate a single, unique and random idea for a board game based on current affairs  / personas / cities / states / countries / issues of global significance and relatability across age groups.
 
@@ -280,7 +302,10 @@ Your task is to generate a single, unique and random idea for a board game based
 "A game about restoring a polluted river ecosystem. Players must balance three key resources: **Funding** for cleanup projects, **Biodiversity** to bring back native species, and **Public Awareness** to gain community support. The board could feature locations like 'Industrial Waste Outlet', 'Community Volunteer Day', and 'Protected Wetland Reserve'. The goal is to be the first to achieve a fully restored and thriving river."`,
 };
 
-function loadPrompt(fileName: keyof typeof promptTemplates, replacements: Record<string, any> = {}): string {
+function loadPrompt(
+    fileName: keyof typeof promptTemplates,
+    replacements: Record<string, any> = {}
+): string {
     const template = promptTemplates[fileName];
     if (!template) {
         const errorMsg = `Error: Could not load prompt template ${fileName}. Template not found.`;
@@ -289,7 +314,6 @@ function loadPrompt(fileName: keyof typeof promptTemplates, replacements: Record
     }
     return fillPromptTemplate(template, replacements);
 }
-
 
 // --- Security hardening (issue #56) ---
 
@@ -329,32 +353,37 @@ const MAX_CHAT_HISTORY_CHARS = 32_000;
 const getOpenAIClient = () => {
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
-      throw new Error("Missing OPENROUTER_API_KEY environment variable.");
+        throw new Error('Missing OPENROUTER_API_KEY environment variable.');
     }
     return new OpenAI({
-      baseURL: "https://openrouter.ai/api/v1",
-      apiKey: apiKey,
-      defaultHeaders: {
-        "HTTP-Referer": "https://questcraft.ai",
-        "X-Title": "QuestCraft",
-      }
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: apiKey,
+        defaultHeaders: {
+            'HTTP-Referer': 'https://questcraft.ai',
+            'X-Title': 'QuestCraft',
+        },
     });
 };
 
 const LANGUAGE_MAP: Record<string, string> = {
-    en: "English",
-    es: "Spanish",
-    hi: "Hindi",
-    ta: "Tamil"
+    en: 'English',
+    es: 'Spanish',
+    hi: 'Hindi',
+    ta: 'Tamil',
 };
 
 const getAgeGroupText = (ageGroupKey: string): string => {
     switch (ageGroupKey) {
-        case 'kids': return 'Kids (5-8)';
-        case 'pre-teens': return 'Pre-Teens (9-12)';
-        case 'teens': return 'Teens (13-17)';
-        case 'adults': return 'Adults (18+)';
-        default: return 'Any Age';
+        case 'kids':
+            return 'Kids (5-8)';
+        case 'pre-teens':
+            return 'Pre-Teens (9-12)';
+        case 'teens':
+            return 'Teens (13-17)';
+        case 'adults':
+            return 'Adults (18+)';
+        default:
+            return 'Any Age';
     }
 };
 
@@ -397,21 +426,29 @@ async function handleGenerateQuestOutline(openai: OpenAI, payload: any) {
     const { idea, numLocations, positivity, supportedLanguages, languageCode } = payload;
     const languageName = LANGUAGE_MAP[languageCode] || 'English';
     const languageList = (supportedLanguages.length > 0 ? supportedLanguages : ['en'])
-      .map((code: string) => `${LANGUAGE_MAP[code]} ('${code}')`).join(', ');
+        .map((code: string) => `${LANGUAGE_MAP[code]} ('${code}')`)
+        .join(', ');
 
     const prompt = `Generate a quest based on this idea: "${idea}"`;
     const schemaString = JSON.stringify(questConfigSchemaForOpenAI, null, 2);
     const systemPrompt = loadPrompt('quest-outline-system-openai.txt', {
-         numLocations, positivity, 
-         groundingInReality: false, // "Ground in Reality" is disabled for community tier
-         languageCode, languageName, languageList, schema: schemaString
+        numLocations,
+        positivity,
+        groundingInReality: false, // "Ground in Reality" is disabled for community tier
+        languageCode,
+        languageName,
+        languageList,
+        schema: schemaString,
     });
 
     const response = await openai.chat.completions.create({
-      model: COMMUNITY_MODEL,
-      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
-      stream: true,
+        model: COMMUNITY_MODEL,
+        messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: prompt },
+        ],
+        response_format: { type: 'json_object' },
+        stream: true,
     });
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
@@ -420,11 +457,12 @@ async function handleGenerateQuestOutline(openai: OpenAI, payload: any) {
 async function handleGenerateScenarios(openai: OpenAI, payload: any, action: string) {
     const { questConfig, location, numScenarios, languageCode } = payload;
     const isDynamic = action === 'generateDynamicScenario';
-    
+
     const languageName = LANGUAGE_MAP[languageCode] || 'English';
     const resourceNames = questConfig.resources.map((r: any) => r.name.en.toLowerCase()).join(', ');
     const languageList = (questConfig.supportedLanguages || ['en'])
-        .map((code: string) => `${LANGUAGE_MAP[code]} ('${code}')`).join(', ');
+        .map((code: string) => `${LANGUAGE_MAP[code]} ('${code}')`)
+        .join(', ');
 
     const replacements = {
         questDescription: questConfig.description.en,
@@ -432,19 +470,23 @@ async function handleGenerateScenarios(openai: OpenAI, payload: any, action: str
         locationDescription: location.description.en,
         resourceNames,
         numScenarios: isDynamic ? 1 : numScenarios,
-        languageCode, languageName, languageList,
+        languageCode,
+        languageName,
+        languageList,
     };
-    
-    const promptFileKey = isDynamic ? 'dynamic-scenario-fictional-openai.txt' : 'pregenerated-scenarios-fictional-openai.txt';
+
+    const promptFileKey = isDynamic
+        ? 'dynamic-scenario-fictional-openai.txt'
+        : 'pregenerated-scenarios-fictional-openai.txt';
     const schema = isDynamic ? scenarioSchema : scenarioArraySchemaForOpenAI;
     const schemaString = JSON.stringify(schema, null, 2);
     const systemPrompt = loadPrompt(promptFileKey, { ...replacements, schema: schemaString });
 
     const response = await openai.chat.completions.create({
-      model: COMMUNITY_MODEL,
-      messages: [{ role: 'system', content: systemPrompt }],
-      response_format: { type: 'json_object' },
-      stream: true,
+        model: COMMUNITY_MODEL,
+        messages: [{ role: 'system', content: systemPrompt }],
+        response_format: { type: 'json_object' },
+        stream: true,
     });
 
     const stream = OpenAIStream(response);
@@ -456,10 +498,10 @@ async function handleChat(openai: OpenAI, payload: any) {
     const userMessage = String(message ?? '').slice(0, MAX_CHAT_MESSAGE_CHARS);
 
     const validHistory = Array.isArray(history)
-        ? history.filter((m: any) =>
-              m &&
-              (m.role === 'user' || m.role === 'model') &&
-              typeof m.content === 'string')
+        ? history.filter(
+              (m: any) =>
+                  m && (m.role === 'user' || m.role === 'model') && typeof m.content === 'string'
+          )
         : [];
 
     // Server-side caps: keep the most recent messages within count + char budgets.
@@ -467,15 +509,25 @@ async function handleChat(openai: OpenAI, payload: any) {
     let totalChars = 0;
     for (let i = validHistory.length - 1; i >= 0; i--) {
         const m = validHistory[i];
-        if (kept.length >= MAX_CHAT_HISTORY_MESSAGES || totalChars + m.content.length > MAX_CHAT_HISTORY_CHARS) break;
+        if (
+            kept.length >= MAX_CHAT_HISTORY_MESSAGES ||
+            totalChars + m.content.length > MAX_CHAT_HISTORY_CHARS
+        )
+            break;
         totalChars += m.content.length;
         kept.unshift({ role: m.role, content: m.content.slice(0, MAX_CHAT_MESSAGE_CHARS) });
     }
 
     const messages = [
-        { role: 'system', content: typeof systemInstruction === 'string' ? systemInstruction.slice(0, MAX_CHAT_MESSAGE_CHARS * 2) : '' },
+        {
+            role: 'system',
+            content:
+                typeof systemInstruction === 'string'
+                    ? systemInstruction.slice(0, MAX_CHAT_MESSAGE_CHARS * 2)
+                    : '',
+        },
         ...kept,
-        { role: 'user', content: userMessage }
+        { role: 'user', content: userMessage },
     ];
 
     const response = await openai.chat.completions.create({
@@ -491,83 +543,89 @@ async function handleChat(openai: OpenAI, payload: any) {
 // --- Main Handler ---
 
 export default async function handler(req: Request) {
-  const origin = req.headers.get('origin');
+    const origin = req.headers.get('origin');
 
-  if (req.method === 'OPTIONS') {
+    if (req.method === 'OPTIONS') {
+        if (!isAllowedOrigin(origin)) {
+            return new Response('Forbidden', { status: 403 });
+        }
+        return new Response(null, {
+            status: 204,
+            headers: {
+                ...corsHeaders(origin),
+                'Access-Control-Max-Age': '86400',
+            },
+        });
+    }
+
+    if (req.method !== 'POST') {
+        return new Response('Method Not Allowed', { status: 405 });
+    }
+
     if (!isAllowedOrigin(origin)) {
-      return new Response('Forbidden', { status: 403 });
+        return new Response('Forbidden', { status: 403 });
     }
-    return new Response(null, {
-      status: 204,
-      headers: {
-        ...corsHeaders(origin),
-        'Access-Control-Max-Age': '86400',
-      },
-    });
-  }
 
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
-  }
-
-  if (!isAllowedOrigin(origin)) {
-    return new Response('Forbidden', { status: 403 });
-  }
-
-  let body: { action?: string; payload?: any };
-  try {
-    body = await req.json();
-  } catch {
-    return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin) });
-  }
-
-  const action = body?.action as ApiAction;
-  const rawPayload = body?.payload;
-  const payloadSchema = actionPayloadSchemas[action];
-  if (!payloadSchema) {
-    return new Response(`Unknown action: ${String(action)}`, { status: 400, headers: corsHeaders(origin) });
-  }
-  const parsed = payloadSchema.safeParse(rawPayload);
-  if (!parsed.success) {
-    return new Response(
-      `Invalid payload for action '${String(action)}': ${parsed.error.issues.map((i: z.ZodIssue) => `${i.path.join('.') || '(root)'} ${i.message}`).join('; ')}`,
-      { status: 400, headers: corsHeaders(origin) },
-    );
-  }
-
-  const payload = parsed.data;
-
-  try {
-    const openai = getOpenAIClient();
-
-    switch (action) {
-      case 'testConnection':
-        return await handleTestConnection(openai);
-
-      case 'enhanceQuestIdea':
-        return await handleEnhanceQuestIdea(openai, payload);
-
-      case 'generateRandomQuestIdea':
-        return await handleGenerateRandomQuestIdea(openai, payload);
-
-      case 'generateQuestOutline':
-        return await handleGenerateQuestOutline(openai, payload);
-
-      case 'generatePregeneratedScenarios':
-      case 'generateDynamicScenario':
-        return await handleGenerateScenarios(openai, payload, action);
-
-      case 'chat':
-        return await handleChat(openai, payload);
-
-      default:
-        return new Response(`Unknown action: ${action}`, { status: 400, headers: corsHeaders(origin) });
+    let body: { action?: string; payload?: any };
+    try {
+        body = await req.json();
+    } catch {
+        return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin) });
     }
-  } catch (error: any) {
-    console.error(`Error in action handler for '${body?.action || 'unknown'}':`, error);
-    return new Response('An unexpected error occurred. Please try again later.', {
-      status: 500,
-      headers: corsHeaders(origin),
-    });
-  }
+
+    const action = body?.action as ApiAction;
+    const rawPayload = body?.payload;
+    const payloadSchema = actionPayloadSchemas[action];
+    if (!payloadSchema) {
+        return new Response(`Unknown action: ${String(action)}`, {
+            status: 400,
+            headers: corsHeaders(origin),
+        });
+    }
+    const parsed = payloadSchema.safeParse(rawPayload);
+    if (!parsed.success) {
+        return new Response(
+            `Invalid payload for action '${String(action)}': ${parsed.error.issues.map((i: z.ZodIssue) => `${i.path.join('.') || '(root)'} ${i.message}`).join('; ')}`,
+            { status: 400, headers: corsHeaders(origin) }
+        );
+    }
+
+    const payload = parsed.data;
+
+    try {
+        const openai = getOpenAIClient();
+
+        switch (action) {
+            case 'testConnection':
+                return await handleTestConnection(openai);
+
+            case 'enhanceQuestIdea':
+                return await handleEnhanceQuestIdea(openai, payload);
+
+            case 'generateRandomQuestIdea':
+                return await handleGenerateRandomQuestIdea(openai, payload);
+
+            case 'generateQuestOutline':
+                return await handleGenerateQuestOutline(openai, payload);
+
+            case 'generatePregeneratedScenarios':
+            case 'generateDynamicScenario':
+                return await handleGenerateScenarios(openai, payload, action);
+
+            case 'chat':
+                return await handleChat(openai, payload);
+
+            default:
+                return new Response(`Unknown action: ${action}`, {
+                    status: 400,
+                    headers: corsHeaders(origin),
+                });
+        }
+    } catch (error: any) {
+        console.error(`Error in action handler for '${body?.action || 'unknown'}':`, error);
+        return new Response('An unexpected error occurred. Please try again later.', {
+            status: 500,
+            headers: corsHeaders(origin),
+        });
+    }
 }

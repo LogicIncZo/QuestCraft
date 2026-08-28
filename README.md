@@ -45,27 +45,27 @@ Then open `http://localhost:5173` and pick a quest to play.
 
 ### AI Providers
 
-| Provider | API Key Required | Free Tier |
-|----------|-----------------|-----------|
-| Gemini (default) | Yes | 60 req/min |
-| OpenAI | Yes | — |
-| Groq | Yes | 100 req/day |
-| Together AI | Yes | — |
-| OpenRouter | Yes | — |
-| Community Gateway | No | ✅ Limited |
+| Provider          | API Key Required | Free Tier   |
+| ----------------- | ---------------- | ----------- |
+| Gemini (default)  | Yes              | 60 req/min  |
+| OpenAI            | Yes              | —           |
+| Groq              | Yes              | 100 req/day |
+| Together AI       | Yes              | —           |
+| OpenRouter        | Yes              | —           |
+| Community Gateway | No               | ✅ Limited  |
 
 ## 🎯 Built-in Quests
 
-| Quest | Topic |
-|-------|-------|
-| Aadhaar Quest | Digital Identity in India |
-| Architects of AI | AI Ethics & Governance |
-| Carbon Crawl | Climate Change |
+| Quest              | Topic                                |
+| ------------------ | ------------------------------------ |
+| Aadhaar Quest      | Digital Identity in India            |
+| Architects of AI   | AI Ethics & Governance               |
+| Carbon Crawl       | Climate Change                       |
 | Equity & Etiquette | Gender Equality (Vishaka Guidelines) |
-| Foodie Fun | Healthy Habits |
-| Metro Master | Urban Transit |
-| Paws & Progress | Animal Welfare |
-| Validation | Code Quality |
+| Foodie Fun         | Healthy Habits                       |
+| Metro Master       | Urban Transit                        |
+| Paws & Progress    | Animal Welfare                       |
+| Validation         | Code Quality                         |
 
 ## 🗺️ Project Status
 

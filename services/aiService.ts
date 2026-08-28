@@ -1,17 +1,25 @@
-import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
-import type { QuestConfig, Player, BoardLocation, ManagedScenario, AiProviderSettings, LanguageCode, AiProviderId } from '../types';
+import { GoogleGenAI, Chat, GenerateContentResponse } from '@google/genai';
+import type {
+    QuestConfig,
+    Player,
+    BoardLocation,
+    ManagedScenario,
+    AiProviderSettings,
+    LanguageCode,
+    AiProviderId,
+} from '../types';
 import { auditLogService } from './auditLogService';
 import { statsService } from './statsService';
 import { settingsService, getProviderApiKeyFromEnv, PROVIDER_CONFIGS } from './settingsService';
-import { 
-    questConfigSchema, 
-    dynamicScenarioSchema, 
+import {
+    questConfigSchema,
+    dynamicScenarioSchema,
     scenarioArraySchema,
-    aiChoiceSchema
+    aiChoiceSchema,
 } from './schemas';
-import { getLocalizedString } from "../utils/localization";
-import { apiRequestBody } from "../shared/actions";
-import { logger } from "./logger";
+import { getLocalizedString } from '../utils/localization';
+import { apiRequestBody } from '../shared/actions';
+import { logger } from './logger';
 
 export class TokenLimitExceededError extends Error {
     constructor(message: string) {
@@ -21,21 +29,28 @@ export class TokenLimitExceededError extends Error {
 }
 
 const LANGUAGE_MAP: Record<LanguageCode, string> = {
-    en: "English",
-    es: "Spanish",
-    hi: "Hindi",
-    ta: "Tamil"
+    en: 'English',
+    es: 'Spanish',
+    hi: 'Hindi',
+    ta: 'Tamil',
 };
 
 const getAgeGroupText = (ageGroupKey: string): string => {
     switch (ageGroupKey) {
-        case 'kids': return 'Kids (5-8)';
-        case 'pre-teens': return 'Pre-Teens (9-12)';
-        case 'teens': return 'Teens (13-17)';
-        case 'young-adults': return 'Young Adults (18-25)';
-        case 'adults': return 'Adults (26-64)';
-        case 'seniors': return 'Seniors (65+)';
-        default: return 'Any Age';
+        case 'kids':
+            return 'Kids (5-8)';
+        case 'pre-teens':
+            return 'Pre-Teens (9-12)';
+        case 'teens':
+            return 'Teens (13-17)';
+        case 'young-adults':
+            return 'Young Adults (18-25)';
+        case 'adults':
+            return 'Adults (26-64)';
+        case 'seniors':
+            return 'Seniors (65+)';
+        default:
+            return 'Any Age';
     }
 };
 
@@ -51,11 +66,13 @@ const getApiKey = (providerId: AiProviderId): string => {
     if (envApiKey) {
         return envApiKey;
     }
-    
+
     // 3. No key found
     const providerName = PROVIDER_CONFIGS[providerId]?.name || providerId;
     const keyName = `${providerId.toUpperCase()}_API_KEY`;
-    throw new Error(`${providerName} API key is not configured. Please set the ${keyName} environment variable or enter one in the Settings menu.`);
+    throw new Error(
+        `${providerName} API key is not configured. Please set the ${keyName} environment variable or enter one in the Settings menu.`
+    );
 };
 
 const preflightCheck = () => {
@@ -65,7 +82,9 @@ const preflightCheck = () => {
     if (!isUsingOverrideKey && providerId !== 'community') {
         if (statsService.isTokenLimitExceeded()) {
             const { limit } = statsService.getTokenUsage();
-            throw new TokenLimitExceededError(`You have used the shared API key's quota of ${limit.toLocaleString()} tokens. To continue, please go to Settings and provide your own personal API key.`);
+            throw new TokenLimitExceededError(
+                `You have used the shared API key's quota of ${limit.toLocaleString()} tokens. To continue, please go to Settings and provide your own personal API key.`
+            );
         }
     }
 };
@@ -90,7 +109,9 @@ async function readWithIdleTimeout(
     const timeout = new Promise<never>((_, reject) => {
         timer = setTimeout(() => {
             reader.cancel('Idle timeout').catch(() => {});
-            reject(new Error(`Stream idle for over ${timeoutMs / 1000}s. Connection appears stalled.`));
+            reject(
+                new Error(`Stream idle for over ${timeoutMs / 1000}s. Connection appears stalled.`)
+            );
         }, timeoutMs);
     });
     try {
@@ -123,17 +144,19 @@ async function processCommunityGatewayStream(response: Response): Promise<string
     return fullResponseText;
 }
 
-
 // --- Helper to mask API keys for logging ---
 const maskApiKey = (key: string): string => {
     if (!key || key.length < 8) return 'Invalid or Not Set';
     return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
-}
+};
 
 // --- Prompt Loading ---
 const promptCache = new Map<string, string>();
 const warnedPromptPaths = new Set<string>();
-export const loadPrompt = async (path: string, replacements: Record<string, string | number> = {}): Promise<string> => {
+export const loadPrompt = async (
+    path: string,
+    replacements: Record<string, string | number> = {}
+): Promise<string> => {
     let template = promptCache.get(path);
     if (!template) {
         try {
@@ -144,7 +167,10 @@ export const loadPrompt = async (path: string, replacements: Record<string, stri
         } catch (error) {
             if (!warnedPromptPaths.has(path)) {
                 warnedPromptPaths.add(path);
-                logger.error(`[PromptManager] Prompt file "${path}" is missing or unreadable — falling back to a generic prompt. Quest quality will be degraded.`, error);
+                logger.error(
+                    `[PromptManager] Prompt file "${path}" is missing or unreadable — falling back to a generic prompt. Quest quality will be degraded.`,
+                    error
+                );
             }
             return `Generate content based on the user's request.`;
         }
@@ -154,9 +180,12 @@ export const loadPrompt = async (path: string, replacements: Record<string, stri
     }, template);
 };
 
-
 // --- Retry Logic ---
-export const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, initialDelay = 1000): Promise<T> => {
+export const withRetry = async <T>(
+    apiCall: () => Promise<T>,
+    maxRetries = 3,
+    initialDelay = 1000
+): Promise<T> => {
     let retries = 0;
     let delay = initialDelay;
 
@@ -164,28 +193,38 @@ export const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, in
         try {
             return await apiCall();
         } catch (e: any) {
-             if (e instanceof TokenLimitExceededError) {
+            if (e instanceof TokenLimitExceededError) {
                 throw e; // Do not retry on token limit errors
             }
             const status = e?.response?.status || e?.status;
             const isRateLimitError = status === 429;
             const isServerError = status >= 500 && status <= 599;
             const isNetworkError = e.message?.includes('Failed to fetch');
-            const isClientError = typeof status === 'number' && status >= 400 && status < 500 && !isRateLimitError;
+            const isClientError =
+                typeof status === 'number' && status >= 400 && status < 500 && !isRateLimitError;
 
             if (isClientError) {
                 // 401/403/404 etc: retrying will not fix a bad key or bad request. Fail fast.
-                logger.error(`API call failed with client error ${status}. Not retrying.`, e.message);
+                logger.error(
+                    `API call failed with client error ${status}. Not retrying.`,
+                    e.message
+                );
                 throw e;
             }
 
             if ((isRateLimitError || isServerError || isNetworkError) && retries < maxRetries) {
                 retries++;
-                logger.warn(`API call failed with retryable error. Retrying in ${delay}ms... (Attempt ${retries}/${maxRetries})`, e.message);
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2; 
+                logger.warn(
+                    `API call failed with retryable error. Retrying in ${delay}ms... (Attempt ${retries}/${maxRetries})`,
+                    e.message
+                );
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                delay *= 2;
             } else {
-                logger.error("API call failed after multiple retries or with a non-retryable error.", e);
+                logger.error(
+                    'API call failed after multiple retries or with a non-retryable error.',
+                    e
+                );
                 throw e;
             }
         }
@@ -196,7 +235,7 @@ export const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, in
 const fetchOpenAICompatible = async (settings: AiProviderSettings, body: object): Promise<any> => {
     const apiKey = getApiKey(settings.providerId);
     if (!settings.baseUrl || !settings.model) {
-        throw new Error("Base URL or Model Name is missing for OpenAI-compatible provider.");
+        throw new Error('Base URL or Model Name is missing for OpenAI-compatible provider.');
     }
 
     logger.debug(`[AI] Making OpenAI-compatible request to ${settings.baseUrl}/chat/completions`);
@@ -206,7 +245,7 @@ const fetchOpenAICompatible = async (settings: AiProviderSettings, body: object)
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify(body),
     });
@@ -224,21 +263,27 @@ const fetchOpenAICompatible = async (settings: AiProviderSettings, body: object)
                 errorMessage += ` Response: ${responseText}`;
             }
         }
-        logger.error(`[AI] OpenAI-compatible request failed with status ${response.status}`, responseText);
+        logger.error(
+            `[AI] OpenAI-compatible request failed with status ${response.status}`,
+            responseText
+        );
         const error = new Error(errorMessage);
         (error as any).status = response.status;
         throw error;
     }
 
     if (!responseText) {
-        throw new Error("The API returned a successful but empty response.");
+        throw new Error('The API returned a successful but empty response.');
     }
 
     try {
         return JSON.parse(responseText);
     } catch (e) {
-        const snippet = responseText.length > 100 ? responseText.substring(0, 100) + '...' : responseText;
-        throw new Error(`Failed to parse valid JSON from API response. Response text begins with: "${snippet}"`);
+        const snippet =
+            responseText.length > 100 ? responseText.substring(0, 100) + '...' : responseText;
+        throw new Error(
+            `Failed to parse valid JSON from API response. Response text begins with: "${snippet}"`
+        );
     }
 };
 
@@ -246,12 +291,12 @@ const fetchOpenAICompatible = async (settings: AiProviderSettings, body: object)
 
 export const testConnection = async (settings: AiProviderSettings): Promise<void> => {
     logger.info(`[AI] Testing connection for provider: ${settings.providerId}`);
-    
+
     if (settings.providerId === 'community') {
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(apiRequestBody('testConnection', undefined))
+            body: JSON.stringify(apiRequestBody('testConnection', undefined)),
         });
         if (!response.ok) {
             const errorText = await response.text();
@@ -264,38 +309,40 @@ export const testConnection = async (settings: AiProviderSettings): Promise<void
     const isGemini = settings.providerId === 'gemini';
     const apiCall = async () => {
         if (isGemini) {
-            if (!settings.model) throw new Error("Model Name is missing.");
+            if (!settings.model) throw new Error('Model Name is missing.');
             const ai = new GoogleGenAI({ apiKey });
             await ai.models.generateContent({
                 model: settings.model,
                 contents: 'test',
-                config: { thinkingConfig: { thinkingBudget: 0 } }
+                config: { thinkingConfig: { thinkingBudget: 0 } },
             });
         } else {
             // OpenAI-compatible
             await fetchOpenAICompatible(settings, {
                 model: settings.model,
                 messages: [{ role: 'user', content: 'test' }],
-                max_tokens: 1
+                max_tokens: 1,
             });
         }
     };
     // Don't retry tests aggressively
-    await withRetry(apiCall, 1, 0); 
+    await withRetry(apiCall, 1, 0);
 };
-
 
 export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<string> => {
     logger.info('[AI] Starting enhanceQuestIdea call...');
     const settings = settingsService.getAiSettings();
     preflightCheck();
-    
+
     const isCommunity = settings.providerId === 'community';
     const apiKey = isCommunity ? 'N/A' : getApiKey(settings.providerId);
     const maskedSettings = { ...settings, apiKey: isCommunity ? 'N/A' : maskApiKey(apiKey) };
     const isGemini = settings.providerId === 'gemini';
 
-    const prompt = await loadPrompt('prompts/enhance-idea.txt', { idea, ageGroup: getAgeGroupText(ageGroup) });
+    const prompt = await loadPrompt('prompts/enhance-idea.txt', {
+        idea,
+        ageGroup: getAgeGroupText(ageGroup),
+    });
     logger.debug('[AI] Enhance idea prompt:', prompt);
 
     const logDetails = {
@@ -314,7 +361,7 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('enhanceQuestIdea', { idea, ageGroup }))
+                    body: JSON.stringify(apiRequestBody('enhanceQuestIdea', { idea, ageGroup })),
                 });
                 const text = await processCommunityGatewayStream(response);
                 // Token usage from community tier is not available due to streaming
@@ -322,16 +369,21 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
                 logDetails.outputTokens = undefined;
                 return text;
             } else if (!isGemini) {
-                logger.info(`[AI] Calling OpenAI-compatible model for enhance idea: ${settings.model}`);
+                logger.info(
+                    `[AI] Calling OpenAI-compatible model for enhance idea: ${settings.model}`
+                );
                 const jsonResponse = await fetchOpenAICompatible(settings, {
                     model: settings.model,
                     messages: [{ role: 'user', content: prompt }],
                 });
-                
+
                 if (jsonResponse.usage) {
                     logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                     logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                    statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                    statsService.updateTokens({
+                        inputTokens: logDetails.inputTokens,
+                        outputTokens: logDetails.outputTokens,
+                    });
                 }
                 return jsonResponse.choices[0].message.content;
             } else {
@@ -354,13 +406,12 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
         };
 
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("The API returned an empty response.");
-        
+        if (!text) throw new Error('The API returned an empty response.');
+
         logger.info('[AI] enhanceQuestIdea call successful.');
         logger.finest('[AI] Enhanced idea response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
         return text.trim();
-
     } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
         throw e;
@@ -371,13 +422,15 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
     logger.info('[AI] Starting generateRandomQuestIdea call...');
     const settings = settingsService.getAiSettings();
     preflightCheck();
-    
+
     const isCommunity = settings.providerId === 'community';
     const apiKey = isCommunity ? 'N/A' : getApiKey(settings.providerId);
     const maskedSettings = { ...settings, apiKey: isCommunity ? 'N/A' : maskApiKey(apiKey) };
     const isGemini = settings.providerId === 'gemini';
 
-    const prompt = await loadPrompt('prompts/random-idea.txt', { ageGroup: getAgeGroupText(ageGroup) });
+    const prompt = await loadPrompt('prompts/random-idea.txt', {
+        ageGroup: getAgeGroupText(ageGroup),
+    });
     logger.debug('[AI] Random idea prompt:', prompt);
 
     const logDetails = {
@@ -396,21 +449,26 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('generateRandomQuestIdea', { ageGroup }))
+                    body: JSON.stringify(apiRequestBody('generateRandomQuestIdea', { ageGroup })),
                 });
                 const text = await processCommunityGatewayStream(response);
                 return text;
             } else if (!isGemini) {
-                logger.info(`[AI] Calling OpenAI-compatible model for random idea: ${settings.model}`);
+                logger.info(
+                    `[AI] Calling OpenAI-compatible model for random idea: ${settings.model}`
+                );
                 const jsonResponse = await fetchOpenAICompatible(settings, {
                     model: settings.model,
                     messages: [{ role: 'user', content: prompt }],
                 });
-                
+
                 if (jsonResponse.usage) {
                     logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                     logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                    statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                    statsService.updateTokens({
+                        inputTokens: logDetails.inputTokens,
+                        outputTokens: logDetails.outputTokens,
+                    });
                 }
                 return jsonResponse.choices[0].message.content;
             } else {
@@ -433,13 +491,12 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
         };
 
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("The API returned an empty response.");
-        
+        if (!text) throw new Error('The API returned an empty response.');
+
         logger.info('[AI] generateRandomQuestIdea call successful.');
         logger.finest('[AI] Random idea response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
         return text.trim();
-
     } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
         throw e;
@@ -465,16 +522,32 @@ export const generateQuestOutline = async (
     const languageCode = settingsService.getLanguage();
     const languageName = LANGUAGE_MAP[languageCode];
     const languageList = (supportedLanguages.length > 0 ? supportedLanguages : ['en'])
-        .map(code => `${LANGUAGE_MAP[code]} ('${code}')`).join(', ');
+        .map((code) => `${LANGUAGE_MAP[code]} ('${code}')`)
+        .join(', ');
 
-    const promptReplacements = { numLocations, positivity, groundingInReality: String(groundingInReality), languageCode, languageName, languageList };
+    const promptReplacements = {
+        numLocations,
+        positivity,
+        groundingInReality: String(groundingInReality),
+        languageCode,
+        languageName,
+        languageList,
+    };
     const userPrompt = `Generate a quest based on this idea: "${idea}"`;
 
     const logDetails = {
         mode: 'Quest Maker' as const,
         prompt: userPrompt,
         systemInstruction: '',
-        requestDetails: { action: 'generate_outline', idea, numLocations, positivity, groundingInReality, supportedLanguages, settings: maskedSettings },
+        requestDetails: {
+            action: 'generate_outline',
+            idea,
+            numLocations,
+            positivity,
+            groundingInReality,
+            supportedLanguages,
+            settings: maskedSettings,
+        },
         model: settings.model,
         inputTokens: undefined as number | undefined,
         outputTokens: undefined as number | undefined,
@@ -484,10 +557,19 @@ export const generateQuestOutline = async (
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for quest outline...');
-                 const response = await fetch('/api/generate', {
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('generateQuestOutline', { idea, numLocations, positivity, groundingInReality, supportedLanguages, languageCode }))
+                    body: JSON.stringify(
+                        apiRequestBody('generateQuestOutline', {
+                            idea,
+                            numLocations,
+                            positivity,
+                            groundingInReality,
+                            supportedLanguages,
+                            languageCode,
+                        })
+                    ),
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
@@ -495,24 +577,38 @@ export const generateQuestOutline = async (
                 return jsonText;
             } else if (!isGemini) {
                 const schemaString = JSON.stringify(questConfigSchema, null, 2).replace(/"/g, '"');
-                const systemInstruction = await loadPrompt('prompts/quest-outline-system-openai.txt', { ...promptReplacements, schema: schemaString });
+                const systemInstruction = await loadPrompt(
+                    'prompts/quest-outline-system-openai.txt',
+                    { ...promptReplacements, schema: schemaString }
+                );
                 logDetails.systemInstruction = systemInstruction;
-                logger.info(`[AI] Calling OpenAI-compatible model for quest outline: ${settings.model}`);
+                logger.info(
+                    `[AI] Calling OpenAI-compatible model for quest outline: ${settings.model}`
+                );
 
                 const jsonResponse = await fetchOpenAICompatible(settings, {
                     model: settings.model,
-                    messages: [{ role: 'system', content: systemInstruction }, { role: 'user', content: userPrompt }],
-                    response_format: { type: "json_object" }
+                    messages: [
+                        { role: 'system', content: systemInstruction },
+                        { role: 'user', content: userPrompt },
+                    ],
+                    response_format: { type: 'json_object' },
                 });
 
                 if (jsonResponse.usage) {
                     logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                     logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                    statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                    statsService.updateTokens({
+                        inputTokens: logDetails.inputTokens,
+                        outputTokens: logDetails.outputTokens,
+                    });
                 }
                 return jsonResponse.choices[0].message.content;
             } else {
-                const systemInstruction = await loadPrompt('prompts/quest-outline-system.txt', promptReplacements);
+                const systemInstruction = await loadPrompt(
+                    'prompts/quest-outline-system.txt',
+                    promptReplacements
+                );
                 logDetails.systemInstruction = systemInstruction;
                 logger.info(`[AI] Calling Gemini model for quest outline: ${settings.model}`);
 
@@ -522,9 +618,9 @@ export const generateQuestOutline = async (
                     contents: userPrompt,
                     config: {
                         systemInstruction,
-                        responseMimeType: "application/json",
+                        responseMimeType: 'application/json',
                         responseSchema: questConfigSchema,
-                    }
+                    },
                 });
                 if (response.usageMetadata) {
                     const inputTokens = response.usageMetadata.promptTokenCount || 0;
@@ -539,8 +635,8 @@ export const generateQuestOutline = async (
         };
 
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("The API returned an empty response.");
-        
+        if (!text) throw new Error('The API returned an empty response.');
+
         logger.info('[AI] generateQuestOutline call successful.');
         logger.finest('[AI] Quest outline response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
@@ -553,10 +649,10 @@ export const generateQuestOutline = async (
         json.supportedLanguages = supportedLanguages;
         if (json.board && Array.isArray(json.board.locations)) {
             const jailIndex = json.board.locations.findIndex((loc: any) => loc.type === 'JAIL');
-            json.board.jailPosition = jailIndex !== -1 ? jailIndex : Math.floor(json.board.locations.length / 2);
+            json.board.jailPosition =
+                jailIndex !== -1 ? jailIndex : Math.floor(json.board.locations.length / 2);
         }
         return json as QuestConfig;
-
     } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
         throw e;
@@ -566,11 +662,13 @@ export const generateQuestOutline = async (
 export const generatePregeneratedScenarios = async (
     questConfig: Omit<QuestConfig, 'pregeneratedScenarios'>,
     location: BoardLocation,
-    numScenarios: number,
+    numScenarios: number
 ): Promise<ManagedScenario[]> => {
     if (numScenarios <= 0) return [];
-    
-    logger.info(`[AI] Starting generatePregeneratedScenarios for location "${getLocalizedString(location.name, 'en')}"...`);
+
+    logger.info(
+        `[AI] Starting generatePregeneratedScenarios for location "${getLocalizedString(location.name, 'en')}"...`
+    );
     const settings = settingsService.getAiSettings();
     preflightCheck();
 
@@ -581,13 +679,22 @@ export const generatePregeneratedScenarios = async (
 
     const languageCode = settingsService.getLanguage();
     const isGrounded = !!questConfig.groundingInReality;
-    const resourceNames = questConfig.resources.map(r => getLocalizedString(r.name, 'en').toLowerCase()).join(', ');
+    const resourceNames = questConfig.resources
+        .map((r) => getLocalizedString(r.name, 'en').toLowerCase())
+        .join(', ');
     const supportedLanguages = questConfig.supportedLanguages || ['en', 'es', 'hi', 'ta'];
-    
+
     const logDetails = {
-        mode: 'Pregenerated Scenarios' as const, 
+        mode: 'Pregenerated Scenarios' as const,
         prompt: '',
-        requestDetails: { questName: getLocalizedString(questConfig.name, 'en'), location: getLocalizedString(location.name, 'en'), numScenarios, grounded: isGrounded, language: languageCode, settings: maskedSettings },
+        requestDetails: {
+            questName: getLocalizedString(questConfig.name, 'en'),
+            location: getLocalizedString(location.name, 'en'),
+            numScenarios,
+            grounded: isGrounded,
+            language: languageCode,
+            settings: maskedSettings,
+        },
         model: settings.model,
         inputTokens: undefined as number | undefined,
         outputTokens: undefined as number | undefined,
@@ -596,21 +703,30 @@ export const generatePregeneratedScenarios = async (
     try {
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
-                 logger.info('[AI] Calling Community Gateway for pre-gen scenarios...');
-                 const response = await fetch('/api/generate', {
+                logger.info('[AI] Calling Community Gateway for pre-gen scenarios...');
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('generatePregeneratedScenarios', { questConfig, location, numScenarios, languageCode }))
+                    body: JSON.stringify(
+                        apiRequestBody('generatePregeneratedScenarios', {
+                            questConfig,
+                            location,
+                            numScenarios,
+                            languageCode,
+                        })
+                    ),
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
                 logDetails.outputTokens = undefined;
                 return jsonText;
             }
-            
+
             // This part remains unchanged as it handles non-community providers
             const languageName = LANGUAGE_MAP[languageCode];
-            const languageList = supportedLanguages.map(code => `${LANGUAGE_MAP[code]} ('${code}')`).join(', ');
+            const languageList = supportedLanguages
+                .map((code) => `${LANGUAGE_MAP[code]} ('${code}')`)
+                .join(', ');
             const promptReplacements = {
                 questDescription: getLocalizedString(questConfig.description, 'en'),
                 locationName: getLocalizedString(location.name, 'en'),
@@ -623,12 +739,21 @@ export const generatePregeneratedScenarios = async (
             };
 
             if (isGrounded) {
-                 if (isGemini) {
+                if (isGemini) {
                     const ai = new GoogleGenAI({ apiKey });
-                    const prompt = await loadPrompt('prompts/pregenerated-scenarios-grounded.txt', promptReplacements);
+                    const prompt = await loadPrompt(
+                        'prompts/pregenerated-scenarios-grounded.txt',
+                        promptReplacements
+                    );
                     logDetails.prompt = prompt;
-                    logger.info(`[AI] Calling Gemini (grounded) for pre-gen scenarios: ${settings.model}`);
-                    const response = await ai.models.generateContent({ model: settings.model, contents: prompt, config: { tools: [{ googleSearch: {} }] } });
+                    logger.info(
+                        `[AI] Calling Gemini (grounded) for pre-gen scenarios: ${settings.model}`
+                    );
+                    const response = await ai.models.generateContent({
+                        model: settings.model,
+                        contents: prompt,
+                        config: { tools: [{ googleSearch: {} }] },
+                    });
                     if (response.usageMetadata) {
                         const inputTokens = response.usageMetadata.promptTokenCount || 0;
                         const totalTokens = response.usageMetadata.totalTokenCount || 0;
@@ -638,49 +763,80 @@ export const generatePregeneratedScenarios = async (
                         statsService.updateTokens({ inputTokens, outputTokens });
                     }
                     return response.text ?? '';
-                 } else {
-                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '"');
-                    const systemInstruction = await loadPrompt('prompts/pregenerated-scenarios-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
+                } else {
+                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(
+                        /"/g,
+                        '"'
+                    );
+                    const systemInstruction = await loadPrompt(
+                        'prompts/pregenerated-scenarios-grounded-openai.txt',
+                        { ...promptReplacements, schema: schemaString }
+                    );
                     logDetails.prompt = systemInstruction;
-                    logger.info(`[AI] Calling OpenAI-compatible (grounded) for pre-gen scenarios: ${settings.model}`);
+                    logger.info(
+                        `[AI] Calling OpenAI-compatible (grounded) for pre-gen scenarios: ${settings.model}`
+                    );
                     const jsonResponse = await fetchOpenAICompatible(settings, {
                         model: settings.model,
                         messages: [{ role: 'system', content: systemInstruction }],
-                        response_format: { type: "json_object" }
+                        response_format: { type: 'json_object' },
                     });
-                     if (jsonResponse.usage) {
+                    if (jsonResponse.usage) {
                         logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                         logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                        statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                        statsService.updateTokens({
+                            inputTokens: logDetails.inputTokens,
+                            outputTokens: logDetails.outputTokens,
+                        });
                     }
                     return jsonResponse.choices[0].message.content;
                 }
-
-            } else { // Fictional flow
+            } else {
+                // Fictional flow
                 if (!isGemini) {
-                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '"');
-                    const systemInstruction = await loadPrompt('prompts/pregenerated-scenarios-fictional-openai.txt', { ...promptReplacements, schema: schemaString });
+                    const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(
+                        /"/g,
+                        '"'
+                    );
+                    const systemInstruction = await loadPrompt(
+                        'prompts/pregenerated-scenarios-fictional-openai.txt',
+                        { ...promptReplacements, schema: schemaString }
+                    );
                     logDetails.prompt = systemInstruction;
-                    logger.info(`[AI] Calling OpenAI-compatible (fictional) for pre-gen scenarios: ${settings.model}`);
+                    logger.info(
+                        `[AI] Calling OpenAI-compatible (fictional) for pre-gen scenarios: ${settings.model}`
+                    );
                     const jsonResponse = await fetchOpenAICompatible(settings, {
                         model: settings.model,
                         messages: [{ role: 'system', content: systemInstruction }],
-                        response_format: { type: "json_object" }
+                        response_format: { type: 'json_object' },
                     });
-                     if (jsonResponse.usage) {
+                    if (jsonResponse.usage) {
                         logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                         logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                        statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                        statsService.updateTokens({
+                            inputTokens: logDetails.inputTokens,
+                            outputTokens: logDetails.outputTokens,
+                        });
                     }
                     return jsonResponse.choices[0].message.content;
                 } else {
-                    const prompt = await loadPrompt('prompts/pregenerated-scenarios-fictional.txt', promptReplacements);
+                    const prompt = await loadPrompt(
+                        'prompts/pregenerated-scenarios-fictional.txt',
+                        promptReplacements
+                    );
                     logDetails.prompt = prompt;
                     const ai = new GoogleGenAI({ apiKey });
-                    logger.info(`[AI] Calling Gemini (fictional) for pre-gen scenarios: ${settings.model}`);
+                    logger.info(
+                        `[AI] Calling Gemini (fictional) for pre-gen scenarios: ${settings.model}`
+                    );
                     const response = await ai.models.generateContent({
-                        model: settings.model, contents: prompt,
-                        config: { responseMimeType: "application/json", responseSchema: scenarioArraySchema }
+                        model: settings.model,
+                        contents: prompt,
+                        config: {
+                            responseMimeType: 'application/json',
+                            responseSchema: scenarioArraySchema,
+                        },
                     });
                     if (response.usageMetadata) {
                         const inputTokens = response.usageMetadata.promptTokenCount || 0;
@@ -694,9 +850,9 @@ export const generatePregeneratedScenarios = async (
                 }
             }
         };
-        
+
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("The API returned an empty response.");
+        if (!text) throw new Error('The API returned an empty response.');
         logger.info('[AI] generatePregeneratedScenarios call successful.');
         logger.finest('[AI] Pre-gen scenarios response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
@@ -705,10 +861,14 @@ export const generatePregeneratedScenarios = async (
         const jsonText = jsonMatch ? jsonMatch[1] : text;
 
         const parsed = JSON.parse(jsonText);
-        const scenarios: Omit<ManagedScenario, 'id'|'custom'|'enabled'>[] = parsed.scenarios || [];
-        
+        const scenarios: Omit<ManagedScenario, 'id' | 'custom' | 'enabled'>[] =
+            parsed.scenarios || [];
+
         return scenarios.map((s, i) => ({
-            ...s, id: `${getLocalizedString(location.name, 'en').toLowerCase().replace(/\s+/g, '-')}-${i}`, custom: false, enabled: true,
+            ...s,
+            id: `${getLocalizedString(location.name, 'en').toLowerCase().replace(/\s+/g, '-')}-${i}`,
+            custom: false,
+            enabled: true,
         }));
     } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
@@ -716,22 +876,34 @@ export const generatePregeneratedScenarios = async (
     }
 };
 
-export const generateDynamicScenario = async (questConfig: QuestConfig, player: Player, location: BoardLocation): Promise<ManagedScenario> => {
-    logger.info(`[AI] Starting generateDynamicScenario for location "${getLocalizedString(location.name, 'en')}"...`);
+export const generateDynamicScenario = async (
+    questConfig: QuestConfig,
+    player: Player,
+    location: BoardLocation
+): Promise<ManagedScenario> => {
+    logger.info(
+        `[AI] Starting generateDynamicScenario for location "${getLocalizedString(location.name, 'en')}"...`
+    );
     const settings = settingsService.getAiSettings();
     preflightCheck();
-    
+
     const isCommunity = settings.providerId === 'community';
     const apiKey = isCommunity ? 'N/A' : getApiKey(settings.providerId);
     const maskedSettings = { ...settings, apiKey: isCommunity ? 'N/A' : maskApiKey(apiKey) };
     const isGemini = settings.providerId === 'gemini';
     const isGrounded = !!questConfig.groundingInReality;
     const languageCode = settingsService.getLanguage();
-    
+
     const logDetails = {
         mode: (isGrounded ? 'Dynamic Scenario (Grounded)' : 'Dynamic Scenario (Fictional)') as any,
         prompt: '',
-        requestDetails: { questName: getLocalizedString(questConfig.name, 'en'), location: getLocalizedString(location.name, 'en'), grounded: isGrounded, language: languageCode, settings: maskedSettings },
+        requestDetails: {
+            questName: getLocalizedString(questConfig.name, 'en'),
+            location: getLocalizedString(location.name, 'en'),
+            grounded: isGrounded,
+            language: languageCode,
+            settings: maskedSettings,
+        },
         model: settings.model,
         inputTokens: undefined as number | undefined,
         outputTokens: undefined as number | undefined,
@@ -741,24 +913,35 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
         let source: any = null;
 
         const apiCall = async (): Promise<string> => {
-             if (isCommunity) {
+            if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for dynamic scenario...');
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('generateDynamicScenario', { questConfig, player, location, languageCode }))
+                    body: JSON.stringify(
+                        apiRequestBody('generateDynamicScenario', {
+                            questConfig,
+                            player,
+                            location,
+                            languageCode,
+                        })
+                    ),
                 });
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
                 logDetails.outputTokens = undefined;
                 return jsonText;
             }
-            
+
             // This part remains unchanged for non-community providers
             const languageName = LANGUAGE_MAP[languageCode];
-            const resourceNames = questConfig.resources.map(r => getLocalizedString(r.name, 'en').toLowerCase()).join(', ');
+            const resourceNames = questConfig.resources
+                .map((r) => getLocalizedString(r.name, 'en').toLowerCase())
+                .join(', ');
             const supportedLanguages = questConfig.supportedLanguages || ['en', 'es', 'hi', 'ta'];
-            const languageList = supportedLanguages.map(code => `${LANGUAGE_MAP[code]} ('${code}')`).join(', ');
+            const languageList = supportedLanguages
+                .map((code) => `${LANGUAGE_MAP[code]} ('${code}')`)
+                .join(', ');
             const promptReplacements = {
                 questDescription: getLocalizedString(questConfig.description, 'en'),
                 locationName: getLocalizedString(location.name, 'en'),
@@ -772,11 +955,20 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
             if (isGrounded) {
                 if (isGemini) {
                     const ai = new GoogleGenAI({ apiKey });
-                    const prompt = await loadPrompt('prompts/dynamic-scenario-grounded.txt', promptReplacements);
+                    const prompt = await loadPrompt(
+                        'prompts/dynamic-scenario-grounded.txt',
+                        promptReplacements
+                    );
                     logDetails.prompt = prompt;
-                    logger.info(`[AI] Calling Gemini (grounded) for dynamic scenario: ${settings.model}`);
-                    const response = await ai.models.generateContent({ model: settings.model, contents: prompt, config: { tools: [{ googleSearch: {} }] } });
-                     if (response.usageMetadata) {
+                    logger.info(
+                        `[AI] Calling Gemini (grounded) for dynamic scenario: ${settings.model}`
+                    );
+                    const response = await ai.models.generateContent({
+                        model: settings.model,
+                        contents: prompt,
+                        config: { tools: [{ googleSearch: {} }] },
+                    });
+                    if (response.usageMetadata) {
                         const inputTokens = response.usageMetadata.promptTokenCount || 0;
                         const totalTokens = response.usageMetadata.totalTokenCount || 0;
                         const outputTokens = Math.max(0, totalTokens - inputTokens);
@@ -786,40 +978,81 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                     }
                     source = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.[0]?.web;
                     return response.text ?? '';
-                } else { // Grounded, OpenAI-compatible
-                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '"');
-                    const systemInstruction = await loadPrompt('prompts/dynamic-scenario-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
+                } else {
+                    // Grounded, OpenAI-compatible
+                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(
+                        /"/g,
+                        '"'
+                    );
+                    const systemInstruction = await loadPrompt(
+                        'prompts/dynamic-scenario-grounded-openai.txt',
+                        { ...promptReplacements, schema: schemaString }
+                    );
                     logDetails.prompt = systemInstruction;
-                    logger.info(`[AI] Calling OpenAI-compatible (grounded) for dynamic scenario: ${settings.model}`);
-                     const jsonResponse = await fetchOpenAICompatible(settings, { model: settings.model, messages: [{ role: 'system', content: systemInstruction }], response_format: { type: "json_object" } });
-                     if (jsonResponse.usage) {
+                    logger.info(
+                        `[AI] Calling OpenAI-compatible (grounded) for dynamic scenario: ${settings.model}`
+                    );
+                    const jsonResponse = await fetchOpenAICompatible(settings, {
+                        model: settings.model,
+                        messages: [{ role: 'system', content: systemInstruction }],
+                        response_format: { type: 'json_object' },
+                    });
+                    if (jsonResponse.usage) {
                         logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                         logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                        statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                        statsService.updateTokens({
+                            inputTokens: logDetails.inputTokens,
+                            outputTokens: logDetails.outputTokens,
+                        });
                     }
                     return jsonResponse.choices[0].message.content;
                 }
-            } else { // Fictional flow
+            } else {
+                // Fictional flow
                 if (!isGemini) {
-                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '"');
-                    const systemInstruction = await loadPrompt('prompts/dynamic-scenario-fictional-openai.txt', { ...promptReplacements, schema: schemaString });
+                    const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(
+                        /"/g,
+                        '"'
+                    );
+                    const systemInstruction = await loadPrompt(
+                        'prompts/dynamic-scenario-fictional-openai.txt',
+                        { ...promptReplacements, schema: schemaString }
+                    );
                     logDetails.prompt = systemInstruction;
-                    logger.info(`[AI] Calling OpenAI-compatible (fictional) for dynamic scenario: ${settings.model}`);
-                    const jsonResponse = await fetchOpenAICompatible(settings, { model: settings.model, messages: [{ role: 'system', content: systemInstruction }], response_format: { type: "json_object" } });
-                     if (jsonResponse.usage) {
+                    logger.info(
+                        `[AI] Calling OpenAI-compatible (fictional) for dynamic scenario: ${settings.model}`
+                    );
+                    const jsonResponse = await fetchOpenAICompatible(settings, {
+                        model: settings.model,
+                        messages: [{ role: 'system', content: systemInstruction }],
+                        response_format: { type: 'json_object' },
+                    });
+                    if (jsonResponse.usage) {
                         logDetails.inputTokens = jsonResponse.usage.prompt_tokens || 0;
                         logDetails.outputTokens = jsonResponse.usage.completion_tokens || 0;
-                        statsService.updateTokens({ inputTokens: logDetails.inputTokens, outputTokens: logDetails.outputTokens });
+                        statsService.updateTokens({
+                            inputTokens: logDetails.inputTokens,
+                            outputTokens: logDetails.outputTokens,
+                        });
                     }
                     return jsonResponse.choices[0].message.content;
                 } else {
-                    const prompt = await loadPrompt('prompts/dynamic-scenario-fictional.txt', promptReplacements);
+                    const prompt = await loadPrompt(
+                        'prompts/dynamic-scenario-fictional.txt',
+                        promptReplacements
+                    );
                     logDetails.prompt = prompt;
                     const ai = new GoogleGenAI({ apiKey });
-                    logger.info(`[AI] Calling Gemini (fictional) for dynamic scenario: ${settings.model}`);
+                    logger.info(
+                        `[AI] Calling Gemini (fictional) for dynamic scenario: ${settings.model}`
+                    );
                     const response = await ai.models.generateContent({
-                        model: settings.model, contents: prompt,
-                        config: { responseMimeType: "application/json", responseSchema: dynamicScenarioSchema }
+                        model: settings.model,
+                        contents: prompt,
+                        config: {
+                            responseMimeType: 'application/json',
+                            responseSchema: dynamicScenarioSchema,
+                        },
                     });
                     if (response.usageMetadata) {
                         const inputTokens = response.usageMetadata.promptTokenCount || 0;
@@ -835,67 +1068,82 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
         };
 
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("API returned empty response.");
-        
+        if (!text) throw new Error('API returned empty response.');
+
         logger.info('[AI] generateDynamicScenario call successful.');
         logger.finest('[AI] Dynamic scenario response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
         const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
         const jsonText = jsonMatch ? jsonMatch[1] : text;
         const scenarioData = JSON.parse(jsonText) as any;
-        
+
         if (isGrounded && !isGemini && scenarioData.sourceUrl) {
             source = { uri: scenarioData.sourceUrl, title: scenarioData.sourceTitle };
         }
 
         return {
-            ...scenarioData, id: `dynamic-${Date.now()}`,
-            sourceUrl: source?.uri, sourceTitle: source?.title,
-            custom: true, enabled: true,
+            ...scenarioData,
+            id: `dynamic-${Date.now()}`,
+            sourceUrl: source?.uri,
+            sourceTitle: source?.title,
+            custom: true,
+            enabled: true,
         };
-    } catch(e: any) {
+    } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
         throw e;
     }
 };
 
-export const getAIChoice = async (questConfig: QuestConfig, scenario: ManagedScenario, aiPlayer: Player): Promise<number> => {
+export const getAIChoice = async (
+    questConfig: QuestConfig,
+    scenario: ManagedScenario,
+    aiPlayer: Player
+): Promise<number> => {
     logger.info(`[AI] Starting getAIChoice for player "${aiPlayer.name}"...`);
     const settings = settingsService.getAiSettings();
     preflightCheck();
     const apiKey = getApiKey(settings.providerId);
-    
+
     if (settings.providerId !== 'gemini') {
         // Fallback for non-gemini providers to keep it simple
-        logger.warn("AI Player choice is only supported for Gemini provider. Falling back to random choice.");
+        logger.warn(
+            'AI Player choice is only supported for Gemini provider. Falling back to random choice.'
+        );
         return Math.floor(Math.random() * 2);
     }
 
     const maskedSettings = { ...settings, apiKey: maskApiKey(apiKey) };
-    
+
     const promptReplacements = {
         questDescription: getLocalizedString(questConfig.description, 'en'),
         aiPlayerResources: JSON.stringify(aiPlayer.resources),
         scenarioTitle: getLocalizedString(scenario.title, 'en'),
         scenarioDescription: getLocalizedString(scenario.description, 'en'),
         choice0_text: getLocalizedString(scenario.choices[0].text, 'en'),
-        choice0_outcome_explanation: getLocalizedString(scenario.choices[0].outcome.explanation, 'en'),
+        choice0_outcome_explanation: getLocalizedString(
+            scenario.choices[0].outcome.explanation,
+            'en'
+        ),
         choice0_resource_changes: JSON.stringify(scenario.choices[0].outcome.resourceChanges),
         choice1_text: getLocalizedString(scenario.choices[1].text, 'en'),
-        choice1_outcome_explanation: getLocalizedString(scenario.choices[1].outcome.explanation, 'en'),
+        choice1_outcome_explanation: getLocalizedString(
+            scenario.choices[1].outcome.explanation,
+            'en'
+        ),
         choice1_resource_changes: JSON.stringify(scenario.choices[1].outcome.resourceChanges),
     };
 
     const prompt = await loadPrompt('prompts/ai-player-choice.txt', promptReplacements);
-    
+
     const logDetails = {
         mode: 'AI Player Choice' as const,
         prompt: prompt,
-        requestDetails: { 
-            questName: getLocalizedString(questConfig.name, 'en'), 
+        requestDetails: {
+            questName: getLocalizedString(questConfig.name, 'en'),
             scenarioTitle: getLocalizedString(scenario.title, 'en'),
-            aiPlayer: {id: aiPlayer.id, name: aiPlayer.name, resources: aiPlayer.resources},
-            settings: maskedSettings 
+            aiPlayer: { id: aiPlayer.id, name: aiPlayer.name, resources: aiPlayer.resources },
+            settings: maskedSettings,
         },
         model: settings.model,
         inputTokens: undefined as number | undefined,
@@ -910,9 +1158,9 @@ export const getAIChoice = async (questConfig: QuestConfig, scenario: ManagedSce
                 model: settings.model,
                 contents: prompt,
                 config: {
-                    responseMimeType: "application/json",
+                    responseMimeType: 'application/json',
                     responseSchema: aiChoiceSchema,
-                }
+                },
             });
             if (response.usageMetadata) {
                 const inputTokens = response.usageMetadata.promptTokenCount || 0;
@@ -926,8 +1174,8 @@ export const getAIChoice = async (questConfig: QuestConfig, scenario: ManagedSce
         };
 
         const text = await withRetry(apiCall);
-        if (!text) throw new Error("API returned empty response for AI choice.");
-        
+        if (!text) throw new Error('API returned empty response for AI choice.');
+
         logger.info('[AI] getAIChoice call successful.');
         logger.finest('[AI] AI choice response:', text);
         auditLogService.addLog({ ...logDetails, response: text, error: null });
@@ -937,19 +1185,19 @@ export const getAIChoice = async (questConfig: QuestConfig, scenario: ManagedSce
         const choiceIndex = json.choiceIndex;
 
         if (choiceIndex === 0 || choiceIndex === 1) {
-            logger.debug(`[AI] Player "${aiPlayer.name}" chose option ${choiceIndex}. Reasoning: ${json.reasoning}`);
+            logger.debug(
+                `[AI] Player "${aiPlayer.name}" chose option ${choiceIndex}. Reasoning: ${json.reasoning}`
+            );
             return choiceIndex;
         }
-        
-        logger.warn("AI returned invalid choice index, picking randomly.", json);
-        return Math.floor(Math.random() * 2);
 
-    } catch(e: any) {
+        logger.warn('AI returned invalid choice index, picking randomly.', json);
+        return Math.floor(Math.random() * 2);
+    } catch (e: any) {
         auditLogService.addLog({ ...logDetails, response: '', error: e.message });
         throw e;
     }
 };
-
 
 let chatInstance: Chat | null = null;
 let currentSystemInstruction: string | undefined = undefined;
@@ -978,7 +1226,7 @@ export const chatManager = {
             logger.info('[AI Chat] Initializing new chat instance.');
             logger.finest('[AI Chat] System Instruction:', systemInstruction);
             const apiKey = getApiKey(settings.providerId);
-            
+
             const ai = new GoogleGenAI({ apiKey });
             chatInstance = ai.chats.create({
                 model: settings.model || 'gemini-2.5-flash',
@@ -986,18 +1234,21 @@ export const chatManager = {
             });
             currentSystemInstruction = systemInstruction;
         } catch (e) {
-            logger.error("Failed to initialize chat:", e);
+            logger.error('Failed to initialize chat:', e);
             chatInstance = null;
         }
     },
 
-    sendMessageStream: async function* (message: string, history: {role: 'user' | 'model', content: string}[]): AsyncGenerator<string, void, unknown> {
+    sendMessageStream: async function* (
+        message: string,
+        history: { role: 'user' | 'model'; content: string }[]
+    ): AsyncGenerator<string, void, unknown> {
         const settings = settingsService.getAiSettings();
         if (settings.providerId !== 'gemini' && settings.providerId !== 'community') {
-            yield "Chat is only available with the Google Gemini or Community Gateway provider. Please change your provider in the Settings menu.";
+            yield 'Chat is only available with the Google Gemini or Community Gateway provider. Please change your provider in the Settings menu.';
             return;
         }
-        
+
         logger.info('[AI Chat] Sending chat message.');
         const logDetails = {
             mode: 'Chat' as const,
@@ -1009,13 +1260,19 @@ export const chatManager = {
 
         try {
             preflightCheck();
-            let fullResponse = "";
+            let fullResponse = '';
 
             if (settings.providerId === 'community') {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apiRequestBody('chat', { message, history, systemInstruction: currentSystemInstruction }))
+                    body: JSON.stringify(
+                        apiRequestBody('chat', {
+                            message,
+                            history,
+                            systemInstruction: currentSystemInstruction,
+                        })
+                    ),
                 });
                 if (!response.ok || !response.body) {
                     throw new Error(`Community Gateway Error: ${await response.text()}`);
@@ -1024,7 +1281,10 @@ export const chatManager = {
                 const decoder = new TextDecoder();
 
                 while (true) {
-                    const { done, value } = await readWithIdleTimeout(reader, STREAM_IDLE_TIMEOUT_MS);
+                    const { done, value } = await readWithIdleTimeout(
+                        reader,
+                        STREAM_IDLE_TIMEOUT_MS
+                    );
                     if (done) break;
 
                     const chunkText = decoder.decode(value, { stream: true });
@@ -1032,17 +1292,17 @@ export const chatManager = {
                     yield chunkText;
                 }
             } else {
-                 if (!chatInstance) throw new Error("Chat not initialized.");
-                 const streamResult = await chatInstance.sendMessageStream({ message });
-                 for await (const chunk of streamResult) {
-                     const chunkText = chunk.text;
-                     if (chunkText) {
-                         fullResponse += chunkText;
-                         yield chunkText;
-                     }
-                 }
+                if (!chatInstance) throw new Error('Chat not initialized.');
+                const streamResult = await chatInstance.sendMessageStream({ message });
+                for await (const chunk of streamResult) {
+                    const chunkText = chunk.text;
+                    if (chunkText) {
+                        fullResponse += chunkText;
+                        yield chunkText;
+                    }
+                }
             }
-            
+
             logger.info('[AI Chat] Stream finished.');
             logger.finest('[AI Chat] Full response:', fullResponse);
             auditLogService.addLog({ ...logDetails, response: fullResponse, error: null });

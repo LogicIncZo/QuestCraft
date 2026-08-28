@@ -13,7 +13,7 @@ export const API_ACTIONS = [
     'chat',
 ] as const;
 
-export type ApiAction = typeof API_ACTIONS[number];
+export type ApiAction = (typeof API_ACTIONS)[number];
 
 const localizedString = z.string().min(1);
 
@@ -51,10 +51,14 @@ export const actionPayloadSchemas = {
     }),
     chat: z.object({
         message: z.string().min(1).max(16_000),
-        history: z.array(z.object({
-            role: z.enum(['user', 'model']),
-            content: z.string().max(8_000),
-        })).max(200),
+        history: z
+            .array(
+                z.object({
+                    role: z.enum(['user', 'model']),
+                    content: z.string().max(8_000),
+                })
+            )
+            .max(200),
         systemInstruction: z.string().max(64_000).optional(),
     }),
 } as const satisfies Record<ApiAction, z.ZodTypeAny>;
@@ -67,7 +71,7 @@ export type ActionPayloads = {
 
 export function apiRequestBody<A extends ApiAction>(
     action: A,
-    payload: ActionPayloads[A],
+    payload: ActionPayloads[A]
 ): { action: A; payload: unknown } {
     return { action, payload };
 }

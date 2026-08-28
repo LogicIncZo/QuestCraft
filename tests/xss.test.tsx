@@ -20,15 +20,18 @@ describe('DocContent XSS (issue #57)', () => {
     beforeEach(() => {
         document.body.innerHTML = '';
         (window as any).__pwned = false;
-        vi.stubGlobal('fetch', vi.fn(async (url: string) => {
-            if (String(url).startsWith('/locales/')) {
-                return { ok: true, json: async () => ({}) } as Response;
-            }
-            if (String(url).includes('/docs/')) {
-                return { ok: true, text: async () => XSS_MARKDOWN } as Response;
-            }
-            throw new Error(`Unhandled fetch in test: ${url}`);
-        }));
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async (url: string) => {
+                if (String(url).startsWith('/locales/')) {
+                    return { ok: true, json: async () => ({}) } as Response;
+                }
+                if (String(url).includes('/docs/')) {
+                    return { ok: true, text: async () => XSS_MARKDOWN } as Response;
+                }
+                throw new Error(`Unhandled fetch in test: ${url}`);
+            })
+        );
     });
 
     it('renders docs markdown without executing injected scripts', async () => {
@@ -78,12 +81,15 @@ describe('ChatDrawer XSS (issue #57)', () => {
         document.body.innerHTML = '';
         (window as any).__pwned = false;
         Element.prototype.scrollIntoView = vi.fn();
-        vi.stubGlobal('fetch', vi.fn(async (url: string) => {
-            if (String(url).startsWith('/locales/')) {
-                return { ok: true, json: async () => ({}) } as Response;
-            }
-            return { ok: true, text: async () => '' } as Response;
-        }));
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async (url: string) => {
+                if (String(url).startsWith('/locales/')) {
+                    return { ok: true, json: async () => ({}) } as Response;
+                }
+                return { ok: true, text: async () => '' } as Response;
+            })
+        );
     });
 
     it('renders malicious model output inert (no script execution)', async () => {
@@ -103,9 +109,12 @@ describe('ChatDrawer XSS (issue #57)', () => {
         await user.type(input, 'hello');
         await user.keyboard('{Enter}');
 
-        await waitFor(() => {
-            expect(document.querySelector('img[src="x"]')).toBeInTheDocument();
-        }, { timeout: 5000 });
+        await waitFor(
+            () => {
+                expect(document.querySelector('img[src="x"]')).toBeInTheDocument();
+            },
+            { timeout: 5000 }
+        );
 
         expect(document.querySelector('script')).toBeNull();
         expect(document.querySelector('img[onerror]')).toBeNull();

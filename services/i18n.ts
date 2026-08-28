@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { settingsService } from './settingsService';
 import type { LanguageCode } from '../types';

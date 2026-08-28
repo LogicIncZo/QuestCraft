@@ -33,15 +33,18 @@ class Logger {
         }
 
         const debugLevelStr = process.env.DEBUG_LEVEL?.toUpperCase() || 'INFO';
-        const levelKey = Object.keys(LogLevel).find(key => key === debugLevelStr);
+        const levelKey = Object.keys(LogLevel).find((key) => key === debugLevelStr);
 
         if (levelKey && typeof LogLevel[levelKey as keyof typeof LogLevel] === 'number') {
             this.level = LogLevel[levelKey as keyof typeof LogLevel];
         } else {
             this.level = LogLevel.INFO;
         }
-        
-        console.log(`%c[Logger] DEV_MODE enabled. Logging level set to: ${LOG_LEVEL_NAMES[this.level]}`, 'color: #FFA500; font-weight: bold;');
+
+        console.log(
+            `%c[Logger] DEV_MODE enabled. Logging level set to: ${LOG_LEVEL_NAMES[this.level]}`,
+            'color: #FFA500; font-weight: bold;'
+        );
     }
 
     private log(level: LogLevel, ...args: any[]) {
@@ -56,7 +59,7 @@ class Logger {
                 [LogLevel.FINEST]: 'color: #F012BE;',
             };
             const color = colors[level] || 'color: #FFFFFF;';
-            
+
             console.log(`%c[${timestamp}] [${levelName}]`, color, ...args);
         }
     }
@@ -76,7 +79,7 @@ class Logger {
     warn(...args: any[]) {
         this.log(LogLevel.WARN, ...args);
     }
-    
+
     error(...args: any[]) {
         this.log(LogLevel.ERROR, ...args);
     }

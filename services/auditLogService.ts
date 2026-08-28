@@ -15,7 +15,7 @@ export const auditLogService = {
             // Sort by most recent first, which is the natural order after prepending
             return logs;
         } catch (e) {
-            console.error("Failed to parse AI audit logs from localStorage", e);
+            console.error('Failed to parse AI audit logs from localStorage', e);
             return [];
         }
     },
@@ -24,7 +24,7 @@ export const auditLogService = {
             const fullLog: AIAuditLog = {
                 id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
                 timestamp: new Date().toISOString(),
-                ...log
+                ...log,
             };
             const currentLogs = auditLogService.getLogs();
             // Prepend new log to keep it sorted by most recent
@@ -32,7 +32,7 @@ export const auditLogService = {
             localStorage.setItem(AUDIT_LOG_STORAGE_KEY, JSON.stringify(newLogs));
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to save AI audit log to localStorage", e);
+            console.error('Failed to save AI audit log to localStorage', e);
         }
     },
     clearLogs: (): void => {
@@ -40,7 +40,7 @@ export const auditLogService = {
             localStorage.setItem(AUDIT_LOG_STORAGE_KEY, '[]');
             dispatchUpdateEvent();
         } catch (e) {
-            console.error("Failed to clear AI audit logs from localStorage", e);
+            console.error('Failed to clear AI audit logs from localStorage', e);
         }
-    }
+    },
 };

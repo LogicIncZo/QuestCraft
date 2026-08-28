@@ -7,21 +7,22 @@ The application is structured into logical pages for a seamless user experience,
 ## The Problem We Solve
 
 Traditional learning methods often fall short when teaching complex, decision-driven skills.
--   **Static Content:** Slideshows and documents are passive and can't simulate real-world consequences.
--   **High Barrier to Entry:** Creating interactive tutorials usually requires custom code, backend servers, and significant development time.
--   **Lack of Engagement:** Learners can quickly become disengaged with non-interactive content.
+
+- **Static Content:** Slideshows and documents are passive and can't simulate real-world consequences.
+- **High Barrier to Entry:** Creating interactive tutorials usually requires custom code, backend servers, and significant development time.
+- **Lack of Engagement:** Learners can quickly become disengaged with non-interactive content.
 
 QuestCraft tackles these challenges by providing a zero-setup, highly engaging platform for scenario-based learning.
 
 ## Key Features
 
--   **Zero-Friction Start:** Jump right in with the **QuestCraft Community Tier**. It's a free, built-in AI provider that works out of the box with no API key required, powered by leading open-source models.
--   **Create with AI:** Use the Quest Maker wizard to generate entire, playable board games from a simple text description of your idea.
--   **Generate Dynamic Scenarios:** Use Google Search grounding (with Gemini) or search-enabled models (via OpenRouter) to create challenges based on real-world, up-to-the-minute events.
--   **Play and Customize:** Load pre-made quests, play your AI-generated creations, or load any custom `quest.json` file from a URL or by pasting its content.
--   **Run Anywhere:** The app is completely serverless and runs in your browser. No backend, no databases, no complex setup.
--   **Stay in Control:** Your game state is saved locally, and an AI Audit Log provides full transparency into all AI interactions.
--   **Multi-language Support:** Generate and play quests in multiple languages, including English, Spanish, Hindi, and Tamil.
+- **Zero-Friction Start:** Jump right in with the **QuestCraft Community Tier**. It's a free, built-in AI provider that works out of the box with no API key required, powered by leading open-source models.
+- **Create with AI:** Use the Quest Maker wizard to generate entire, playable board games from a simple text description of your idea.
+- **Generate Dynamic Scenarios:** Use Google Search grounding (with Gemini) or search-enabled models (via OpenRouter) to create challenges based on real-world, up-to-the-minute events.
+- **Play and Customize:** Load pre-made quests, play your AI-generated creations, or load any custom `quest.json` file from a URL or by pasting its content.
+- **Run Anywhere:** The app is completely serverless and runs in your browser. No backend, no databases, no complex setup.
+- **Stay in Control:** Your game state is saved locally, and an AI Audit Log provides full transparency into all AI interactions.
+- **Multi-language Support:** Generate and play quests in multiple languages, including English, Spanish, Hindi, and Tamil.
 
 ## Getting Started & Configuration
 
@@ -39,6 +40,7 @@ For advanced users, all application configuration is managed through a `.env` fi
 By default, you do not need an API key. If you want to use your own private models, you need an API key. This key **must** be provided through an environment variable; the application will **never** ask you to enter it in the UI for security reasons.
 
 You can provide a generic key:
+
 ```
 # .env
 # This key will be used for any AI provider selected in the settings.
@@ -61,9 +63,9 @@ TOGETHER_API_KEY="your_together_api_key"
 
 The `.env.sample` file documents other useful variables for controlling application behavior and debugging, including:
 
--   `MAKER_MODE_DISABLED`: To deploy a "player-only" version of the app.
--   `TOKEN_LIMIT`: To set a usage limit for a shared API key in a public demo.
--   `DEV_MODE` & `DEBUG_LEVEL`: To enable detailed console logging for development and troubleshooting.
+- `MAKER_MODE_DISABLED`: To deploy a "player-only" version of the app.
+- `TOKEN_LIMIT`: To set a usage limit for a shared API key in a public demo.
+- `DEV_MODE` & `DEBUG_LEVEL`: To enable detailed console logging for development and troubleshooting.
 
 ### AI Provider Setup
 

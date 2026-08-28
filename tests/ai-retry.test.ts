@@ -28,7 +28,8 @@ describe('withRetry fail-fast policy (issue #55)', () => {
 
     it('retries 429s up to maxRetries', async () => {
         vi.useRealTimers();
-        const call = vi.fn()
+        const call = vi
+            .fn()
             .mockRejectedValueOnce(makeErr(429))
             .mockRejectedValueOnce(makeErr(429))
             .mockResolvedValue('ok');
