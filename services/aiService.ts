@@ -74,6 +74,31 @@ const preflightCheck = () => {
  * @param response The fetch Response object.
  * @returns A promise that resolves to the full text content of the stream.
  */
+const STREAM_IDLE_TIMEOUT_MS = 60_000;
+
+/**
+ * Wraps reader.read() with an idle timeout: if no bytes arrive within
+ * timeoutMs, the stream is cancelled and an error is thrown instead of
+ * hanging the UI forever on a stalled connection. (issue #55)
+ */
+async function readWithIdleTimeout(
+    reader: ReadableStreamDefaultReader<Uint8Array>,
+    timeoutMs: number
+): Promise<ReadableStreamReadResult<Uint8Array>> {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+        timer = setTimeout(() => {
+            reader.cancel('Idle timeout').catch(() => {});
+            reject(new Error(`Stream idle for over ${timeoutMs / 1000}s. Connection appears stalled.`));
+        }, timeoutMs);
+    });
+    try {
+        return await Promise.race([reader.read(), timeout]);
+    } finally {
+        if (timer) clearTimeout(timer);
+    }
+}
+
 async function processCommunityGatewayStream(response: Response): Promise<string> {
     if (!response.ok) {
         throw new Error(`Community Gateway Error: ${await response.text()}`);
@@ -85,10 +110,14 @@ async function processCommunityGatewayStream(response: Response): Promise<string
     const decoder = new TextDecoder();
     let fullResponseText = '';
 
-    while (true) { // eslint-disable-line no-constant-condition
-        const { done, value } = await reader.read();
-        if (done) break;
-        fullResponseText += decoder.decode(value, { stream: true });
+    try {
+        while (true) { // eslint-disable-line no-constant-condition
+            const { done, value } = await readWithIdleTimeout(reader, STREAM_IDLE_TIMEOUT_MS);
+            if (done) break;
+            fullResponseText += decoder.decode(value, { stream: true });
+        }
+    } finally {
+        reader.releaseLock();
     }
     return fullResponseText;
 }
@@ -102,6 +131,7 @@ const maskApiKey = (key: string): string => {
 
 // --- Prompt Loading ---
 const promptCache = new Map<string, string>();
+const warnedPromptPaths = new Set<string>();
 export const loadPrompt = async (path: string, replacements: Record<string, string | number> = {}): Promise<string> => {
     let template = promptCache.get(path);
     if (!template) {
@@ -111,7 +141,10 @@ export const loadPrompt = async (path: string, replacements: Record<string, stri
             template = await response.text();
             promptCache.set(path, template);
         } catch (error) {
-            console.error(error);
+            if (!warnedPromptPaths.has(path)) {
+                warnedPromptPaths.add(path);
+                logger.error(`[PromptManager] Prompt file "${path}" is missing or unreadable — falling back to a generic prompt. Quest quality will be degraded.`, error);
+            }
             return `Generate content based on the user's request.`;
         }
     }
@@ -122,7 +155,7 @@ export const loadPrompt = async (path: string, replacements: Record<string, stri
 
 
 // --- Retry Logic ---
-const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, initialDelay = 1000): Promise<T> => {
+export const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, initialDelay = 1000): Promise<T> => {
     let retries = 0;
     let delay = initialDelay;
 
@@ -137,6 +170,13 @@ const withRetry = async <T>(apiCall: () => Promise<T>, maxRetries = 3, initialDe
             const isRateLimitError = status === 429;
             const isServerError = status >= 500 && status <= 599;
             const isNetworkError = e.message?.includes('Failed to fetch');
+            const isClientError = typeof status === 'number' && status >= 400 && status < 500 && !isRateLimitError;
+
+            if (isClientError) {
+                // 401/403/404 etc: retrying will not fix a bad key or bad request. Fail fast.
+                logger.error(`API call failed with client error ${status}. Not retrying.`, e.message);
+                throw e;
+            }
 
             if ((isRateLimitError || isServerError || isNetworkError) && retries < maxRetries) {
                 retries++;
@@ -995,9 +1035,9 @@ export const chatManager = {
                 const decoder = new TextDecoder();
 
                 while (true) {
-                    const { done, value } = await reader.read();
+                    const { done, value } = await readWithIdleTimeout(reader, STREAM_IDLE_TIMEOUT_MS);
                     if (done) break;
-                    
+
                     const chunkText = decoder.decode(value, { stream: true });
                     fullResponse += chunkText;
                     yield chunkText;

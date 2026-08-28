@@ -105,21 +105,40 @@ export const defaultSettings: AppSettings = {
     language: 'en',
 };
 
+export const SETTINGS_VERSION = 1;
+
+/**
+ * Sequential settings migrations. Each entry upgrades `saved` from
+ * `index + SETTINGS_VERSION - migrations.length` to the next version.
+ * Add new migrations at the END and bump SETTINGS_VERSION. (issue #55)
+ */
+const SETTINGS_MIGRATIONS: ((saved: Record<string, unknown>) => void)[] = [
+    // v0 -> v1: legacy flat `apiKey` moved out of settings; nothing to carry forward.
+    (saved) => {
+        const savedAi = saved.ai as Record<string, unknown> | undefined;
+        if (savedAi) delete savedAi.apiKey;
+    },
+];
+
 export const settingsService = {
     getSettings: (): AppSettings => {
         try {
             const settingsJson = localStorage.getItem(APP_SETTINGS_STORAGE_KEY);
             const saved = settingsJson ? JSON.parse(settingsJson) : {};
-            
+
+            const savedVersion = typeof saved.settingsVersion === 'number' ? saved.settingsVersion : 0;
+            for (let v = savedVersion; v < SETTINGS_MIGRATIONS.length; v++) {
+                SETTINGS_MIGRATIONS[v](saved);
+            }
+
             const savedAi = saved.ai || {};
-            // Clean up legacy apiKey from storage if it exists
             delete savedAi.apiKey;
 
             const merged: AppSettings = {
                 ai: { ...defaultSettings.ai, ...savedAi },
                 language: saved.language || defaultSettings.language
             };
-            
+
             if (!PROVIDER_CONFIGS[merged.ai.providerId]) {
                 merged.ai.providerId = 'community';
             }
@@ -132,6 +151,7 @@ export const settingsService = {
     saveSettings: (settings: AppSettings): void => {
         try {
             const settingsToSave = JSON.parse(JSON.stringify(settings));
+            settingsToSave.settingsVersion = SETTINGS_VERSION;
             if (settingsToSave.ai) {
                 delete settingsToSave.ai.apiKey;
             }
