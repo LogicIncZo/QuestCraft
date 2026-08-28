@@ -349,7 +349,7 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
                     logDetails.outputTokens = outputTokens;
                     statsService.updateTokens({ inputTokens, outputTokens });
                 }
-                return response.text;
+                return response.text ?? '';
             }
         };
 
@@ -428,7 +428,7 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
                     logDetails.outputTokens = outputTokens;
                     statsService.updateTokens({ inputTokens, outputTokens });
                 }
-                return response.text;
+                return response.text ?? '';
             }
         };
 
@@ -534,7 +534,7 @@ export const generateQuestOutline = async (
                     logDetails.outputTokens = outputTokens;
                     statsService.updateTokens({ inputTokens, outputTokens });
                 }
-                return response.text;
+                return response.text ?? '';
             }
         };
 
@@ -637,7 +637,7 @@ export const generatePregeneratedScenarios = async (
                         logDetails.outputTokens = outputTokens;
                         statsService.updateTokens({ inputTokens, outputTokens });
                     }
-                    return response.text;
+                    return response.text ?? '';
                  } else {
                     const schemaString = JSON.stringify(scenarioArraySchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/pregenerated-scenarios-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
@@ -690,7 +690,7 @@ export const generatePregeneratedScenarios = async (
                         logDetails.outputTokens = outputTokens;
                         statsService.updateTokens({ inputTokens, outputTokens });
                     }
-                    return response.text;
+                    return response.text ?? '';
                 }
             }
         };
@@ -785,7 +785,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                         statsService.updateTokens({ inputTokens, outputTokens });
                     }
                     source = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.[0]?.web;
-                    return response.text;
+                    return response.text ?? '';
                 } else { // Grounded, OpenAI-compatible
                     const schemaString = JSON.stringify(dynamicScenarioSchema, null, 2).replace(/"/g, '"');
                     const systemInstruction = await loadPrompt('prompts/dynamic-scenario-grounded-openai.txt', { ...promptReplacements, schema: schemaString });
@@ -829,7 +829,7 @@ export const generateDynamicScenario = async (questConfig: QuestConfig, player: 
                         logDetails.outputTokens = outputTokens;
                         statsService.updateTokens({ inputTokens, outputTokens });
                     }
-                    return response.text;
+                    return response.text ?? '';
                 }
             }
         };
@@ -922,7 +922,7 @@ export const getAIChoice = async (questConfig: QuestConfig, scenario: ManagedSce
                 logDetails.outputTokens = outputTokens;
                 statsService.updateTokens({ inputTokens, outputTokens });
             }
-            return response.text;
+            return response.text ?? '';
         };
 
         const text = await withRetry(apiCall);

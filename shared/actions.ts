@@ -55,7 +55,7 @@ export const actionPayloadSchemas = {
             role: z.enum(['user', 'model']),
             content: z.string().max(8_000),
         })).max(200),
-        systemInstruction: z.string().max(64_000),
+        systemInstruction: z.string().max(64_000).optional(),
     }),
 } as const satisfies Record<ApiAction, z.ZodTypeAny>;
 
