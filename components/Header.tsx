@@ -73,14 +73,14 @@ const Header: React.FC<HeaderProps> = ({
                 <button
                     onClick={onMenuClick}
                     className="text-gray-300 hover:text-white"
-                    aria-label="Open navigation menu"
+                    aria-label={t('menuOpen')}
                 >
                     <MenuIcon />
                 </button>
                 <button
                     onClick={() => onNavigate('home')}
                     className="text-left hover:opacity-80 transition-opacity"
-                    aria-label="Go to Home page"
+                    aria-label={t('navHome')}
                 >
                     <h1 className="text-xl md:text-2xl font-bold text-orange-400 font-mono truncate">
                         {t('questCraftTitle')}

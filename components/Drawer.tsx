@@ -141,17 +141,17 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
                         <button
                             onClick={() => setIsMaximized(!isMaximized)}
                             className="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                            aria-label={isMaximized ? 'Restore drawer size' : 'Maximize drawer'}
+                            aria-label={isMaximized ? t('drawerRestore') : t('drawerMaximize')}
                         >
                             {isMaximized ? <MinimizeIcon /> : <MaximizeIcon />}
                             <span className="sr-only">
-                                {isMaximized ? 'Restore drawer size' : 'Maximize drawer'}
+                                {isMaximized ? t('drawerRestore') : t('drawerMaximize')}
                             </span>
                         </button>
                         <button
                             onClick={onClose}
                             className="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            aria-label="Close drawer"
+                            aria-label={t('drawerClose')}
                         >
                             <svg
                                 className="w-3 h-3"

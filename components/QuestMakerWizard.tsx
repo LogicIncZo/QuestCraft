@@ -52,10 +52,11 @@ const Stepper: React.FC<{
     onStepClick: (stepName: WizardStep) => void;
     disabled: boolean;
 }> = ({ steps, currentStepName, onStepClick, disabled }) => {
+    const { t } = useTranslation();
     const currentStepIndex = steps.findIndex((s) => s.name === currentStepName);
 
     return (
-        <nav className="flex items-center justify-center mb-8" aria-label="Progress">
+        <nav className="flex items-center justify-center mb-8" aria-label={t('navProgress')}>
             <ol role="list" className="flex items-center space-x-2 md:space-x-4">
                 {steps.map((step, index) => (
                     <li key={step.name} className="flex items-center">

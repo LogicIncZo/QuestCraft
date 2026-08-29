@@ -233,5 +233,11 @@
     "ageYoungAdults": "युवा वयस्क (18-25)",
     "ageAdults": "वयस्क (26-64)",
     "ageSeniors": "वरिष्ठ (65+)",
-    "chatSend": "संदेश भेजें"
+    "chatSend": "संदेश भेजें",
+    "drawerMaximize": "ड्रॉर बड़ा करें",
+    "drawerRestore": "ड्रॉर का आकार पुनर्स्थापित करें",
+    "drawerClose": "ड्रॉर बंद करें",
+    "menuOpen": "नेविगेशन मेनू खोलें",
+    "navHome": "होम पेज पर जाएँ",
+    "navProgress": "प्रगति"
 }
