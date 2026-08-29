@@ -233,5 +233,11 @@
     "ageYoungAdults": "Jóvenes Adultos (18-25)",
     "ageAdults": "Adultos (26-64)",
     "ageSeniors": "Mayores (65+)",
-    "chatSend": "Enviar mensaje"
+    "chatSend": "Enviar mensaje",
+    "drawerMaximize": "Maximizar panel",
+    "drawerRestore": "Restaurar tamaño del panel",
+    "drawerClose": "Cerrar panel",
+    "menuOpen": "Abrir menú de navegación",
+    "navHome": "Ir a la página de inicio",
+    "navProgress": "Progreso"
 }
