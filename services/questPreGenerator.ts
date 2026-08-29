@@ -1,8 +1,7 @@
-// @ts-nocheck
 // services/questPreGenerator.ts
 // Pre-generate scenarios for quest (batch web searches at startup)
 
-import type { QuestConfig, BoardLocation, LanguageCode } from '../types';
+import { SearchEngine, type QuestConfig, type BoardLocation, type LanguageCode, type ManagedScenario } from '../types';
 import { generateDynamicScenario, generatePregeneratedScenarios } from './aiService';
 import { webSearchService } from './webSearchService';
 import { statsService } from './statsService';
@@ -53,7 +52,7 @@ export const questPreGenerator = {
             const searchPromises = propertyLocations.map(async (location) => {
                 const searchQuery = `${questConfig.description.en} ${location.description.en}`;
                 return webSearchService.search(searchQuery, {
-                    engine: 'exa', // Default to Exa (free, good for facts)
+                    engine: SearchEngine.EXA, // Default to Exa (free, good for facts)
                     maxResults: 5,
                 });
             });
@@ -140,6 +139,8 @@ export const questPreGenerator = {
                                         },
                                     },
                                 ],
+                                custom: false,
+                                enabled: true,
                             },
                         ];
                     }
@@ -186,11 +187,12 @@ export const questPreGenerator = {
         try {
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
-                return JSON.parse(cached);
+                return JSON.parse(cached) as Record<string, ManagedScenario[]>;
             }
         } catch (e) {
             logger.error(`[PreGenerator] Failed to load cached scenarios:`, e);
             return null;
         }
+        return null;
     },
 };

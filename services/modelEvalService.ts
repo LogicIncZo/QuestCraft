@@ -1,8 +1,9 @@
-// @ts-nocheck
 // services/modelEvalService.ts
 // Model evaluation framework for optimizing prompt selection
 
 import { logger } from './logger';
+import { promptTester, type TestCase, type TestResult } from './promptTester';
+import { scenarioGenerationTests as promptTestCases } from '../tests/promptTestCases';
 
 export interface EvalConfig {
     tasks: string[];
@@ -27,27 +28,27 @@ export const modelEvalService = {
 
             for (const model of config.models) {
                 // Call promptTester for this model + task
-                const testResults = await promptTester.runTestSuite(
+                const report = await promptTester.runTestSuite(
                     task,
-                    [this.getTestCaseForTask(task)],
+                    [modelEvalService.getTestCaseForTask(task)],
                     [model]
                 );
 
                 // Calculate score (0-100)
-                const score = this.calculateScore(testResults);
+                const score = modelEvalService.calculateScore(report.results);
                 results.push({
                     model,
                     task,
                     score,
                     metrics: {
-                        latency: testResults[0]?.latencyMs || 0,
-                        quality: testResults[0]?.passed ? 1 : 0,
-                        hallucination_rate: testResults.some((r) =>
+                        latency: report.results[0]?.latencyMs || 0,
+                        quality: report.results[0]?.passed ? 1 : 0,
+                        hallucination_rate: report.results.some((r) =>
                             r.error?.includes('hallucination')
                         )
                             ? 1
                             : 0,
-                        cost_per_result: this.estimateCost(model, testResults),
+                        cost_per_result: modelEvalService.estimateCost(model, report.results),
                     },
                 });
             }
@@ -87,7 +88,7 @@ export const modelEvalService = {
 
     getTestCaseForTask: (task: string): TestCase => {
         // Return appropriate test case for task type
-        const testCases = require('../tests/promptTestCases');
+        const testCases: TestCase[] = promptTestCases as TestCase[];
         return testCases.find((t) => t.name === task) || testCases[0];
     },
 };

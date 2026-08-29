@@ -1,4 +1,3 @@
-// @ts-nocheck
 // services/modelCapabilityDetector.ts
 // Model capability detection for adaptive prompt generation
 
@@ -108,18 +107,6 @@ export const MODEL_CAPABILITIES: Record<string, ModelCapabilities> = {
     },
 
     // DeepSeek (via OpenRouter)
-    'tngtech/deepseek-r1t2-chimera:free': {
-        supportsJsonSchema: false,
-        supportsTools: false,
-        supportsThinking: true,
-        maxContextTokens: 64000,
-        prefersMarkdown: false,
-        requiresJsonOnly: false,
-        canDoWebSearch: false,
-        supportsStreaming: true,
-        qualityTier: 'medium',
-        supportsMultiLanguage: true,
-    },
     'tngtech/deepseek-r1t2-chimera:free': {
         supportsJsonSchema: false,
         supportsTools: false,

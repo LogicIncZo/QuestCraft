@@ -1,18 +1,13 @@
-// @ts-nocheck
 // services/promptManager.ts
 // Adaptive prompt management with model capability awareness
 
-import type {
-    ModelCapabilities,
-    detectCapabilities,
-    selectPromptVariant,
-} from './modelCapabilityDetector';
+import { selectPromptVariant, type ModelCapabilities, type detectCapabilities } from './modelCapabilityDetector';
 import { loadPrompt as loadPromptFile } from './aiService';
 import { logger } from './logger';
 
 export interface PromptConfig {
     templateName: string;
-    replacements: Record<string, string | number>;
+    replacements: Record<string, string | number | string[]>;
     capabilities: ModelCapabilities;
     requireJsonOutput: boolean;
 }
@@ -22,6 +17,7 @@ export interface ValidationResult {
     error?: string;
     extractedData?: any;
     data?: any;
+    method?: 'json-block' | 'markdown-extraction' | 'bracket-extraction';
 }
 
 export const promptManager = {
@@ -36,11 +32,10 @@ export const promptManager = {
         prompt = selectPromptVariant(prompt, capabilities, requireJsonOutput);
 
         // Add language constraint warning
-        const requestedLangs = replacements.languageList?.length || 0;
-        if (requestedLangs > 2 && !capabilities.supportsMultiLanguage) {
-            const langList = replacements.languageList as string[];
-            const limitedList = langList.slice(0, 2);
-            const langCodes = limitedList
+        const languageListValue = replacements.languageList;
+        if (!capabilities.supportsMultiLanguage && Array.isArray(languageListValue) && languageListValue.length > 2) {
+            const langCodes = languageListValue
+                .slice(0, 2)
                 .map((l) => {
                     const codeMatch = l.match(/'?languageCode'?([a-z]{2})'/)?.[1];
                     return codeMatch || 'en';
@@ -82,7 +77,7 @@ export const promptManager = {
                             const extracted = JSON.parse(output.substring(startIdx, endIdx + 1));
                             return { isValid: true, data: extracted, method: 'bracket-extraction' };
                         } catch (e3) {
-                            return { isValid: false, error: `JSON parse failed: ${e.message}` };
+                            return { isValid: false, error: `JSON parse failed: ${e3 instanceof Error ? e3.message : String(e3)}` };
                         }
                     }
                 }
