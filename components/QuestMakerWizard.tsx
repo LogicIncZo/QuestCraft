@@ -244,11 +244,13 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 );
 
                 try {
-                    const scenarios = await generatePregeneratedScenarios(
-                        draftQuest,
+                    const scenarios = await generatePregeneratedScenarios({
+                        questConfig: draftQuest,
                         location,
-                        numScenarios
-                    );
+                        numScenarios,
+                        language,
+                        useGrounding: false,
+                    });
                     if (scenarios.length > 0) {
                         finalQuestConfig = {
                             ...finalQuestConfig,
