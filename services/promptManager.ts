@@ -88,7 +88,7 @@ export const promptManager = {
 
     // Fallback prompt generator for error scenarios
     generateFallbackPrompt: (originalPrompt: string, errorType: string): string => {
-        const fallbackTemplates = {
+        const fallbackTemplates: Record<string, string> = {
             'json-fail': `You failed to generate valid JSON. Please try again with this simplified request:\n\n${originalPrompt}`,
             'tool-refusal': `You refused to use a tool. Let's try without tool requirements:\n\n${originalPrompt}`,
             'context-overflow': `The previous response was too long. Please try with a shorter context. Focus on the core task:\n\nGenerate a scenario with title and two choices.`,
