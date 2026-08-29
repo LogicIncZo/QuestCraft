@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from '../services/i18n';
 
 interface DrawerProps {
@@ -59,6 +59,58 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
         }
     }, [show]);
 
+    const panelRef = useRef<HTMLDivElement>(null);
+    const previouslyFocused = useRef<HTMLElement | null>(null);
+    const isMountedRef = useRef(false);
+    isMountedRef.current = isMounted && show;
+
+    useEffect(() => {
+        if (!isMountedRef.current) return;
+        previouslyFocused.current = document.activeElement as HTMLElement;
+        const getFocusable = (): HTMLElement[] =>
+            Array.from<HTMLElement>(
+                panelRef.current?.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                ) ?? []
+            ).filter((el: HTMLElement) => !el.hasAttribute('disabled'));
+        const first = getFocusable()[0];
+        if (first) {
+            first.focus();
+        }
+        return () => {
+            previouslyFocused.current?.focus();
+        };
+    }, [show]);
+
+    useEffect(() => {
+        if (!show) return;
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            const focusable: HTMLElement[] = Array.from<HTMLElement>(
+                panelRef.current?.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                ) ?? []
+            ).filter((el: HTMLElement) => !el.hasAttribute('disabled'));
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            const active = document.activeElement as HTMLElement | null;
+            if (e.shiftKey && (active === first || !panelRef.current?.contains(active))) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && (active === last || !panelRef.current?.contains(active))) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, [show, onClose]);
+
     if (!isMounted) {
         return null;
     }
@@ -78,6 +130,7 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
             />
 
             <div
+                ref={panelRef}
                 className={`fixed top-0 right-0 h-full bg-gray-800 border-l border-gray-700 shadow-2xl flex flex-col transform transition-all duration-300 ease-in-out ${drawerWidthClass} ${show ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 <header className="flex justify-between items-center p-4 md:p-5 border-b border-gray-700 flex-shrink-0">
