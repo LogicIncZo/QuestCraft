@@ -521,7 +521,7 @@ export const generateQuestOutline = async (
 
     const languageCode = settingsService.getLanguage();
     const languageName = LANGUAGE_MAP[languageCode];
-    const languageList = (supportedLanguages.length > 0 ? supportedLanguages : ['en'])
+    const languageList = (supportedLanguages.length > 0 ? supportedLanguages : (['en'] as LanguageCode[]))
         .map((code) => `${LANGUAGE_MAP[code]} ('${code}')`)
         .join(', ');
 
@@ -688,7 +688,7 @@ export const generatePregeneratedScenarios = async ({
     const resourceNames = questConfig.resources
         .map((r) => getLocalizedString(r.name, 'en').toLowerCase())
         .join(', ');
-    const supportedLanguages = questConfig.supportedLanguages || ['en', 'es', 'hi', 'ta'];
+    const supportedLanguages = questConfig.supportedLanguages || (['en', 'es', 'hi', 'ta'] as LanguageCode[]);
 
     const logDetails = {
         mode: 'Pregenerated Scenarios' as const,
@@ -944,7 +944,7 @@ export const generateDynamicScenario = async (
             const resourceNames = questConfig.resources
                 .map((r) => getLocalizedString(r.name, 'en').toLowerCase())
                 .join(', ');
-            const supportedLanguages = questConfig.supportedLanguages || ['en', 'es', 'hi', 'ta'];
+            const supportedLanguages = questConfig.supportedLanguages || (['en', 'es', 'hi', 'ta'] as LanguageCode[]);
             const languageList = supportedLanguages
                 .map((code) => `${LANGUAGE_MAP[code]} ('${code}')`)
                 .join(', ');
