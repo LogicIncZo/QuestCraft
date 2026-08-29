@@ -1,10 +1,9 @@
-// @ts-nocheck
 // services/webSearchService.ts
 // Universal web search service (BYOLLM tier only)
 // Community tier uses OpenRouter's :online variant instead
 
 import { logger } from './logger';
-import type { SearchEngine, SearchConfig, SearchResult } from './webSearchService';
+import { SearchEngine, type SearchConfig, type SearchResult } from '../types';
 
 // Exa API key - only available in BYOLLM mode
 const EXA_API_KEY = process.env.EXA_API_KEY;
@@ -24,7 +23,7 @@ export const webSearchService = {
         config: SearchConfig = { engine: SearchEngine.EXA, maxResults: 5 }
     ): Promise<SearchResult[]> => {
         // Check if web search is available
-        if (!this.isSearchAvailable()) {
+        if (!webSearchService.isSearchAvailable()) {
             logger.warn(
                 '[WebSearch] Search not available in community mode - proceeding without search results'
             );
@@ -32,7 +31,7 @@ export const webSearchService = {
         }
 
         // Check for Exa API key in BYOLLM mode
-        if (!this.EXA_API_KEY) {
+        if (!webSearchService.EXA_API_KEY) {
             logger.warn('[WebSearch] Exa API key not configured for BYOLLM mode');
             return [];
         }
@@ -40,11 +39,11 @@ export const webSearchService = {
         try {
             switch (config.engine) {
                 case SearchEngine.EXA:
-                    return await this.searchExa(query, config);
+                    return await webSearchService.searchExa(query, config);
                 case SearchEngine.BRAVE:
-                    return await this.searchBrave(query, config);
+                    return await webSearchService.searchBrave(query, config);
                 case SearchEngine.DUCKDUCKGO:
-                    return await this.searchDuckDuckGo(query, config);
+                    return await webSearchService.searchDuckDuckGo(query, config);
                 default:
                     logger.warn(`[WebSearch] Unsupported engine: ${config.engine}`);
                     return [];
@@ -58,11 +57,15 @@ export const webSearchService = {
 
     // Exa API implementation (FREE, good for educational content)
     searchExa: async (query: string, config: SearchConfig): Promise<SearchResult[]> => {
+        if (!webSearchService.EXA_API_KEY) {
+            logger.warn('[WebSearch] Exa API key not configured for BYOLLM mode');
+            return [];
+        }
         const response = await fetch('https://api.exa.ai/search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': this.EXA_API_KEY,
+                'x-api-key': webSearchService.EXA_API_KEY,
             },
             body: JSON.stringify({
                 query,
@@ -112,12 +115,11 @@ export const webSearchService = {
             const snippetMatch = match[0]?.match(snippetRegex);
             const urlMatch = match[0]?.match(urlRegex);
 
-            if (titleMatch && snippetMatch && urlMatch) {
-                results.push({
-                    title: titleMatch[1]?.replace(/<[^>]+>/g, ''),
-                    snippet: snippetMatch[1]?.replace(/<[^>]+>/g, ''),
-                    url: urlMatch[1],
-                });
+            const title = titleMatch?.[1]?.replace(/<[^>]+>/g, '');
+            const snippet = snippetMatch?.[1]?.replace(/<[^>]+>/g, '');
+            const url = urlMatch?.[1];
+            if (title && snippet && url) {
+                results.push({ title, snippet, url, source: "DuckDuckGo" });
             }
         }
 

@@ -155,7 +155,7 @@ const promptCache = new Map<string, string>();
 const warnedPromptPaths = new Set<string>();
 export const loadPrompt = async (
     path: string,
-    replacements: Record<string, string | number> = {}
+    replacements: Record<string, string | number | string[]> = {}
 ): Promise<string> => {
     let template = promptCache.get(path);
     if (!template) {
@@ -659,11 +659,17 @@ export const generateQuestOutline = async (
     }
 };
 
-export const generatePregeneratedScenarios = async (
-    questConfig: Omit<QuestConfig, 'pregeneratedScenarios'>,
-    location: BoardLocation,
-    numScenarios: number
-): Promise<ManagedScenario[]> => {
+export const generatePregeneratedScenarios = async ({
+    questConfig,
+    location,
+    numScenarios,
+}: {
+    questConfig: Omit<QuestConfig, 'pregeneratedScenarios'>;
+    location: BoardLocation;
+    numScenarios: number;
+    language?: unknown;
+    useGrounding?: boolean;
+}): Promise<ManagedScenario[]> => {
     if (numScenarios <= 0) return [];
 
     logger.info(

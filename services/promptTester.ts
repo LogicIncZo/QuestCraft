@@ -1,9 +1,8 @@
-// @ts-nocheck
 // services/promptTester.ts
 // Automated prompt testing framework
 
 import { promptManager } from './promptManager';
-import { detectCapabilities } from './modelCapabilityDetector';
+import { detectCapabilities, type ModelCapabilities } from './modelCapabilityDetector';
 import { logger } from './logger';
 
 export interface TestCase {
@@ -66,11 +65,11 @@ export const promptTester = {
 
                 try {
                     // Call model (abstract interface, implemented per provider)
-                    const modelOutput = await this.callModel(model, adaptedPrompt);
+                    const modelOutput = await promptTester.callModel(model, adaptedPrompt);
                     const latency = Date.now() - startTime;
 
                     // Validate output
-                    testResult = this.validateOutput(modelOutput, testCase, capabilities, latency);
+                    testResult = promptTester.validateOutput(modelOutput.output, testCase, capabilities, latency, model);
                 } catch (error: any) {
                     testResult = {
                         testCase: testCase.name,
@@ -86,7 +85,7 @@ export const promptTester = {
             }
         }
 
-        return this.generateSummary(results);
+        return promptTester.generateSummary(results);
     },
 
     // Output validation
@@ -94,11 +93,12 @@ export const promptTester = {
         output: string,
         testCase: TestCase,
         capabilities: ModelCapabilities,
-        latency: number
+        latency: number,
+        model: string
     ): TestResult => {
         const result: any = {
             testCase: testCase.name,
-            model, // Set by caller
+            model,
             passed: true,
             latencyMs: latency,
             output,
