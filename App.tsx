@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useCallback, useEffect } from 'react';
 import type { QuestConfig, AppStats, Page, LoadedQuest, AiProviderSettings } from './types';
 import { statsService, STATS_UPDATED_EVENT } from './services/statsService';
 import {
@@ -17,9 +17,9 @@ import Drawer from './components/Drawer';
 import SettingsPage from './components/SettingsDrawer';
 import StatusBar from './components/StatusBar';
 import WelcomeScreen from './components/WelcomeScreen';
-import GamePage from './components/GamePage';
-import QuestMakerPage from './components/QuestMakerWizard';
-import DocsPage from './components/DocsPage';
+const GamePage = lazy(() => import('./components/GamePage'));
+const QuestMakerPage = lazy(() => import('./components/QuestMakerWizard'));
+const DocsPage = lazy(() => import('./components/DocsPage'));
 import Header from './components/Header';
 import HamburgerMenu from './components/HamburgerMenu';
 import AIAuditLogDrawer from './components/AIAuditLogDrawer';
@@ -279,11 +279,13 @@ const App: React.FC = () => {
                     return null;
                 }
                 return (
-                    <GamePage
-                        questConfig={questConfig}
-                        onExit={handleExitGameImmediate}
-                        onOpenFooterDrawer={setOpenDrawerContent}
-                    />
+                    <Suspense fallback={<PageLoadingFallback />}>
+                        <GamePage
+                            questConfig={questConfig}
+                            onExit={handleExitGameImmediate}
+                            onOpenFooterDrawer={setOpenDrawerContent}
+                        />
+                    </Suspense>
                 );
             case 'maker':
                 if (!isMakerModeEnabled) {
@@ -295,14 +297,20 @@ const App: React.FC = () => {
                     );
                 }
                 return (
-                    <QuestMakerPage
-                        draftQuest={draftQuestForChat}
-                        onLoadQuest={(config) => handleLoadQuest(config, true)}
-                        onDraftUpdate={setDraftQuestForChat}
-                    />
+                    <Suspense fallback={<PageLoadingFallback />}>
+                        <QuestMakerPage
+                            draftQuest={draftQuestForChat}
+                            onLoadQuest={(config) => handleLoadQuest(config, true)}
+                            onDraftUpdate={setDraftQuestForChat}
+                        />
+                    </Suspense>
                 );
             case 'docs':
-                return <DocsPage />;
+                return (
+                    <Suspense fallback={<PageLoadingFallback />}>
+                        <DocsPage />
+                    </Suspense>
+                );
             case 'settings':
                 return (
                     <SettingsPage
@@ -331,6 +339,16 @@ const App: React.FC = () => {
                 );
         }
     };
+
+    const PageLoadingFallback = () => (
+        <div className="flex h-full w-full items-center justify-center bg-gray-900">
+            <div
+                className="h-10 w-10 animate-spin rounded-full border-4 border-gray-600 border-t-white"
+                role="status"
+                aria-label="Loading"
+            />
+        </div>
+    );
 
     const modelDisplayName =
         aiSettings.providerId === 'community' ? PROVIDER_CONFIGS.community.name : aiSettings.model;
