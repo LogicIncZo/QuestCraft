@@ -102,9 +102,9 @@ export const webSearchService = {
         const html = await response.text();
         // Simple regex extraction (enhance with proper parser in production)
         const results: SearchResult[] = [];
-        const titleRegex = /<a[^>]*class="result__a"[^>]*>([^<]+)<\/a>/g;
-        const snippetRegex = /<a[^>]*class="result__snippet"[^>]*>([^<]+)<\/a>/g;
-        const urlRegex = /<a[^>]*href="([^"]+)"/g;
+        const titleRegex = /<a[^>]*class="result__a"[^>]*>([^<]+)<\/a>/;
+        const snippetRegex = /<a[^>]*class="result__snippet"[^>]*>([^<]+)<\/a>/;
+        const urlRegex = /<a[^>]*href="([^"]+)"/;
 
         const matches = html.matchAll(
             new RegExp(titleRegex.source + snippetRegex.source + urlRegex.source, 'g')
@@ -113,7 +113,7 @@ export const webSearchService = {
         for (const match of matches) {
             const titleMatch = match[0]?.match(titleRegex);
             const snippetMatch = match[0]?.match(snippetRegex);
-            const urlMatch = match[0]?.match(urlRegex);
+            const urlMatch = match[0]?.match(/<a[^>]*class="result__a"[^>]*href="([^"]+)"/);
 
             const title = titleMatch?.[1]?.replace(/<[^>]+>/g, '');
             const snippet = snippetMatch?.[1]?.replace(/<[^>]+>/g, '');

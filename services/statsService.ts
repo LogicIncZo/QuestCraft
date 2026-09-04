@@ -87,6 +87,7 @@ export const statsService = {
                 stats.webSearchResults = (stats.webSearchResults || 0) + resultsCount;
             }
 
+            localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
             dispatchUpdateEvent();
         } catch (e) {
             console.error('Failed to update web search stats', e);

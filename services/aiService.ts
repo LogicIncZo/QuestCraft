@@ -1109,7 +1109,6 @@ export const getAIChoice = async (
     logger.info(`[AI] Starting getAIChoice for player "${aiPlayer.name}"...`);
     const settings = settingsService.getAiSettings();
     preflightCheck();
-    const apiKey = getApiKey(settings.providerId);
 
     if (settings.providerId !== 'gemini') {
         // Fallback for non-gemini providers to keep it simple
@@ -1119,6 +1118,7 @@ export const getAIChoice = async (
         return Math.floor(Math.random() * 2);
     }
 
+    const apiKey = getApiKey(settings.providerId);
     const maskedSettings = { ...settings, apiKey: maskApiKey(apiKey) };
 
     const promptReplacements = {

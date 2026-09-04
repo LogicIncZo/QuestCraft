@@ -6,5 +6,11 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./tests/setup.ts'],
         include: ['tests/**/*.test.{ts,tsx}'],
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json-summary'],
+            reportsDirectory: './coverage',
+            include: ['App.tsx', 'api/**', 'components/**', 'services/**', 'shared/**', 'utils/**'],
+        },
     },
 });
