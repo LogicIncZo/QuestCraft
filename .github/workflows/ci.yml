@@ -51,6 +51,9 @@ jobs:
             - name: Setup bun (needed by agent-browser installer)
               uses: oven-sh/setup-bun@v2
 
+            - name: Setup Rust (needed by agent-browser native build)
+              uses: dtolnay/rust-toolchain@stable
+
             - name: Install dependencies
               run: npm ci
 
@@ -58,7 +61,9 @@ jobs:
               run: npm run build
 
             - name: Install agent-browser
-              run: curl -fsSL https://media.zocomputer.com/install/agentbrowser2.sh | bash
+              run: |
+                  export PATH="$HOME/.cargo/bin:$PATH"
+                  curl -fsSL https://media.zocomputer.com/install/agentbrowser2.sh | bash
 
             - name: Run e2e suite
               run: |
