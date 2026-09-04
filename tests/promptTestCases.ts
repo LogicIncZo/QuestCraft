@@ -1,7 +1,12 @@
 // tests/promptTestCases.ts
 // Test case definitions for prompt testing
 
-import type { TestCase } from '../services/promptTester';
+export interface TestCase {
+    name: string;
+    input: Record<string, any>;
+    expectedSchema?: boolean;
+    validators: Record<string, any>;
+}
 
 export const scenarioGenerationTests: TestCase[] = [
     {
