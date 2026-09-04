@@ -25,4 +25,12 @@ You must choose one of the following two options. Analyze them carefully.
 - **Resource Changes:** {choice1_resource_changes}
 
 # Your Task
-Based on your current resources and the potential outcomes, decide which option is strategically better for you. Provide your choice as a JSON object with the index of your chosen option and a brief reasoning for your decision.
+Based on your current resources and the potential outcomes, decide which option is strategically better for you.
+
+# Output Format
+Your entire response MUST be a single, valid JSON object with exactly these two keys:
+- "choiceIndex": the index of your chosen option (0 or 1) as a number.
+- "reasoning": a brief explanation of your decision.
+
+Example:
+{"choiceIndex": 0, "reasoning": "Option 0 costs less money and prevents a larger loss."}

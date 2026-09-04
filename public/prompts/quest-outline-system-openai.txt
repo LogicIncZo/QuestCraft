@@ -18,6 +18,7 @@ Key Instructions:
 - Create a game board with exactly {numLocations} locations. One of these must be 'START' at index 0, 'JAIL' at some index, 'FREE_PARKING', and 'GO_TO_JAIL'. The board should be balanced for this number of locations.
 - The user has specified a 'positivity' level of {positivity} (from 0.0=dystopian to 1.0=optimistic). Use this to influence the tone of names, descriptions, and cards, and set the 'positivity' field in the output to the same value.
 - The 'jailPosition' must correctly point to the index of the 'JAIL' location.
+- The user has specified 'groundingInReality' as {groundingInReality}. Use this to guide the theme and set the 'groundingInReality' field in the output to the same value.
 - Resource names in 'resourceChanges' objects must be the lowercase English name of the resource.
 - Fill all fields creatively and thematically based on the user's idea.
 - Provide content for two footer sections: one titled "Rules" and one titled "About".
