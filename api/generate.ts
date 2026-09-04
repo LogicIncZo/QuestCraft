@@ -320,6 +320,7 @@ function loadPrompt(
 const DEFAULT_ALLOWED_ORIGINS = [
     'https://aipoly.vercel.app',
     'https://quest-craft.vercel.app',
+    'https://questcraft-dusky.vercel.app',
     'http://localhost:5173',
     'http://localhost:4173',
     'http://127.0.0.1:5173',
@@ -334,13 +335,22 @@ const getAllowedOrigins = (): string[] => {
     return [...DEFAULT_ALLOWED_ORIGINS, ...extra];
 };
 
-const isAllowedOrigin = (origin: string | null): boolean => {
+const isAllowedOrigin = (origin: string | null, req?: Request): boolean => {
     if (!origin) return true; // non-browser clients (curl, server-to-server)
+    if (req) {
+        // Same-origin requests: the Origin host equals the serving host
+        try {
+            const host = new URL(req.url).host;
+            if (new URL(origin).host === host) return true;
+        } catch {
+            // malformed origin falls through to the allowlist
+        }
+    }
     return getAllowedOrigins().includes(origin);
 };
 
-const corsHeaders = (origin: string | null): Record<string, string> => ({
-    'Access-Control-Allow-Origin': isAllowedOrigin(origin) && origin ? origin : '',
+const corsHeaders = (origin: string | null, req?: Request): Record<string, string> => ({
+    'Access-Control-Allow-Origin': isAllowedOrigin(origin, req) && origin ? origin : '',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     Vary: 'Origin',
@@ -552,7 +562,7 @@ export default async function handler(req: Request) {
         return new Response(null, {
             status: 204,
             headers: {
-                ...corsHeaders(origin),
+                ...corsHeaders(origin, req),
                 'Access-Control-Max-Age': '86400',
             },
         });
@@ -570,7 +580,7 @@ export default async function handler(req: Request) {
     try {
         body = await req.json();
     } catch {
-        return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin) });
+        return new Response('Malformed JSON body.', { status: 400, headers: corsHeaders(origin, req) });
     }
 
     const action = body?.action as ApiAction;
@@ -579,14 +589,14 @@ export default async function handler(req: Request) {
     if (!payloadSchema) {
         return new Response(`Unknown action: ${String(action)}`, {
             status: 400,
-            headers: corsHeaders(origin),
+            headers: corsHeaders(origin, req),
         });
     }
     const parsed = payloadSchema.safeParse(rawPayload);
     if (!parsed.success) {
         return new Response(
             `Invalid payload for action '${String(action)}': ${parsed.error.issues.map((i: z.ZodIssue) => `${i.path.join('.') || '(root)'} ${i.message}`).join('; ')}`,
-            { status: 400, headers: corsHeaders(origin) }
+            { status: 400, headers: corsHeaders(origin, req) }
         );
     }
 
@@ -618,14 +628,14 @@ export default async function handler(req: Request) {
             default:
                 return new Response(`Unknown action: ${action}`, {
                     status: 400,
-                    headers: corsHeaders(origin),
+                    headers: corsHeaders(origin, req),
                 });
         }
     } catch (error: any) {
         console.error(`Error in action handler for '${body?.action || 'unknown'}':`, error);
         return new Response('An unexpected error occurred. Please try again later.', {
             status: 500,
-            headers: corsHeaders(origin),
+            headers: corsHeaders(origin, req),
         });
     }
 }
