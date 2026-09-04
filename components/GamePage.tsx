@@ -18,6 +18,7 @@ import ActionPanel from './ActionPanel';
 import { useTranslation } from '../services/i18n';
 import { getLocalizedString } from '../utils/localization';
 import { gameStateService } from '../services/gameStateService';
+import { buildFallbackScenario } from '../services/fallbackScenario';
 import { BoardIcon, PlayerIcon, UtilityIcon } from '../constants';
 import { logger } from '../services/logger';
 
@@ -271,6 +272,10 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                 );
                 updateGameState({ activeScenario: dynamicScenario, gamePhase: 'SCENARIO_CHOICE' });
             } catch (error: any) {
+                if (error.name === 'TokenLimitExceededError') {
+                    setGameError(error.message);
+                    return;
+                }
                 logger.warn('Failed to generate dynamic scenario, checking for fallback.', error);
                 const locationNameEn = getLocalizedString(location.name, 'en');
                 const pregenScenarios = questConfig.pregeneratedScenarios?.[locationNameEn];
@@ -281,12 +286,18 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                         pregenScenarios[Math.floor(Math.random() * pregenScenarios.length)];
                     updateGameState({ activeScenario: scenario, gamePhase: 'SCENARIO_CHOICE' });
                 } else {
-                    logger.error('No fallback scenario available.');
-                    let errorMessage = `Failed to generate a dynamic event: ${error instanceof Error ? error.message : String(error)}.`;
-                    if (error.name === 'TokenLimitExceededError') {
-                        errorMessage = error.message;
-                    }
-                    setGameError(errorMessage);
+                    logger.warn(
+                        'No pre-generated fallback available; using deterministic offline scenario to keep the turn playable.'
+                    );
+                    const fallbackScenario = buildFallbackScenario(
+                        questConfig,
+                        players[currentPlayerIndex],
+                        location
+                    );
+                    updateGameState({
+                        activeScenario: fallbackScenario,
+                        gamePhase: 'SCENARIO_CHOICE',
+                    });
                 }
             }
         },

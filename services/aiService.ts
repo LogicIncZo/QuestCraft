@@ -180,6 +180,43 @@ export const loadPrompt = async (
     }, template);
 };
 
+/**
+ * Fetch wrapper that aborts the request after `timeoutMs` and converts the
+ * abort into a GatewayTimeoutError. The Community Gateway proxies to upstream
+ * model providers that can stall indefinitely (serverless function timeouts,
+ * provider outages); without an explicit timeout the caller waits forever and
+ * the game deadlocks in GENERATING_SCENARIO.
+ */
+export class GatewayTimeoutError extends Error {
+    constructor(timeoutMs: number) {
+        super(
+            `Community Gateway request timed out after ${timeoutMs / 1000}s (upstream may be overloaded).`
+        );
+        this.name = 'GatewayTimeoutError';
+    }
+}
+
+export const GATEWAY_TIMEOUT_MS = 45_000;
+
+const fetchWithTimeout = async (
+    url: string,
+    init: RequestInit,
+    timeoutMs: number = GATEWAY_TIMEOUT_MS
+): Promise<Response> => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...init, signal: controller.signal });
+    } catch (error: any) {
+        if (error?.name === 'AbortError') {
+            throw new GatewayTimeoutError(timeoutMs);
+        }
+        throw error;
+    } finally {
+        clearTimeout(timer);
+    }
+};
+
 // --- Retry Logic ---
 export const withRetry = async <T>(
     apiCall: () => Promise<T>,
@@ -200,6 +237,7 @@ export const withRetry = async <T>(
             const isRateLimitError = status === 429;
             const isServerError = status >= 500 && status <= 599;
             const isNetworkError = e.message?.includes('Failed to fetch');
+            const isTimeoutError = e instanceof GatewayTimeoutError;
             const isClientError =
                 typeof status === 'number' && status >= 400 && status < 500 && !isRateLimitError;
 
@@ -212,7 +250,10 @@ export const withRetry = async <T>(
                 throw e;
             }
 
-            if ((isRateLimitError || isServerError || isNetworkError) && retries < maxRetries) {
+            if (
+                (isRateLimitError || isServerError || isNetworkError || isTimeoutError) &&
+                retries < maxRetries
+            ) {
                 retries++;
                 logger.warn(
                     `API call failed with retryable error. Retrying in ${delay}ms... (Attempt ${retries}/${maxRetries})`,
@@ -293,7 +334,7 @@ export const testConnection = async (settings: AiProviderSettings): Promise<void
     logger.info(`[AI] Testing connection for provider: ${settings.providerId}`);
 
     if (settings.providerId === 'community') {
-        const response = await fetch('/api/generate', {
+        const response = await fetchWithTimeout('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(apiRequestBody('testConnection', undefined)),
@@ -358,7 +399,7 @@ export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for enhance idea...');
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(apiRequestBody('enhanceQuestIdea', { idea, ageGroup })),
@@ -446,7 +487,7 @@ export const generateRandomQuestIdea = async (ageGroup: string): Promise<string>
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for random idea...');
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(apiRequestBody('generateRandomQuestIdea', { ageGroup })),
@@ -557,7 +598,7 @@ export const generateQuestOutline = async (
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for quest outline...');
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(
@@ -710,7 +751,7 @@ export const generatePregeneratedScenarios = async ({
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for pre-gen scenarios...');
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(
@@ -921,7 +962,7 @@ export const generateDynamicScenario = async (
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for dynamic scenario...');
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(
@@ -1269,7 +1310,7 @@ export const chatManager = {
             let fullResponse = '';
 
             if (settings.providerId === 'community') {
-                const response = await fetch('/api/generate', {
+                const response = await fetchWithTimeout('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(

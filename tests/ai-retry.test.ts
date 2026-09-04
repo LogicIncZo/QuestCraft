@@ -4,7 +4,7 @@ vi.mock('../services/logger', () => ({
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(), finest: vi.fn() },
 }));
 
-import { withRetry, TokenLimitExceededError } from '../services/aiService';
+import { withRetry, TokenLimitExceededError, GatewayTimeoutError } from '../services/aiService';
 
 const makeErr = (status?: number, msg = 'api error') => {
     const e: any = new Error(msg);
@@ -50,5 +50,25 @@ describe('withRetry fail-fast policy (issue #55)', () => {
         const call = vi.fn().mockRejectedValue(new TokenLimitExceededError('limit'));
         await expect(withRetry(call, 3, 1)).rejects.toBeInstanceOf(TokenLimitExceededError);
         expect(call).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('withRetry timeout policy (issue #78)', () => {
+    it('retries GatewayTimeoutError (Vercel function invocation timeouts)', async () => {
+        vi.useRealTimers();
+        const call = vi
+            .fn()
+            .mockRejectedValueOnce(new GatewayTimeoutError(45000))
+            .mockResolvedValue('ok');
+        const result = await withRetry(call, 3, 1);
+        expect(result).toBe('ok');
+        expect(call).toHaveBeenCalledTimes(2);
+    });
+
+    it('gives up on GatewayTimeoutError after maxRetries', async () => {
+        vi.useRealTimers();
+        const call = vi.fn().mockRejectedValue(new GatewayTimeoutError(45000));
+        await expect(withRetry(call, 2, 1)).rejects.toBeInstanceOf(GatewayTimeoutError);
+        expect(call).toHaveBeenCalledTimes(3);
     });
 });
