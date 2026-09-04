@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import showdown from 'showdown';
 import { sanitizeHtml } from '../utils/sanitizeHtml';
+import { fetchTextAsset } from '../utils/staticAssets';
 
 const converter = new showdown.Converter({
     ghCompatibleHeaderId: true,
@@ -27,15 +28,7 @@ const DocContent: React.FC<DocContentProps> = ({ docId, onHeadingsExtracted }) =
     useEffect(() => {
         setIsLoading(true);
         setError(null);
-        fetch(`/docs/${docId}.md`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(
-                        `Failed to fetch documentation file: ${res.status} ${res.statusText}`
-                    );
-                }
-                return res.text();
-            })
+        fetchTextAsset(`/docs/${docId}.md`)
             .then((text) => {
                 const html = sanitizeHtml(converter.makeHtml(text));
 

@@ -26,6 +26,7 @@ import AIAuditLogDrawer from './components/AIAuditLogDrawer';
 import ChatDrawer from './components/ChatDrawer';
 import HomePage from './components/HomePage';
 import { getLocalizedString } from './utils/localization';
+import { fetchJsonAsset } from './utils/staticAssets';
 import { sanitizeHtml } from './utils/sanitizeHtml';
 import { useTranslation } from './services/i18n';
 import { logger } from './services/logger';
@@ -85,19 +86,25 @@ const App: React.FC = () => {
 
         const loadDefaultQuests = async () => {
             try {
-                const questsPromises = DEFAULT_QUEST_PATHS.map(async (filePath) => {
-                    const response = await fetch(filePath);
-                    if (!response.ok) {
-                        console.error(`Failed to fetch quest: ${filePath}`);
-                        return null;
-                    }
-                    const config: QuestConfig = await response.json();
-                    return { filePath, config };
-                });
-
-                const loadedQuests = (await Promise.all(questsPromises)).filter(
-                    (q): q is LoadedQuest => q !== null
+                const questsResults = await Promise.allSettled(
+                    DEFAULT_QUEST_PATHS.map(async (filePath) => {
+                        const config: QuestConfig = await fetchJsonAsset<QuestConfig>(filePath);
+                        return { filePath, config };
+                    })
                 );
+
+                const loadedQuests = questsResults
+                    .map((result) => {
+                        if (result.status === 'fulfilled') {
+                            return result.value;
+                        }
+                        console.error(
+                            `Skipping default quest that failed to load:`,
+                            result.reason instanceof Error ? result.reason.message : result.reason
+                        );
+                        return null;
+                    })
+                    .filter((q): q is LoadedQuest => q !== null);
                 setDefaultQuests(loadedQuests);
             } catch (error) {
                 console.error('Error loading default quests:', error);
