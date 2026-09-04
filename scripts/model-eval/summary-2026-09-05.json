@@ -1,0 +1,374 @@
+{
+ "DeepSeek V3.2": {
+  "quest": [
+   {
+    "json": true,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 239171,
+    "cost": 0.00382314075,
+    "intok": 2201,
+    "outtok": 10415
+   },
+   {
+    "json": true,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 282967,
+    "cost": 0.00520346,
+    "intok": 2203,
+    "outtok": 12186
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": false,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": false,
+    "keyname": "choice_index",
+    "lat": 3984
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 2982
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "chosen_option",
+    "lat": 4125
+   }
+  ],
+  "chat": [
+   {
+    "words": 128,
+    "ok": true
+   },
+   {
+    "words": 267,
+    "ok": false
+   }
+  ]
+ },
+ "Gemma 4 31B": {
+  "quest": [
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 52742,
+    "cost": 0.0020776,
+    "intok": 2127,
+    "outtok": 5485
+   },
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 65436,
+    "cost": 0.0021012,
+    "intok": 2125,
+    "outtok": 5555
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": true,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 1329
+   },
+   {
+    "key": false,
+    "smart": false,
+    "keyname": "index",
+    "lat": 1261
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 1328
+   }
+  ],
+  "chat": [
+   {
+    "words": 86,
+    "ok": true
+   },
+   {
+    "words": 119,
+    "ok": true
+   }
+  ]
+ },
+ "Gemma 3 27B": {
+  "quest": [
+   {
+    "json": true,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 82794,
+    "cost": 0.00227086,
+    "intok": 2117,
+    "outtok": 4670
+   },
+   {
+    "json": true,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 246457,
+    "cost": 0.0010452,
+    "intok": 2119,
+    "outtok": 5473
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": true,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "option",
+    "lat": 2094
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "option",
+    "lat": 1862
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "option",
+    "lat": 5173
+   }
+  ],
+  "chat": [
+   {
+    "words": 218,
+    "ok": false
+   },
+   {
+    "words": 125,
+    "ok": true
+   }
+  ]
+ },
+ "GLM-5.3-Flash": {
+  "quest": [
+   {
+    "json": false,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 143746,
+    "cost": 0.004158085,
+    "intok": 2159,
+    "outtok": 16000
+   },
+   {
+    "json": false,
+    "struct": false,
+    "lang": false,
+    "ground": false,
+    "lat": 160081,
+    "cost": 0.004157935,
+    "intok": 2157,
+    "outtok": 16000
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": false,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 4083
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 7285
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 10641
+   }
+  ],
+  "chat": [
+   {
+    "words": 227,
+    "ok": false
+   },
+   {
+    "words": 219,
+    "ok": false
+   }
+  ]
+ },
+ "Qwen3.5 397B": {
+  "quest": [
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 120130,
+    "cost": 0.02683083,
+    "intok": 2113,
+    "outtok": 11114
+   },
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 109577,
+    "cost": 0.02374827,
+    "intok": 2111,
+    "outtok": 9797
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": true,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 16032
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 14306
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 10332
+   }
+  ],
+  "chat": [
+   {
+    "words": 126,
+    "ok": true
+   },
+   {
+    "words": 147,
+    "ok": true
+   }
+  ]
+ },
+ "Gemini 2.5 Flash (baseline)": {
+  "quest": [
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 33549,
+    "cost": 0.0194133,
+    "intok": 2111,
+    "outtok": 7512
+   },
+   {
+    "json": true,
+    "struct": true,
+    "lang": false,
+    "ground": false,
+    "lat": 35120,
+    "cost": 0.01786594,
+    "intok": 2107,
+    "outtok": 7105
+   }
+  ],
+  "scen": [
+   {
+    "json": true,
+    "perfect": false,
+    "two": false,
+    "lang": false
+   }
+  ],
+  "choice": [
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "chosen_option",
+    "lat": 1240
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "decision",
+    "lat": 977
+   },
+   {
+    "key": false,
+    "smart": true,
+    "keyname": "choice",
+    "lat": 875
+   }
+  ],
+  "chat": [
+   {
+    "words": 76,
+    "ok": true
+   },
+   {
+    "words": 153,
+    "ok": false
+   }
+  ]
+ }
+}

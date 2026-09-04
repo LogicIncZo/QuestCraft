@@ -1,0 +1,1786 @@
+[
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "no-index-key"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 348,
+      "completion_tokens": 99,
+      "total_tokens": 447,
+      "cost": 0.000131712,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000131712,
+        "upstream_inference_prompt_cost": 9.0132e-05,
+        "upstream_inference_completions_cost": 4.158e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 3984,
+    "fallbackNoJsonMode": false,
+    "keyCompliant": false,
+    "choiceSemanticOK": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 334,
+      "completion_tokens": 73,
+      "total_tokens": 407,
+      "cost": 9.513075e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 9.513075e-05,
+        "upstream_inference_prompt_cost": 7.1643e-05,
+        "upstream_inference_completions_cost": 2.348775e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 2982,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "no-index-key"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 342,
+      "completion_tokens": 105,
+      "total_tokens": 447,
+      "cost": 0.00010714275,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00010714275,
+        "upstream_inference_prompt_cost": 7.3359e-05,
+        "upstream_inference_completions_cost": 3.378375e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 4125,
+    "fallbackNoJsonMode": false,
+    "keyCompliant": false,
+    "choiceSemanticOK": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3854,
+      "completion_tokens": 160,
+      "total_tokens": 4014,
+      "cost": 0.00106284,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00106284,
+        "upstream_inference_prompt_cost": 0.00100204,
+        "upstream_inference_completions_cost": 6.08e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 6392,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": false,
+    "fails": [
+      "too-long-267"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3852,
+      "completion_tokens": 341,
+      "total_tokens": 4193,
+      "cost": 0.00020701395,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 3776,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00020701395,
+        "upstream_inference_prompt_cost": 9.72972e-05,
+        "upstream_inference_completions_cost": 0.00010971675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 11210,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "title/desc-localization",
+      "choices=3!=2",
+      "choice-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 817,
+      "completion_tokens": 3248,
+      "total_tokens": 4065,
+      "cost": 0.0012202905,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0012202905,
+        "upstream_inference_prompt_cost": 0.0001752465,
+        "upstream_inference_completions_cost": 0.001045044
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 78431,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "quest_outline",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "name/desc-localization",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2127,
+      "completion_tokens": 5485,
+      "total_tokens": 7612,
+      "cost": 0.0020776,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0020776,
+        "upstream_inference_prompt_cost": 0.0002127,
+        "upstream_inference_completions_cost": 0.0018649
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 52742,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "choice-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 774,
+      "completion_tokens": 1043,
+      "total_tokens": 1817,
+      "cost": 0.00043202,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00043202,
+        "upstream_inference_prompt_cost": 7.74e-05,
+        "upstream_inference_completions_cost": 0.00035462
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 11085,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 344,
+      "completion_tokens": 74,
+      "total_tokens": 418,
+      "cost": 5.956e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 5.956e-05,
+        "upstream_inference_prompt_cost": 3.44e-05,
+        "upstream_inference_completions_cost": 2.516e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1329,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 0,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "no-index-key"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 328,
+      "completion_tokens": 66,
+      "total_tokens": 394,
+      "cost": 5.524e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 32,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 5.524e-05,
+        "upstream_inference_prompt_cost": 3.28e-05,
+        "upstream_inference_completions_cost": 2.244e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1261,
+    "fallbackNoJsonMode": false,
+    "keyCompliant": false,
+    "choiceSemanticOK": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 337,
+      "completion_tokens": 77,
+      "total_tokens": 414,
+      "cost": 5.988e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 5.988e-05,
+        "upstream_inference_prompt_cost": 3.37e-05,
+        "upstream_inference_completions_cost": 2.618e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1328,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3008,
+      "completion_tokens": 114,
+      "total_tokens": 3122,
+      "cost": 0.00030948,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00030948,
+        "upstream_inference_prompt_cost": 0.00027072,
+        "upstream_inference_completions_cost": 3.876e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 4181,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3006,
+      "completion_tokens": 150,
+      "total_tokens": 3156,
+      "cost": 0.0002025,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2976,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002025,
+        "upstream_inference_prompt_cost": 0.0001515,
+        "upstream_inference_completions_cost": 5.1e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 3923,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 4 31B",
+    "modelId": "google/gemma-4-31b-it",
+    "task": "quest_outline_ta",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "name/desc-localization",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2125,
+      "completion_tokens": 5555,
+      "total_tokens": 7680,
+      "cost": 0.0021012,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0021012,
+        "upstream_inference_prompt_cost": 0.0002125,
+        "upstream_inference_completions_cost": 0.0018887
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 65436,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "quest_outline_ta",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "locations=21!=20",
+      "name/desc-localization",
+      "location-localization",
+      "chanceCard-invalid",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2201,
+      "completion_tokens": 10415,
+      "total_tokens": 12616,
+      "cost": 0.00382314075,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00382314075,
+        "upstream_inference_prompt_cost": 0.0004721145,
+        "upstream_inference_completions_cost": 0.00335102625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 239171,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "DeepSeek V3.2",
+    "modelId": "deepseek/deepseek-v3.2",
+    "task": "quest_outline",
+    "tier": "markdown",
+    "valid": false,
+    "fails": [
+      "locations=22!=20",
+      "name/desc-localization",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2203,
+      "completion_tokens": 12186,
+      "total_tokens": 14389,
+      "cost": 0.00520346,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00520346,
+        "upstream_inference_prompt_cost": 0.00057278,
+        "upstream_inference_completions_cost": 0.00463068
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 282967,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 336,
+      "completion_tokens": 98,
+      "total_tokens": 434,
+      "cost": 6.3e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 6.3e-05,
+        "upstream_inference_prompt_cost": 3.36e-05,
+        "upstream_inference_completions_cost": 2.94e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 2094,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 0,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "title/desc-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 766,
+      "completion_tokens": 1095,
+      "total_tokens": 1861,
+      "cost": 0.0004051,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0004051,
+        "upstream_inference_prompt_cost": 7.66e-05,
+        "upstream_inference_completions_cost": 0.0003285
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 18648,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 320,
+      "completion_tokens": 100,
+      "total_tokens": 420,
+      "cost": 6.2e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 6.2e-05,
+        "upstream_inference_prompt_cost": 3.2e-05,
+        "upstream_inference_completions_cost": 3e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1862,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 329,
+      "completion_tokens": 140,
+      "total_tokens": 469,
+      "cost": 4.872e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 4.872e-05,
+        "upstream_inference_prompt_cost": 2.632e-05,
+        "upstream_inference_completions_cost": 2.24e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 5173,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": false,
+    "fails": [
+      "too-long-218"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2959,
+      "completion_tokens": 308,
+      "total_tokens": 3267,
+      "cost": 0.0003883,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0003883,
+        "upstream_inference_prompt_cost": 0.0002959,
+        "upstream_inference_completions_cost": 9.24e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 5761,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2961,
+      "completion_tokens": 168,
+      "total_tokens": 3129,
+      "cost": 0.00031248,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00031248,
+        "upstream_inference_prompt_cost": 0.00023688,
+        "upstream_inference_completions_cost": 7.56e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 4687,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "quest_outline_ta",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "locations=19!=20",
+      "jailPosition=11!=10",
+      "name/desc-localization",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2117,
+      "completion_tokens": 4670,
+      "total_tokens": 6787,
+      "cost": 0.00227086,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00227086,
+        "upstream_inference_prompt_cost": 0.00016936,
+        "upstream_inference_completions_cost": 0.0021015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 82794,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "quest_outline",
+    "tier": "fail",
+    "valid": false,
+    "fails": [
+      "unparseable"
+    ],
+    "finish": "length",
+    "usage": {
+      "prompt_tokens": 2159,
+      "completion_tokens": 16000,
+      "total_tokens": 18159,
+      "cost": 0.004158085,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 64,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.004158085,
+        "upstream_inference_prompt_cost": 0.000158085,
+        "upstream_inference_completions_cost": 0.004
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 12956,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 143746,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 376,
+      "completion_tokens": 246,
+      "total_tokens": 622,
+      "cost": 8.586e-05,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 64,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 8.586e-05,
+        "upstream_inference_prompt_cost": 2.436e-05,
+        "upstream_inference_completions_cost": 6.15e-05
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 146,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 4083,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 0,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 372,
+      "completion_tokens": 557,
+      "total_tokens": 929,
+      "cost": 0.00016331,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 64,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00016331,
+        "upstream_inference_prompt_cost": 2.406e-05,
+        "upstream_inference_completions_cost": 0.00013925
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 410,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 7285,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 372,
+      "completion_tokens": 544,
+      "total_tokens": 916,
+      "cost": 0.00016006,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 64,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00016006,
+        "upstream_inference_prompt_cost": 2.406e-05,
+        "upstream_inference_completions_cost": 0.000136
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 434,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 10641,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemma 3 27B",
+    "modelId": "google/gemma-3-27b-it",
+    "task": "quest_outline",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "locations=19!=20",
+      "jailPosition=12!=11",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2119,
+      "completion_tokens": 5473,
+      "total_tokens": 7592,
+      "cost": 0.0010452,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0010452,
+        "upstream_inference_prompt_cost": 0.00016952,
+        "upstream_inference_completions_cost": 0.00087568
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 246457,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": false,
+    "fails": [
+      "too-long-227"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 5170,
+      "completion_tokens": 702,
+      "total_tokens": 5872,
+      "cost": 0.00056325,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00056325,
+        "upstream_inference_prompt_cost": 0.00038775,
+        "upstream_inference_completions_cost": 0.0001755
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 405,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 9989,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": false,
+    "fails": [
+      "too-long-219"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 5168,
+      "completion_tokens": 904,
+      "total_tokens": 6072,
+      "cost": 0.0012272,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0012272,
+        "upstream_inference_prompt_cost": 0.0007752,
+        "upstream_inference_completions_cost": 0.000452
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 608,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 11375,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "title/desc-localization",
+      "choices=4!=2",
+      "choice-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 817,
+      "completion_tokens": 12824,
+      "total_tokens": 13641,
+      "cost": 0.003267275,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.003267275,
+        "upstream_inference_prompt_cost": 6.1275e-05,
+        "upstream_inference_completions_cost": 0.003206
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 5321,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 181691,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "quest_outline",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "name/desc-localization",
+      "location-localization",
+      "chanceCard-invalid",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2113,
+      "completion_tokens": 11114,
+      "total_tokens": 13227,
+      "cost": 0.02683083,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02683083,
+        "upstream_inference_prompt_cost": 0.00082407,
+        "upstream_inference_completions_cost": 0.02600676
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 3182,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 120130,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 341,
+      "completion_tokens": 1408,
+      "total_tokens": 1749,
+      "cost": 0.00342771,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00342771,
+        "upstream_inference_prompt_cost": 0.00013299,
+        "upstream_inference_completions_cost": 0.00329472
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1270,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 16032,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 0,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "title/desc-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 775,
+      "completion_tokens": 5611,
+      "total_tokens": 6386,
+      "cost": 0.01343199,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01343199,
+        "upstream_inference_prompt_cost": 0.00030225,
+        "upstream_inference_completions_cost": 0.01312974
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 4087,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 65272,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 328,
+      "completion_tokens": 1152,
+      "total_tokens": 1480,
+      "cost": 0.0028236,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0028236,
+        "upstream_inference_prompt_cost": 0.00012792,
+        "upstream_inference_completions_cost": 0.00269568
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1026,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 14306,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "GLM-5.3-Flash",
+    "modelId": "z-ai/glm-5.3-flash",
+    "task": "quest_outline_ta",
+    "tier": "fail",
+    "valid": false,
+    "fails": [
+      "unparseable"
+    ],
+    "finish": "length",
+    "usage": {
+      "prompt_tokens": 2157,
+      "completion_tokens": 16000,
+      "total_tokens": 18157,
+      "cost": 0.004157935,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 64,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.004157935,
+        "upstream_inference_prompt_cost": 0.000157935,
+        "upstream_inference_completions_cost": 0.004
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 12764,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 160081,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 336,
+      "completion_tokens": 842,
+      "total_tokens": 1178,
+      "cost": 0.00210132,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00210132,
+        "upstream_inference_prompt_cost": 0.00013104,
+        "upstream_inference_completions_cost": 0.00197028
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 705,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 10332,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3406,
+      "completion_tokens": 1542,
+      "total_tokens": 4948,
+      "cost": 0.00493662,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00493662,
+        "upstream_inference_prompt_cost": 0.00132834,
+        "upstream_inference_completions_cost": 0.00360828
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1358,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 19497,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 3404,
+      "completion_tokens": 1644,
+      "total_tokens": 5048,
+      "cost": 0.00517452,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00517452,
+        "upstream_inference_prompt_cost": 0.00132756,
+        "upstream_inference_completions_cost": 0.00384696
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1452,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 21613,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "dynamic_scenario",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "choices=3!=2",
+      "choice-localization"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 758,
+      "completion_tokens": 1486,
+      "total_tokens": 2244,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0039424,
+        "upstream_inference_prompt_cost": 0.0002274,
+        "upstream_inference_completions_cost": 0.003715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 7503,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "player_choice",
+    "correct": 0,
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "no-index-key"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 329,
+      "completion_tokens": 93,
+      "total_tokens": 422,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0003312,
+        "upstream_inference_prompt_cost": 9.87e-05,
+        "upstream_inference_completions_cost": 0.0002325
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1240,
+    "fallbackNoJsonMode": false,
+    "keyCompliant": false,
+    "choiceSemanticOK": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "no-index-key"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 313,
+      "completion_tokens": 93,
+      "total_tokens": 406,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0003264,
+        "upstream_inference_prompt_cost": 9.39e-05,
+        "upstream_inference_completions_cost": 0.0002325
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 977,
+    "fallbackNoJsonMode": false,
+    "keyCompliant": false,
+    "choiceSemanticOK": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "player_choice",
+    "correct": 1,
+    "tier": "direct",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 322,
+      "completion_tokens": 64,
+      "total_tokens": 386,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002566,
+        "upstream_inference_prompt_cost": 9.66e-05,
+        "upstream_inference_completions_cost": 0.00016
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 875,
+    "fallbackNoJsonMode": false,
+    "choiceIdx": 1,
+    "keyCompliant": false,
+    "choiceSemanticOK": true
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2952,
+      "completion_tokens": 101,
+      "total_tokens": 3053,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0011381,
+        "upstream_inference_prompt_cost": 0.0008856,
+        "upstream_inference_completions_cost": 0.0002525
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1329,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "chat_game",
+    "tier": "text",
+    "valid": true,
+    "fails": [],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2950,
+      "completion_tokens": 199,
+      "total_tokens": 3149,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0013825,
+        "upstream_inference_prompt_cost": 0.000885,
+        "upstream_inference_completions_cost": 0.0004975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 1849,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "quest_outline",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2111,
+      "completion_tokens": 7512,
+      "total_tokens": 9623,
+      "cost": 0,
+      "is_byok": true,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0194133,
+        "upstream_inference_prompt_cost": 0.0006333,
+        "upstream_inference_completions_cost": 0.01878
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 33549,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Gemini 2.5 Flash (baseline)",
+    "modelId": "google/gemini-2.5-flash",
+    "task": "quest_outline_ta",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "location-localization",
+      "chanceCard-invalid",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2107,
+      "completion_tokens": 7105,
+      "total_tokens": 9212,
+      "cost": 0.01786594,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1958,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01786594,
+        "upstream_inference_prompt_cost": 0.00010344,
+        "upstream_inference_completions_cost": 0.0177625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 35120,
+    "fallbackNoJsonMode": false
+  },
+  {
+    "model": "Qwen3.5 397B",
+    "modelId": "qwen/qwen3.5-397b-a17b",
+    "task": "quest_outline_ta",
+    "tier": "direct",
+    "valid": false,
+    "fails": [
+      "name/desc-localization",
+      "location-localization",
+      "grounding=true!=false"
+    ],
+    "finish": "stop",
+    "usage": {
+      "prompt_tokens": 2111,
+      "completion_tokens": 9797,
+      "total_tokens": 11908,
+      "cost": 0.02374827,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02374827,
+        "upstream_inference_prompt_cost": 0.00082329,
+        "upstream_inference_completions_cost": 0.02292498
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 3147,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "latencyMs": 109577,
+    "fallbackNoJsonMode": false
+  }
+]

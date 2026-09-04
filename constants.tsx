@@ -391,4 +391,5 @@ export const DOC_LINKS = [
     { id: 'maker-guide', title: 'Quest Maker Guide' },
     { id: 'architecture', title: 'Architecture & Design' },
     { id: 'privacy', title: 'Privacy & Data Safety' },
+    { id: 'model-evals', title: 'AI Model Evals' },
 ];
