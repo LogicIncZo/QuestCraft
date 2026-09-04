@@ -36,20 +36,50 @@ jobs:
               env:
                   GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || '' }}
 
-  security-audit:
-    runs-on: ubuntu-latest
+    e2e:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "npm"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+            - name: Setup bun (needed by agent-browser installer)
+              uses: oven-sh/setup-bun@v2
 
-      - name: npm audit (high severity, non-blocking)
-        run: npm audit --audit-level high || echo "::warning::npm audit found high-severity issues"
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Install agent-browser
+              run: curl -fsSL https://media.zocomputer.com/install/agentbrowser2.sh | bash
+
+            - name: Run e2e suite
+              run: |
+                  npx vite preview --port 4173 &
+                  sleep 5
+                  npm run test:e2e
+
+    security-audit:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci --legacy-peer-deps
+
+            - name: npm audit (high severity, non-blocking)
+              run: npm audit --audit-level high || echo "::warning::npm audit found high-severity issues"

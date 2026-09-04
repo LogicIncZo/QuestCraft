@@ -11,11 +11,32 @@ npm run dev
 # Production build
 npm run build
 
-# Preview production build
+# Preview production build (serves dist/; used by the e2e suite)
 npm run preview
+
+# Type check
+npm run typecheck
+
+# Lint / format
+npm run lint
+npm run format
+
+# Unit + component tests (Vitest, jsdom)
+npm test              # single run
+npm run test:coverage
+
+# E2E tests (agent-browser against a production build)
+npm run build
+npx vite preview --port 4173 &
+npm run test:e2e      # drives http://localhost:4173
 ```
 
-**Important:** No linting or testing commands currently exist. This repository lacks ESLint, Prettier, and testing frameworks.
+**Testing:** Vitest unit/component tests live in `tests/` (108 tests). The e2e
+suite in `e2e/e2e.mjs` drives key flows (home, quest list, asset content-types,
+game start, docs, settings/i18n, console error scan) via agent-browser against
+`localhost:4173` and runs in CI as the `e2e` job in `.github/workflows/ci.yml`.
+The suite needs the preview server running first; it exits non-zero on any
+failure.
 
 ## Tech Stack & Setup
 
@@ -237,32 +258,47 @@ const Component: React.FC<ComponentProps> = ({ requiredProp, optionalProp, onAct
 │   ├── statsService.ts  # Usage statistics
 │   └── i18n.ts        # Internationalization
 ├── utils/              # Utility functions
-│   └── localization.ts # String localization helpers
-├── locales/           # Translation files
+│   ├── localization.ts # String localization helpers
+│   └── staticAssets.ts # SPA-fallback-safe fetchers for /quests + /docs assets
+├── locales/           # Translation files (public/locales in production)
 │   ├── en.json        # English (default)
 │   ├── es.json        # Spanish
 │   ├── hi.json        # Hindi
 │   └── ta.json        # Tamil
 ├── types.ts           # Central TypeScript type definitions
 ├── constants.tsx      # React components used as constants (icons)
-├── quests/           # Quest configuration JSON files
+├── tests/             # Vitest unit/component tests
+├── e2e/e2e.mjs        # agent-browser e2e suite (key flows)
+├── public/            # Static assets served verbatim in production builds
+│   ├── quests/        # Quest configuration JSON files (DEFAULT_QUEST_PATHS)
+│   ├── docs/          # Documentation markdown shown on the Docs page
+│   ├── locales/       # Translation JSON
+│   └── prompts/       # AI prompt templates
 ├── App.tsx           # Main application component
 └── index.tsx         # Application entry point
 ```
 
 ## Important Notes
 
-### No Testing Framework
+### Testing
 
-- **No tests exist** in this repository
-- **No testing commands** are available
-- **Recommendation:** Consider adding Vitest or Jest + React Testing Library
+- Unit/component tests: Vitest + jsdom in `tests/` — run with `npm test`.
+  Every PR must keep the suite green (`npm run typecheck && npm test`).
+- Static-asset rule: anything the app fetches at runtime (`/quests/*.json`,
+  `/docs/*.md`, `/locales/*`, `/prompts/*`) must live under `public/`. A
+  repository-root copy will NOT be served by production builds (Vite SPA
+  fallback returns index.html instead — the root cause of issues #59/#77).
+  `tests/static-assets.test.ts` verifies every registered quest/doc file
+  exists under `public/` and parses.
+- E2E: `npm run test:e2e` (agent-browser + production preview). Run the build
+  and `npx vite preview --port 4173` first. CI runs it in the `e2e` job.
+- When adding a shipped quest, add its path to `DEFAULT_QUEST_PATHS` in
+  `constants.tsx` AND place the JSON in `public/quests/`.
 
-### No Linting/Formatting
+### Linting/Formatting
 
-- **No ESLint configuration** exists
-- **No Prettier configuration** exists
-- **Recommendation:** Add code quality tools
+- ESLint (`npm run lint`) and Prettier (`npm run format`) are configured.
+- Keep `npx tsc --noEmit` clean; CI enforces all three.
 
 ### API Security
 
