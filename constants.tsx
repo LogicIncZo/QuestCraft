@@ -377,6 +377,7 @@ export const DEFAULT_QUEST_PATHS = [
     '/quests/aadhaar-quest.json',
     '/quests/architects-of-ai-quest.json',
     '/quests/carbon-crawl-quest.json',
+    '/quests/chennai_-city-of-mayors-quest.json',
     '/quests/equity-&-etiquette_-the-vishaka-challenge-quest.json',
     '/quests/foodie-fun_-the-healthy-habits-game-quest.json',
     '/quests/metro-master_-urban-transit-challenge-quest.json',

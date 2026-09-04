@@ -8,6 +8,7 @@ import { useTranslation } from '../services/i18n';
 import { getLocalizedString } from '../utils/localization';
 import { DOC_LINKS } from '../constants';
 import { sanitizeHtml } from '../utils/sanitizeHtml';
+import { fetchTextAsset } from '../utils/staticAssets';
 
 const converter = new showdown.Converter({
     ghCompatibleHeaderId: true,
@@ -51,9 +52,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
 
         const fetchDocsContext = async (): Promise<string> => {
             const docPromises = DOC_LINKS.map((link) =>
-                fetch(`/docs/${link.id}.md`)
-                    .then((res) => res.text())
-                    .catch(() => '')
+                fetchTextAsset(`/docs/${link.id}.md`).catch(() => '')
             );
             const docContents = await Promise.all(docPromises);
             return docContents.join('\n\n---\n\n');
