@@ -51,6 +51,9 @@ jobs:
             - name: Setup bun (needed by agent-browser installer)
               uses: oven-sh/setup-bun@v2
 
+            - name: Setup pnpm (needed by agent-browser eve prepare script)
+              run: npm install -g pnpm
+
             - name: Setup Rust (needed by agent-browser native build)
               uses: dtolnay/rust-toolchain@stable
 
