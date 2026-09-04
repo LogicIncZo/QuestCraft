@@ -51,7 +51,7 @@ class StreamingTextResponse extends Response {
 }
 
 // --- Model Configuration ---
-const COMMUNITY_MODEL = 'openai/gpt-oss-20b:free';
+const COMMUNITY_MODEL = 'nvidia/nemotron-3.5-lightning:free';
 
 // --- Schemas for OpenAI-compatible models ---
 const localizedStringSchema = {

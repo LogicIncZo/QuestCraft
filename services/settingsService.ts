@@ -22,7 +22,7 @@ export const PROVIDER_CONFIGS: Record<AiProviderId, AiProviderConfig> = {
     community: {
         id: 'community',
         name: 'Community Gateway (Free Tier)',
-        defaultModel: 'openai/gpt-oss-20b:free', // Display only
+        defaultModel: 'nvidia/nemotron-3.5-lightning:free', // Display only
         isCustom: false,
         isGemini: false,
     },
