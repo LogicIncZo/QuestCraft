@@ -1,8 +1,11 @@
-import { questConfigSchema, dynamicScenarioSchema } from '/home/workspace/Projects/QuestCraft/services/schemas';
+import { questConfigSchema, dynamicScenarioSchema } from '../../services/schemas';
 import { readFileSync } from 'fs';
+import { join } from 'path';
+import { fileURLToPath } from 'url';
 
 export const KEY = process.env.OPENROUTER_API_KEY!;
-const PDIR = '/home/workspace/Projects/QuestCraft/public/prompts';
+const PUBLIC_DIR = fileURLToPath(new URL('../../public', import.meta.url));
+const PDIR = join(PUBLIC_DIR, 'prompts');
 const fill = (name: string, reps: Record<string, string | number | string[]>): string => {
   let t = readFileSync(`${PDIR}/${name}`, 'utf8');
   for (const [k, v] of Object.entries(reps)) t = t.split(`{${k}}`).join(String(v));
@@ -82,7 +85,7 @@ export const choiceTasks = (): Task[] => [
     user: 'Choose your option.', jsonMode: true, correct: 1,
   },
 ];
-const cfg = JSON.stringify(JSON.parse(readFileSync('/home/workspace/Projects/QuestCraft/public/quests/validation-quest.json', 'utf8')));
+const cfg = JSON.stringify(JSON.parse(readFileSync(join(PUBLIC_DIR, 'quests', 'validation-quest.json'), 'utf8')));
 export const chatTasks = (): Task[] => [
   {
     key: 'chat_game',

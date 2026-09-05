@@ -133,7 +133,7 @@ everywhere (1–14s).
 2. ~~Restore the `groundingInReality` echo in the OpenAI outline variant~~ (**done**, Finding 2).
 3. Add `MODEL_CAPABILITIES` entries for `google/gemma-4-31b-it` and `qwen/qwen3.5-397b-a17b`; consider replacing the `gemma-3-27b-it` entry.
 4. Re-run GLM-5.3-Flash with strict JSON-schema enforcement before any registry decision.
-5. Measure localization as per-language coverage instead of a 4/4 gate (harness now does).
+5. Measure localization as per-language coverage instead of a 4/4 gate.
 6. Consider a soft length cap ("Keep the reply under 120 words") on `chat-game.txt` — the three verbose models all blew the 150-word budget.
 
 ## Limitations
