@@ -103,6 +103,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                                         onChange={(e) => setUrlInput(e.target.value)}
                                         className="flex-grow p-2 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
                                         placeholder={t('urlPlaceholder')}
+                                        aria-label={t('urlPlaceholder')}
                                     />
                                     <button
                                         onClick={handleLoadFromUrl}
@@ -119,6 +120,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                                     onChange={(e) => setJsonInput(e.target.value)}
                                     className="w-full h-24 p-2 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
                                     placeholder={t('jsonPlaceholder')}
+                                    aria-label={t('jsonPlaceholder')}
                                 />
                                 <button
                                     onClick={handleJsonLoad}

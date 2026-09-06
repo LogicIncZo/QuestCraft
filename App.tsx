@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useCallback, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useCallback, useEffect, useRef } from 'react';
 import type { QuestConfig, AppStats, Page, LoadedQuest, AiProviderSettings } from './types';
 import { statsService, STATS_UPDATED_EVENT } from './services/statsService';
 import {
@@ -75,6 +75,12 @@ const App: React.FC = () => {
     const [isAiConnected, setIsAiConnected] = useState(aiConnectivityService.isConnected());
     const [showAuditLog, setShowAuditLog] = useState(false);
     const [showChat, setShowChat] = useState(false);
+    const mainRef = useRef<HTMLElement>(null);
+
+    // Reset the content scroll position whenever the page changes
+    useEffect(() => {
+        mainRef.current?.scrollTo?.({ top: 0 });
+    }, [page]);
 
     useEffect(() => {
         // Load state from localStorage on initial mount
@@ -369,19 +375,19 @@ const App: React.FC = () => {
                 currentPage={page}
                 isMakerModeEnabled={isMakerModeEnabled}
             />
-            <div
-                className="flex-1 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out"
-                style={{ transform: isMenuOpen ? 'translateX(16rem)' : 'translateX(0)' }}
-            >
+            <div className="flex-1 flex flex-col overflow-hidden">
                 <Header
                     onMenuClick={() => setIsMenuOpen(true)}
+                    isMenuOpen={isMenuOpen}
                     page={page}
                     questConfig={questConfig}
                     onExitGame={handleExitGameWithConfirm}
                     onOpenFooterDrawer={setOpenDrawerContent}
                     onNavigate={handleNavigate}
                 />
-                <main className="flex-1 overflow-y-auto">{renderPage()}</main>
+                <main ref={mainRef} className="flex-1 overflow-y-auto">
+                    {renderPage()}
+                </main>
                 <StatusBar
                     stats={appStats}
                     modelName={modelDisplayName}

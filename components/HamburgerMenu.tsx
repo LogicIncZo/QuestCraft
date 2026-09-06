@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import type { Page } from '../types';
 import { useTranslation } from '../services/i18n';
 import { SettingsIcon, DocsIcon, MakerIcon } from '../constants';
@@ -59,6 +59,18 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
     isMakerModeEnabled,
 }) => {
     const { t } = useTranslation();
+    const navRef = useRef<HTMLElement>(null);
+
+    // Close on Escape and hand focus back to the opening button
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        navRef.current?.focus();
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
 
     return (
         <>
@@ -68,18 +80,22 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
                     isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
                 }`}
                 onClick={onClose}
+                aria-hidden="true"
             />
 
             {/* Menu */}
             <nav
-                className={`fixed top-0 left-0 h-full w-64 bg-gray-800 border-r border-gray-700 p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
+                ref={navRef}
+                tabIndex={-1}
+                aria-label={t('menuOpen')}
+                className={`fixed top-0 left-0 h-full w-64 bg-gray-800 border-r border-gray-700 p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out outline-none ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-orange-400 font-mono">
+                    <p className="text-2xl font-bold text-orange-400 font-mono" aria-hidden="true">
                         {t('questCraftTitle')}
-                    </h1>
+                    </p>
                 </div>
 
                 <div className="space-y-3">

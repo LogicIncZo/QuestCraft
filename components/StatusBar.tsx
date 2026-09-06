@@ -72,17 +72,18 @@ const StatusBar: React.FC<StatusBarProps> = ({
         : `Shared Limit: ${tokenUsage.used.toLocaleString()} / ${tokenUsage.limit.toLocaleString()} tokens used.`;
 
     return (
-        <footer className="fixed bottom-0 left-0 right-0 h-12 bg-gray-900/80 backdrop-blur-md border-t border-gray-700 z-40">
+        <footer className="relative flex-shrink-0 h-12 bg-gray-900/95 backdrop-blur-md border-t border-gray-700 z-40">
             <div className="container mx-auto h-full flex items-center justify-between px-4">
                 {/* Left Side */}
                 <div className="flex items-center gap-3">
-                    <span title={t('aiStatusTitle')} className="text-lg">
+                    <span title={t('aiStatusTitle')} className="text-lg" aria-hidden="true">
                         ✨
                     </span>
                     {isAiConnected && modelName && (
                         <button
                             onClick={onNavigateToSettings}
                             title={t('changeModelTooltip')}
+                            aria-label={`${t('changeModelTooltip')}: ${modelName}`}
                             className="text-gray-400 hover:text-white transition-colors"
                         >
                             <StatItem
@@ -93,18 +94,20 @@ const StatusBar: React.FC<StatusBarProps> = ({
                             />
                         </button>
                     )}
-                    <div className="w-px h-5 bg-gray-700"></div>
+                    <div className="w-px h-5 bg-gray-700" aria-hidden="true"></div>
                     <button
                         onClick={onOpenChat}
                         title={t('chatTitle')}
-                        className="text-gray-400 hover:text-white"
+                        aria-label={t('chatTitle')}
+                        className="text-gray-400 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
                     >
                         <ChatIcon className="w-5 h-5" />
                     </button>
                     <button
                         onClick={onOpenAuditLog}
                         title={t('auditLogTitle')}
-                        className="text-gray-400 hover:text-white"
+                        aria-label={t('auditLogTitle')}
+                        className="text-gray-400 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
                     >
                         <AuditLogIcon className="w-5 h-5" />
                     </button>

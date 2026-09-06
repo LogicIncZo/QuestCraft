@@ -5,6 +5,7 @@ import { getLocalizedString } from '../utils/localization';
 
 interface HeaderProps {
     onMenuClick: () => void;
+    isMenuOpen: boolean;
     page: Page;
     questConfig: QuestConfig | null;
     onExitGame: () => void;
@@ -31,6 +32,7 @@ const MenuIcon = () => (
 
 const Header: React.FC<HeaderProps> = ({
     onMenuClick,
+    isMenuOpen,
     page,
     questConfig,
     onExitGame,
@@ -72,8 +74,9 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-4">
                 <button
                     onClick={onMenuClick}
-                    className="text-gray-300 hover:text-white"
+                    className="text-gray-300 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
                     aria-label={t('menuOpen')}
+                    aria-expanded={isMenuOpen}
                 >
                     <MenuIcon />
                 </button>
@@ -82,9 +85,9 @@ const Header: React.FC<HeaderProps> = ({
                     className="text-left hover:opacity-80 transition-opacity"
                     aria-label={t('navHome')}
                 >
-                    <h1 className="text-xl md:text-2xl font-bold text-orange-400 font-mono truncate">
+                    <span className="block text-xl md:text-2xl font-bold text-orange-400 font-mono truncate">
                         {t('questCraftTitle')}
-                    </h1>
+                    </span>
                 </button>
             </div>
             {renderGameButtons()}

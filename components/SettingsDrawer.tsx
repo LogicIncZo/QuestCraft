@@ -218,7 +218,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         aiSettings.providerId !== 'gemini' && aiSettings.providerId !== 'openai';
 
     return (
-        <div className="p-4 md:p-8 space-y-4">
+        <div className="p-4 md:p-8 space-y-4 max-w-3xl">
             <div>
                 <h2 className="text-2xl font-bold text-orange-400 mb-1">{t('settingsTitle')}</h2>
                 <p className="text-gray-400">{t('settingsDescription')}</p>

@@ -527,10 +527,10 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                     {getLocalizedString(questConfig.description, language)}
                 </p>
 
-                <div className="mb-6">
-                    <label className="block text-lg font-medium text-gray-300 mb-2">
-                        Game Mode
-                    </label>
+                <div className="mb-6" role="group" aria-label={t('gameMode')}>
+                    <div className="block text-lg font-medium text-gray-300 mb-2">
+                        {t('gameMode')}
+                    </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => handleGameModeChange('multi')}
@@ -577,6 +577,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             value={playerNames[i] || ''}
                             onChange={(e) => handlePlayerNameChange(i, e.target.value)}
                             placeholder={`${t('player')} ${i + 1}`}
+                            aria-label={`${t('player')} ${i + 1}`}
                             className="bg-gray-700 text-white p-3 rounded-lg w-full"
                         />
                     ))}
@@ -585,6 +586,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             type="text"
                             value={t('aiOpponent')}
                             readOnly
+                            aria-label={t('aiOpponent')}
                             className="bg-gray-900 text-gray-400 p-3 rounded-lg w-full cursor-not-allowed"
                         />
                     )}
@@ -612,8 +614,11 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
 
     if (players.length === 0) {
         return (
-            <div className="min-h-full bg-gray-900 flex items-center justify-center text-white">
-                Loading...
+            <div
+                className="min-h-full bg-gray-900 flex items-center justify-center text-white"
+                role="status"
+            >
+                {t('loadingQuest')}
             </div>
         );
     }
@@ -678,7 +683,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
 
             {/* Mobile Layout (up to md) */}
             <div className="md:hidden h-full flex flex-col">
-                <main className="flex-1 overflow-y-auto p-2 pb-20">
+                <main className="flex-1 overflow-y-auto p-2">
                     {activeTab === 'board' && (
                         <div className="flex items-center justify-center h-full">
                             {commonGameBoard}
@@ -687,7 +692,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                     {activeTab === 'turn' && commonPlayerDashboard}
                     {activeTab === 'scenario' && commonActionPanel}
                 </main>
-                <nav className="fixed bottom-12 left-0 right-0 z-30 bg-gray-900/80 backdrop-blur-md border-t border-gray-700 grid grid-cols-3 gap-2 p-2">
+                <nav className="flex-shrink-0 bg-gray-900/95 backdrop-blur-md border-t border-gray-700 grid grid-cols-3 gap-2 p-2">
                     <TabButton
                         label={t('tabBoard')}
                         icon={<BoardIcon className="w-6 h-6 mx-auto mb-1" />}

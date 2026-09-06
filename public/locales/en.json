@@ -154,6 +154,7 @@
     "makerModeDescription": "Create your own unique board games with the power of AI.",
     "singlePlayer": "Single Player (vs AI)",
     "multiplayer": "Multiplayer",
+    "gameMode": "Game Mode",
     "aiOpponent": "AI Opponent",
     "aiIsThinking": "AI is thinking...",
     "chatTitle": "AI Chat",

@@ -154,6 +154,7 @@
     "makerModeDescription": "AI की शक्ति से अपने अनूठे बोर्ड गेम बनाएं।",
     "singlePlayer": "एकल खिलाड़ी (बनाम AI)",
     "multiplayer": "मल्टीप्लेयर",
+    "gameMode": "गेम मोड",
     "aiOpponent": "AI प्रतिद्वंद्वी",
     "aiIsThinking": "AI सोच रहा है...",
     "chatTitle": "AI चैट",

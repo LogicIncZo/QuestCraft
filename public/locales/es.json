@@ -154,6 +154,7 @@
     "makerModeDescription": "Crea tus propios juegos de mesa únicos con el poder de la IA.",
     "singlePlayer": "Un Jugador (vs IA)",
     "multiplayer": "Multijugador",
+    "gameMode": "Modo de juego",
     "aiOpponent": "Oponente IA",
     "aiIsThinking": "La IA está pensando...",
     "chatTitle": "Chat con IA",

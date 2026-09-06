@@ -15,27 +15,13 @@
             content="Turn any topic into a playable AI-driven board game. Build quests, learn through play."
         />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://questcraft.vercel.app" />
         <meta property="og:image" content="/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="QuestCraft - AI Powered Board Game Engine" />
         <meta
             name="twitter:description"
             content="Turn any topic into a playable AI-driven board game. Build quests, learn through play."
-        />
-        <meta name="twitter:image" content="/og-image.png" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="QuestCraft - AI Powered Board Game Engine" />
-        <meta
-            property="og:description"
-            content="Turn any topic into a playable AI-driven board game. 8 built-in quests, 4 languages, multi-provider AI."
-        />
-        <meta property="og:image" content="/og-image.png" />
-        <meta property="og:url" content="https://questcraft.vercel.app" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="QuestCraft - AI Powered Board Game Engine" />
-        <meta
-            name="twitter:description"
-            content="Turn any topic into a playable AI-driven board game."
         />
         <meta name="twitter:image" content="/og-image.png" />
         <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
@@ -54,6 +40,10 @@
                             mono: ['Space Mono', 'monospace'],
                         },
                         keyframes: {
+                            'fade-in': {
+                                '0%': { opacity: '0', transform: 'translateY(4px)' },
+                                '100%': { opacity: '1', transform: 'translateY(0)' },
+                            },
                             'dice-roll': {
                                 '0%, 100%': { transform: 'rotate(0deg) scale(1)' },
                                 '25%': { transform: 'rotate(15deg) scale(1.1)' },
@@ -66,6 +56,7 @@
                             },
                         },
                         animation: {
+                            'fade-in': 'fade-in 0.4s ease-out',
                             'dice-roll': 'dice-roll 0.5s ease-in-out',
                             'token-move': 'token-move 0.3s ease-in-out',
                         },
@@ -131,7 +122,31 @@
             }
         </script>
     </head>
-    <body class="bg-gray-900 text-gray-100 font-sans antialiased pb-12">
+    <body class="bg-gray-900 text-gray-100 font-sans antialiased">
+        <style>
+            /* The app shell is a fixed-height flex column; the window itself never scrolls. */
+            html,
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            /* Visible keyboard focus everywhere, without changing mouse aesthetics. */
+            :focus-visible {
+                outline: 2px solid #818cf8;
+                outline-offset: 2px;
+                border-radius: 4px;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+        </style>
         <div id="root"></div>
         <script type="module" src="/index.tsx"></script>
     </body>

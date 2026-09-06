@@ -164,7 +164,9 @@ const DocsPage: React.FC = () => {
 
             {/* Main Content */}
             <main ref={contentRef} className="flex-grow p-6 md:p-10 overflow-y-auto">
-                <DocContent docId={activeDocId} onHeadingsExtracted={setHeadings} />
+                <div className="max-w-3xl mx-auto">
+                    <DocContent docId={activeDocId} onHeadingsExtracted={setHeadings} />
+                </div>
             </main>
 
             {/* Desktop Right Sidebar (TOC) */}

@@ -42,7 +42,7 @@ const getGridPosition = (index: number, total: number) => {
 };
 
 const LocationContent = ({ location }: { location: Board['locations'][0] }) => {
-    const baseIconClass = 'w-8 h-8 md:w-10 md:h-10 mx-auto opacity-80';
+    const baseIconClass = 'w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 mx-auto opacity-80';
     switch (location.type) {
         case BoardLocationType.START:
             return <StartIcon className={baseIconClass} />;
@@ -68,11 +68,13 @@ const LocationContent = ({ location }: { location: Board['locations'][0] }) => {
 const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, language }) => {
     const totalLocations = board.locations.length;
     const sideLength = totalLocations / 4;
-    const gridTemplateColumns = `1.5fr repeat(${sideLength - 1}, 1fr) 1.5fr`;
-    const gridTemplateRows = `1.5fr repeat(${sideLength - 1}, 1fr) 1.5fr`;
+    // minmax(0, 1fr) keeps tile content from inflating tracks beyond the board
+    const track = 'minmax(0, 1fr)';
+    const gridTemplateColumns = `1.5fr repeat(${sideLength - 1}, ${track}) 1.5fr`;
+    const gridTemplateRows = `1.5fr repeat(${sideLength - 1}, ${track}) 1.5fr`;
 
     return (
-        <div className="aspect-square w-full max-w-[80vh] mx-auto p-2 md:p-4 bg-gray-800 rounded-2xl shadow-2xl">
+        <div className="aspect-square w-full max-w-[80vh] max-h-full mx-auto p-2 md:p-4 bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
             <div
                 className="relative grid h-full w-full gap-1"
                 style={{ gridTemplateColumns, gridTemplateRows }}
@@ -87,17 +89,17 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                             key={locationId}
                             id={locationId}
                             style={positionStyle}
-                            className={`relative flex flex-col justify-between p-1.5 md:p-2 rounded-md shadow-inner bg-gray-200 text-gray-800 text-center ${isCorner ? 'items-center justify-center' : ''}`}
+                            className={`relative flex flex-col justify-between p-1 md:p-1.5 rounded-md shadow-inner bg-gray-200 text-gray-800 text-center overflow-hidden ${isCorner ? 'items-center justify-center' : ''}`}
                         >
                             {location.type === 'PROPERTY' && location.color && (
                                 <div
-                                    className={`h-4 md:h-6 w-full ${location.color} rounded-t-sm -mx-1.5 -mt-1.5 md:-mx-2 md:-mt-2 mb-1`}
+                                    className={`h-2.5 md:h-4 w-full ${location.color} rounded-t-sm -mx-1 -mt-1 md:-mx-1.5 md:-mt-1.5 mb-1`}
                                 ></div>
                             )}
                             <div
-                                className={`flex-grow flex flex-col ${isCorner ? 'justify-center items-center' : 'justify-start'}`}
+                                className={`flex-grow flex flex-col min-h-0 ${isCorner ? 'justify-center items-center' : 'justify-start'}`}
                             >
-                                <p className="text-[8px] md:text-xs font-bold uppercase leading-tight tracking-tighter">
+                                <p className="text-[7px] sm:text-[8px] md:text-[10px] font-bold uppercase leading-tight tracking-tighter break-words">
                                     {getLocalizedString(location.name, language)}
                                 </p>
                                 {isCorner && (
@@ -107,21 +109,23 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                                 )}
                             </div>
                             {!isCorner && (
-                                <div className="mt-1">
+                                <div className="mt-1 shrink-0">
                                     <LocationContent location={location} />
                                 </div>
                             )}
 
                             {/* Player Tokens */}
-                            <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1">
+                            <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-1 p-1 pointer-events-none">
                                 {players
                                     .filter((p) => p.position === index && !p.isBankrupt)
                                     .map((p) => (
                                         <div
                                             key={`token-${p.id}`}
-                                            className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-white shadow-lg animate-token-move`}
+                                            role="img"
+                                            aria-label={p.name}
+                                            className={`w-3.5 h-3.5 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-white shadow-lg animate-token-move`}
                                             style={{ animationDelay: `${p.id * 100}ms` }}
-                                            title={`Player ${p.id + 1}`}
+                                            title={p.name}
                                         />
                                     ))}
                             </div>
@@ -131,15 +135,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
 
                 {/* Center Area */}
                 <div
-                    className="flex flex-col items-center justify-center bg-gray-900/50 rounded-lg shadow-xl"
+                    className="flex flex-col items-center justify-center bg-gray-900/50 rounded-lg shadow-xl min-h-0 min-w-0 p-2"
                     style={{
                         gridColumn: `2 / ${sideLength + 1}`,
                         gridRow: `2 / ${sideLength + 1}`,
                     }}
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold font-mono text-center text-orange-400 transform -rotate-6">
+                    <div
+                        aria-hidden="true"
+                        className="text-2xl sm:text-4xl md:text-5xl font-bold font-mono text-center text-orange-400 transform -rotate-6 max-w-full leading-tight"
+                    >
                         {questName}
-                    </h1>
+                    </div>
                 </div>
             </div>
         </div>
