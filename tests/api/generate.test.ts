@@ -128,8 +128,37 @@ describe('api/generate security hardening (issue #56)', () => {
         expect(messages[messages.length - 2].content).toContain('msg-99-');
     });
 
-    it('returns a generic error message on internal failure (no provider error leakage)', async () => {
+    it('falls back to the next community model when the primary fails', async () => {
         typedMockCreate.mockImplementationOnce(() => {
+            throw new Error('OpenRouter quota exceeded for account billing@example.com');
+        });
+
+        const res = await handler(
+            postRequest({
+                action: 'chat',
+                payload: {
+                    message: 'hi',
+                    history: [],
+                    systemInstruction: 'You are a helpful game master.',
+                },
+            })
+        );
+        expect(res.status).toBe(200);
+        expect(typedMockCreate.mock.calls.length).toBeGreaterThanOrEqual(2);
+        expect(typedMockCreate.mock.calls[0][0].model).toBe(
+            'nvidia/nemotron-3-ultra-550b-a55b:free'
+        );
+        expect(typedMockCreate.mock.calls[1][0].model).toBe(
+            'nvidia/nemotron-3-super-120b-a12b:free'
+        );
+        const text = await res.text();
+        expect(text).not.toContain('quota');
+        expect(text).not.toContain('billing@example.com');
+        expect(text).not.toContain('OpenRouter');
+    });
+
+    it('returns a generic error message when the whole chain fails (no provider error leakage)', async () => {
+        typedMockCreate.mockImplementation(() => {
             throw new Error('OpenRouter quota exceeded for account billing@example.com');
         });
 
@@ -148,5 +177,8 @@ describe('api/generate security hardening (issue #56)', () => {
         expect(text).not.toContain('billing@example.com');
         expect(text).not.toContain('OpenRouter');
         expect(text).toContain('unexpected error');
+        typedMockCreate.mockImplementation(async function* () {
+            yield { choices: [{ delta: { content: 'ok' } }] };
+        } as any);
     });
 });

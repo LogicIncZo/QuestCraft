@@ -22,7 +22,7 @@ export const PROVIDER_CONFIGS: Record<AiProviderId, AiProviderConfig> = {
     community: {
         id: 'community',
         name: 'Community Gateway (Free Tier)',
-        defaultModel: 'nvidia/nemotron-3.5-lightning:free', // Display only
+        defaultModel: 'nvidia/nemotron-3-ultra-550b-a55b:free', // Display only (server chain: see api/generate.ts COMMUNITY_MODELS)
         isCustom: false,
         isGemini: false,
     },

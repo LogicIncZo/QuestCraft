@@ -51,7 +51,80 @@ class StreamingTextResponse extends Response {
 }
 
 // --- Model Configuration ---
-const COMMUNITY_MODEL = 'nvidia/nemotron-3.5-lightning:free';
+// Community gateway chain: verified free models with per-request fallback.
+// 1-3 OpenRouter free tier (NVIDIA nemotron family); 4-5 NVIDIA NIM direct
+// (build.nvidia.com free tier, `NVIDIA_API_KEY`). Verified live 2026-09-07
+// against response_format json_object + streaming. `lightning` was dropped:
+// it leaks reasoning text into visible content.
+type CommunityModelEntry = { model: string; client: 'openrouter' | 'nim' };
+const COMMUNITY_MODELS: CommunityModelEntry[] = [
+    { model: 'nvidia/nemotron-3-ultra-550b-a55b:free', client: 'openrouter' },
+    { model: 'nvidia/nemotron-3-super-120b-a12b:free', client: 'openrouter' },
+    { model: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', client: 'openrouter' },
+    { model: 'deepseek-ai/deepseek-v4-flash-0731', client: 'nim' },
+    { model: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning', client: 'nim' },
+];
+// Display-only default (first chain entry) — the server may serve any chain entry.
+const COMMUNITY_MODEL = COMMUNITY_MODELS[0].model;
+
+const NIM_BASE_URL = 'https://integrate.api.nvidia.com/v1';
+
+interface CommunityClients {
+    openrouter: OpenAI;
+    nim?: OpenAI;
+}
+
+function getCommunityClients(): CommunityClients {
+    const openrouterKey = process.env.OPENROUTER_API_KEY;
+    if (!openrouterKey) {
+        throw new Error('Missing OPENROUTER_API_KEY environment variable.');
+    }
+    const openrouter = new OpenAI({
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: openrouterKey,
+        defaultHeaders: {
+            'HTTP-Referer': 'https://questcraft.ai',
+            'X-Title': 'QuestCraft',
+        },
+    });
+    const nimKey = process.env.NVIDIA_API_KEY;
+    const nim = nimKey
+        ? new OpenAI({
+              baseURL: NIM_BASE_URL,
+              apiKey: nimKey,
+          })
+        : undefined;
+    return { openrouter, nim };
+}
+
+/**
+ * Runs a community-tier completion against the first healthy model in
+ * COMMUNITY_MODELS. Transient provider failures (model pulled, rate limit,
+ * upstream overload) fall through to the next entry; NIM entries are
+ * skipped when NVIDIA_API_KEY is not configured.
+ */
+async function communityCompletion(
+    clients: CommunityClients,
+    params: { messages: any[]; [key: string]: any }
+): Promise<any> {
+    let lastError: unknown;
+    for (const entry of COMMUNITY_MODELS) {
+        const client = entry.client === 'nim' ? clients.nim : clients.openrouter;
+        if (!client) continue; // NIM key not configured -> skip NIM entries
+        try {
+            return await client.chat.completions.create({
+                ...(params as any),
+                model: entry.model,
+            });
+        } catch (error) {
+            lastError = error;
+            console.warn(
+                `[community-gateway] ${entry.model} failed: ${(error as Error).message}; trying next model`
+            );
+        }
+    }
+    throw lastError ?? new Error('No community gateway models are configured.');
+}
 
 // --- Schemas for OpenAI-compatible models ---
 const localizedStringSchema = {
@@ -360,21 +433,6 @@ const MAX_CHAT_HISTORY_MESSAGES = 40;
 const MAX_CHAT_MESSAGE_CHARS = 8_000;
 const MAX_CHAT_HISTORY_CHARS = 32_000;
 
-const getOpenAIClient = () => {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-        throw new Error('Missing OPENROUTER_API_KEY environment variable.');
-    }
-    return new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1',
-        apiKey: apiKey,
-        defaultHeaders: {
-            'HTTP-Referer': 'https://questcraft.ai',
-            'X-Title': 'QuestCraft',
-        },
-    });
-};
-
 const LANGUAGE_MAP: Record<string, string> = {
     en: 'English',
     es: 'Spanish',
@@ -399,20 +457,18 @@ const getAgeGroupText = (ageGroupKey: string): string => {
 
 // --- Action Handlers ---
 
-async function handleTestConnection(openai: OpenAI) {
-    await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+async function handleTestConnection(clients: CommunityClients) {
+    await communityCompletion(clients, {
         messages: [{ role: 'user', content: 'test' }],
         max_tokens: 1,
     });
     return new Response('Connection successful', { status: 200 });
 }
 
-async function handleEnhanceQuestIdea(openai: OpenAI, payload: any) {
+async function handleEnhanceQuestIdea(clients: CommunityClients, payload: any) {
     const { idea, ageGroup } = payload;
     const prompt = loadPrompt('enhance-idea.txt', { idea, ageGroup: getAgeGroupText(ageGroup) });
-    const response = await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+    const response = await communityCompletion(clients, {
         messages: [{ role: 'user', content: prompt }],
         stream: true,
     });
@@ -420,11 +476,10 @@ async function handleEnhanceQuestIdea(openai: OpenAI, payload: any) {
     return new StreamingTextResponse(stream);
 }
 
-async function handleGenerateRandomQuestIdea(openai: OpenAI, payload: any) {
+async function handleGenerateRandomQuestIdea(clients: CommunityClients, payload: any) {
     const { ageGroup } = payload;
     const prompt = loadPrompt('random-idea.txt', { ageGroup: getAgeGroupText(ageGroup) });
-    const response = await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+    const response = await communityCompletion(clients, {
         messages: [{ role: 'user', content: prompt }],
         stream: true,
     });
@@ -432,7 +487,7 @@ async function handleGenerateRandomQuestIdea(openai: OpenAI, payload: any) {
     return new StreamingTextResponse(stream);
 }
 
-async function handleGenerateQuestOutline(openai: OpenAI, payload: any) {
+async function handleGenerateQuestOutline(clients: CommunityClients, payload: any) {
     const { idea, numLocations, positivity, supportedLanguages, languageCode } = payload;
     const languageName = LANGUAGE_MAP[languageCode] || 'English';
     const languageList = (supportedLanguages.length > 0 ? supportedLanguages : ['en'])
@@ -451,8 +506,7 @@ async function handleGenerateQuestOutline(openai: OpenAI, payload: any) {
         schema: schemaString,
     });
 
-    const response = await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+    const response = await communityCompletion(clients, {
         messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: prompt },
@@ -464,7 +518,7 @@ async function handleGenerateQuestOutline(openai: OpenAI, payload: any) {
     return new StreamingTextResponse(stream);
 }
 
-async function handleGenerateScenarios(openai: OpenAI, payload: any, action: string) {
+async function handleGenerateScenarios(clients: CommunityClients, payload: any, action: string) {
     const { questConfig, location, numScenarios, languageCode } = payload;
     const isDynamic = action === 'generateDynamicScenario';
 
@@ -492,8 +546,7 @@ async function handleGenerateScenarios(openai: OpenAI, payload: any, action: str
     const schemaString = JSON.stringify(schema, null, 2);
     const systemPrompt = loadPrompt(promptFileKey, { ...replacements, schema: schemaString });
 
-    const response = await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+    const response = await communityCompletion(clients, {
         messages: [{ role: 'system', content: systemPrompt }],
         response_format: { type: 'json_object' },
         stream: true,
@@ -503,7 +556,7 @@ async function handleGenerateScenarios(openai: OpenAI, payload: any, action: str
     return new StreamingTextResponse(stream);
 }
 
-async function handleChat(openai: OpenAI, payload: any) {
+async function handleChat(clients: CommunityClients, payload: any) {
     const { message, history, systemInstruction } = payload;
     const userMessage = String(message ?? '').slice(0, MAX_CHAT_MESSAGE_CHARS);
 
@@ -540,8 +593,7 @@ async function handleChat(openai: OpenAI, payload: any) {
         { role: 'user', content: userMessage },
     ];
 
-    const response = await openai.chat.completions.create({
-        model: COMMUNITY_MODEL,
+    const response = await communityCompletion(clients, {
         stream: true,
         messages: messages as any,
     });
@@ -603,27 +655,27 @@ export default async function handler(req: Request) {
     const payload = parsed.data;
 
     try {
-        const openai = getOpenAIClient();
+        const clients = getCommunityClients();
 
         switch (action) {
             case 'testConnection':
-                return await handleTestConnection(openai);
+                return await handleTestConnection(clients);
 
             case 'enhanceQuestIdea':
-                return await handleEnhanceQuestIdea(openai, payload);
+                return await handleEnhanceQuestIdea(clients, payload);
 
             case 'generateRandomQuestIdea':
-                return await handleGenerateRandomQuestIdea(openai, payload);
+                return await handleGenerateRandomQuestIdea(clients, payload);
 
             case 'generateQuestOutline':
-                return await handleGenerateQuestOutline(openai, payload);
+                return await handleGenerateQuestOutline(clients, payload);
 
             case 'generatePregeneratedScenarios':
             case 'generateDynamicScenario':
-                return await handleGenerateScenarios(openai, payload, action);
+                return await handleGenerateScenarios(clients, payload, action);
 
             case 'chat':
-                return await handleChat(openai, payload);
+                return await handleChat(clients, payload);
 
             default:
                 return new Response(`Unknown action: ${action}`, {
