@@ -57,7 +57,7 @@ class StreamingTextResponse extends Response {
 // against response_format json_object + streaming. `lightning` was dropped:
 // it leaks reasoning text into visible content.
 type CommunityModelEntry = { model: string; client: 'openrouter' | 'nim' };
-const COMMUNITY_MODELS: CommunityModelEntry[] = [
+export const COMMUNITY_MODELS: CommunityModelEntry[] = [
     { model: 'nvidia/nemotron-3-ultra-550b-a55b:free', client: 'openrouter' },
     { model: 'nvidia/nemotron-3-super-120b-a12b:free', client: 'openrouter' },
     { model: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', client: 'openrouter' },
@@ -98,6 +98,19 @@ function getCommunityClients(): CommunityClients {
 }
 
 /**
+ * Wraps a partially-consumed stream: yields the already-peeked first chunk,
+ * then the rest of the original stream unchanged.
+ */
+async function* guardedStream(first: IteratorResult<any>, rest: AsyncIterator<any>) {
+    yield first.value;
+    while (true) {
+        const next = await rest.next();
+        if (next.done) break;
+        yield next.value;
+    }
+}
+
+/**
  * Runs a community-tier completion against the first healthy model in
  * COMMUNITY_MODELS. Transient provider failures (model pulled, rate limit,
  * upstream overload) fall through to the next entry; NIM entries are
@@ -112,10 +125,23 @@ async function communityCompletion(
         const client = entry.client === 'nim' ? clients.nim : clients.openrouter;
         if (!client) continue; // NIM key not configured -> skip NIM entries
         try {
-            return await client.chat.completions.create({
+            const stream = await client.chat.completions.create({
                 ...(params as any),
                 model: entry.model,
             });
+            if (params.stream) {
+                // Streaming errors surface on iteration, not at create() —
+                // peek the first chunk here so upstream failures (429/502,
+                // model pulled) trigger the fallback instead of blowing up
+                // in the caller after we have returned a doomed stream.
+                const iterator = (stream as any)[Symbol.asyncIterator]();
+                const first = await iterator.next();
+                if (first.done) {
+                    throw new Error(`${entry.model} returned an empty stream`);
+                }
+                return guardedStream(first, iterator);
+            }
+            return stream;
         } catch (error) {
             lastError = error;
             console.warn(

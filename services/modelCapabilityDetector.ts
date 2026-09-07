@@ -120,18 +120,42 @@ export const MODEL_CAPABILITIES: Record<string, ModelCapabilities> = {
         supportsMultiLanguage: true,
     },
 
-    // Community Model
-    'openai/gpt-oss-20b:free': {
-        supportsJsonSchema: false,
+    // Community Gateway chain (verified 2026-09-07, see api/generate.ts COMMUNITY_MODELS)
+    'nvidia/nemotron-3-ultra-550b-a55b:free': {
+        supportsJsonSchema: true,
         supportsTools: false,
         supportsThinking: false,
-        maxContextTokens: 131072,
+        maxContextTokens: 1000000,
         prefersMarkdown: false,
-        requiresJsonOnly: false,
+        requiresJsonOnly: true,
+        canDoWebSearch: false, // CRITICAL: No web search in community tier
+        supportsStreaming: true,
+        qualityTier: 'high',
+        supportsMultiLanguage: true,
+    },
+    'nvidia/nemotron-3-super-120b-a12b:free': {
+        supportsJsonSchema: true,
+        supportsTools: false,
+        supportsThinking: false,
+        maxContextTokens: 262144,
+        prefersMarkdown: false,
+        requiresJsonOnly: true,
+        canDoWebSearch: false, // CRITICAL: No web search in community tier
+        supportsStreaming: true,
+        qualityTier: 'high',
+        supportsMultiLanguage: true,
+    },
+    'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free': {
+        supportsJsonSchema: true,
+        supportsTools: false,
+        supportsThinking: true,
+        maxContextTokens: 256000,
+        prefersMarkdown: false,
+        requiresJsonOnly: true,
         canDoWebSearch: false, // CRITICAL: No web search in community tier
         supportsStreaming: true,
         qualityTier: 'medium',
-        supportsMultiLanguage: false,
+        supportsMultiLanguage: true,
     },
 
     // Default for unknown models

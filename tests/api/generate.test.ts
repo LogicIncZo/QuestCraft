@@ -10,7 +10,9 @@ vi.mock('openai', () => {
     return { default: MockOpenAI, __create: create };
 });
 
-import handler from '../../api/generate';
+import handler, {
+    COMMUNITY_MODELS,
+} from '../../api/generate';
 import * as openaiModule from 'openai';
 
 const typedMockCreate = (openaiModule as unknown as { __create: ReturnType<typeof vi.fn> })
@@ -180,5 +182,34 @@ describe('api/generate security hardening (issue #56)', () => {
         typedMockCreate.mockImplementation(async function* () {
             yield { choices: [{ delta: { content: 'ok' } }] };
         } as any);
+    });
+
+    it('falls back to the next model when the primary stream errors before the first chunk', async () => {
+        vi.stubEnv('NVIDIA_API_KEY', 'nim-key');
+        // First call (ultra via OpenRouter): create() resolves lazily and the
+        // upstream 502 only surfaces when the stream is first iterated. The
+        // guard peeks chunk #1 inside the try, so this triggers fallback.
+        // Note: failures AFTER a chunk has been delivered to the client are
+        // not recoverable (streaming already began) — by design.
+        typedMockCreate.mockImplementationOnce(() => {
+            const bad = async function* () {
+                throw new Error('Upstream error from Nvidia: Service temporarily overloaded');
+            };
+            return bad();
+        });
+
+        const res = await handler(
+            postRequest({
+                action: 'chat',
+                payload: { message: 'hi', history: [], systemInstruction: 'sys' },
+            })
+        );
+        expect(res.status).toBe(200);
+        const text = await res.text();
+        expect(text).not.toContain('Overloaded');
+        // Second call must have gone to the next chain entry (super), not the failed model
+        expect(typedMockCreate).toHaveBeenCalledTimes(2);
+        const secondCallModel = typedMockCreate.mock.calls[1][0].model;
+        expect(secondCallModel).not.toBe(COMMUNITY_MODELS[0].model);
     });
 });
