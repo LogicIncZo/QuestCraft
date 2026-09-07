@@ -32,12 +32,12 @@ const StatItem: React.FC<{
     value: string | number;
     tooltip: string;
     valueClass?: string;
-}> = ({ icon, label, value, tooltip, valueClass = 'text-orange-300' }) => (
+}> = ({ icon, label, value, tooltip, valueClass = 'text-brass' }) => (
     <div className="flex items-center gap-2" title={tooltip}>
-        <div className="text-gray-400">{icon}</div>
+        <div className="text-sage">{icon}</div>
         <div className="flex items-baseline gap-1.5">
             {label && (
-                <span className="hidden sm:inline text-sm font-medium text-gray-200">{label}:</span>
+                <span className="hidden sm:inline text-sm font-medium text-sage">{label}:</span>
             )}
             <span className={`text-sm font-semibold font-mono ${valueClass}`}>{value}</span>
         </div>
@@ -60,11 +60,11 @@ const StatusBar: React.FC<StatusBarProps> = ({
     const totalTokens = tokenUsage.used;
     const usagePercentage = isUsingOverrideKey ? 0 : (tokenUsage.used / tokenUsage.limit) * 100;
 
-    let tokenColorClass = 'text-orange-300';
+    let tokenColorClass = 'text-brass';
     if (usagePercentage > 90) {
-        tokenColorClass = 'text-red-400';
+        tokenColorClass = 'text-clay';
     } else if (usagePercentage > 75) {
-        tokenColorClass = 'text-yellow-400';
+        tokenColorClass = 'text-brass-bright';
     }
 
     const tokenTooltip = isUsingOverrideKey
@@ -72,34 +72,38 @@ const StatusBar: React.FC<StatusBarProps> = ({
         : `Shared Limit: ${tokenUsage.used.toLocaleString()} / ${tokenUsage.limit.toLocaleString()} tokens used.`;
 
     return (
-        <footer className="relative flex-shrink-0 h-12 bg-gray-900/95 backdrop-blur-md border-t border-gray-700 z-40">
+        <footer className="relative flex-shrink-0 h-12 bg-felt-900/95 backdrop-blur-md border-t border-felt-700 z-40">
             <div className="container mx-auto h-full flex items-center justify-between px-4">
                 {/* Left Side */}
                 <div className="flex items-center gap-3">
-                    <span title={t('aiStatusTitle')} className="text-lg" aria-hidden="true">
-                        ✨
-                    </span>
+                    <span
+                        title={t('aiStatusTitle')}
+                        aria-hidden="true"
+                        className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+                            isAiConnected ? 'bg-green-400' : 'bg-clay'
+                        }`}
+                    ></span>
                     {isAiConnected && modelName && (
                         <button
                             onClick={onNavigateToSettings}
                             title={t('changeModelTooltip')}
                             aria-label={`${t('changeModelTooltip')}: ${modelName}`}
-                            className="text-gray-400 hover:text-white transition-colors"
+                            className="text-sage hover:text-paper transition-colors"
                         >
                             <StatItem
                                 icon={<ChipIcon className="w-4 h-4" />}
                                 value={modelName}
                                 tooltip=""
-                                valueClass="text-cyan-300 truncate max-w-[80px] sm:max-w-[150px]"
+                                valueClass="text-sage truncate max-w-[80px] sm:max-w-[150px]"
                             />
                         </button>
                     )}
-                    <div className="w-px h-5 bg-gray-700" aria-hidden="true"></div>
+                    <div className="w-px h-5 bg-felt-700" aria-hidden="true"></div>
                     <button
                         onClick={onOpenChat}
                         title={t('chatTitle')}
                         aria-label={t('chatTitle')}
-                        className="text-gray-400 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
+                        className="text-sage hover:text-paper p-1 rounded"
                     >
                         <ChatIcon className="w-5 h-5" />
                     </button>
@@ -107,7 +111,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
                         onClick={onOpenAuditLog}
                         title={t('auditLogTitle')}
                         aria-label={t('auditLogTitle')}
-                        className="text-gray-400 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
+                        className="text-sage hover:text-paper p-1 rounded"
                     >
                         <AuditLogIcon className="w-5 h-5" />
                     </button>

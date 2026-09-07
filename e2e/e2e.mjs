@@ -157,7 +157,7 @@ if (startRef) {
 const boardSnap = snapshot();
 assert(
     'game board renders with roll control',
-    /START/.test(boardSnap) && /Roll Dice/.test(boardSnap),
+    /Start/i.test(boardSnap) && /Roll Dice/i.test(boardSnap),
     'board or Roll Dice button missing'
 );
 

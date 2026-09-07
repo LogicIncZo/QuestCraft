@@ -57,16 +57,16 @@ const DocContent: React.FC<DocContentProps> = ({ docId, onHeadingsExtracted }) =
     }, [docId, onHeadingsExtracted]);
 
     if (isLoading) {
-        return <p className="text-lg text-gray-400 animate-pulse">Loading documentation...</p>;
+        return <p className="text-lg text-sage animate-pulse">Loading documentation...</p>;
     }
 
     if (error) {
-        return <p className="text-red-400">{error}</p>;
+        return <p className="text-clay">{error}</p>;
     }
 
     return (
         <article
-            className="prose prose-invert prose-p:text-gray-300 prose-li:text-gray-300 prose-strong:text-white prose-headings:text-orange-400 prose-a:text-indigo-400 hover:prose-a:text-indigo-300 prose-code:text-orange-300 prose-pre:bg-gray-800 max-w-none"
+            className="prose prose-p:text-ink/90 prose-li:text-ink/90 prose-strong:text-ink prose-headings:text-felt-700 prose-a:text-brass-deep hover:prose-a:text-brass prose-code:text-clay-deep prose-pre:bg-felt-900 prose-pre-code:text-brass-bright prose-th-borders:border-ink/20 prose-td-borders:border-ink/10 prose-hr:border-ink/20 max-w-none bg-paper text-ink rounded-lg border border-ink/10 shadow-xl p-6 md:p-10"
             dangerouslySetInnerHTML={{ __html: content }}
         />
     );

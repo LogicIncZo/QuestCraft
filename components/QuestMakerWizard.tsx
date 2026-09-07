@@ -68,17 +68,17 @@ const Stepper: React.FC<{
                             <div
                                 className={`flex items-center justify-center w-8 h-8 rounded-full font-bold ${
                                     index < currentStepIndex
-                                        ? 'bg-indigo-600 text-white'
+                                        ? 'bg-brass text-felt-900 font-bold'
                                         : index === currentStepIndex
-                                          ? 'bg-orange-500 text-white ring-2 ring-orange-400'
-                                          : 'bg-gray-700 text-gray-400'
+                                          ? 'bg-brass text-felt-900 ring-2 ring-brass-bright'
+                                          : 'bg-felt-700 text-sage'
                                 }`}
                             >
                                 {index < currentStepIndex ? '✓' : index + 1}
                             </div>
                             <span
                                 className={`hidden md:block ml-3 text-sm font-medium ${
-                                    index <= currentStepIndex ? 'text-white' : 'text-gray-500'
+                                    index <= currentStepIndex ? 'text-paper' : 'text-sage/70'
                                 }`}
                             >
                                 {step.label}
@@ -86,7 +86,7 @@ const Stepper: React.FC<{
                         </button>
                         {index < steps.length - 1 && (
                             <div
-                                className={`h-0.5 w-8 md:w-16 mx-2 ${index < currentStepIndex ? 'bg-indigo-500' : 'bg-gray-700'}`}
+                                className={`h-0.5 w-8 md:w-16 mx-2 ${index < currentStepIndex ? 'bg-brass' : 'bg-felt-700'}`}
                             />
                         )}
                     </li>
@@ -416,19 +416,19 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
     const renderConfigStep = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-orange-400">{t('step1Title')}</h2>
-                <p className="text-gray-400">{t('step1Description')}</p>
+                <h2 className="text-2xl font-bold text-brass">{t('step1Title')}</h2>
+                <p className="text-sage">{t('step1Description')}</p>
                 <textarea
                     value={idea}
                     onChange={(e) => setIdea(e.target.value)}
-                    className="w-full h-40 p-3 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
+                    className="w-full h-40 p-3 bg-felt-900 border border-felt-600 rounded-lg font-mono text-sm"
                     placeholder={t('ideaPlaceholder')}
                 />
                 <div className="flex gap-4">
                     <button
                         onClick={handleSurpriseMe}
                         disabled={isLoading || isSubmittingIdea}
-                        className="flex-1 bg-teal-600 hover:bg-teal-700 disabled:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+                        className="flex-1 bg-brass hover:bg-brass-bright disabled:bg-felt-700 disabled:text-sage/50 text-felt-900 font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -449,17 +449,17 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     <button
                         onClick={handleEnhanceIdea}
                         disabled={!idea.trim() || isLoading || isSubmittingIdea}
-                        className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
+                        className="flex-1 bg-brass hover:bg-brass-deep disabled:bg-felt-700 text-felt-900 font-bold py-2 px-4 rounded-lg"
                     >
                         {t('enhance')}
                     </button>
                 </div>
             </div>
-            <div className="space-y-4 bg-gray-800 p-6 rounded-lg">
+            <div className="space-y-4 bg-felt-800 p-6 rounded-lg">
                 <div>
                     <label
                         htmlFor="num-locations"
-                        className="block text-sm font-medium text-gray-300"
+                        className="block text-sm font-medium text-paper/85"
                     >
                         {t('boardLocations')}
                     </label>
@@ -471,19 +471,19 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                         step="4"
                         min="12"
                         max="40"
-                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                        className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                     />
-                    <p className="text-xs text-gray-500 mt-1">{t('boardLocationsHint')}</p>
+                    <p className="text-xs text-sage/70 mt-1">{t('boardLocationsHint')}</p>
                 </div>
                 <div>
-                    <label htmlFor="age-group" className="block text-sm font-medium text-gray-300">
+                    <label htmlFor="age-group" className="block text-sm font-medium text-paper/85">
                         {t('targetAgeGroup')}
                     </label>
                     <select
                         id="age-group"
                         value={ageGroup}
                         onChange={(e) => setAgeGroup(e.target.value)}
-                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                        className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                     >
                         <option value="any">{t('ageAny')}</option>
                         <option value="kids">{t('ageKids')}</option>
@@ -495,20 +495,20 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-300">
+                    <label className="block text-sm font-medium text-paper/85">
                         {t('supportedLanguages')}
                     </label>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                         {LANGUAGES.map((lang) => (
                             <label
                                 key={lang.code}
-                                className="flex items-center space-x-2 bg-gray-700 p-2 rounded-md"
+                                className="flex items-center space-x-2 bg-felt-700 p-2 rounded-md"
                             >
                                 <input
                                     type="checkbox"
                                     checked={supportedLanguages.includes(lang.code)}
                                     onChange={() => handleLanguageToggle(lang.code)}
-                                    className="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-500 bg-gray-900"
+                                    className="h-4 w-4 rounded text-brass-deep focus:ring-brass/40 border-felt-500 bg-felt-900"
                                 />
                                 <span>{lang.name}</span>
                             </label>
@@ -518,7 +518,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 <div>
                     <label
                         htmlFor="num-scenarios"
-                        className="block text-sm font-medium text-gray-300"
+                        className="block text-sm font-medium text-paper/85"
                     >
                         {t('scenariosPerLocation')}
                     </label>
@@ -529,11 +529,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                         onChange={(e) => setNumScenarios(parseInt(e.target.value))}
                         min="0"
                         max="3"
-                        className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                        className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                     />
                 </div>
                 <div>
-                    <label htmlFor="positivity" className="block text-sm font-medium text-gray-300">
+                    <label htmlFor="positivity" className="block text-sm font-medium text-paper/85">
                         {t('positivityTone')}
                     </label>
                     <input
@@ -544,9 +544,9 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                         min="0"
                         max="1"
                         step="0.1"
-                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                        className="w-full h-2 bg-felt-700 rounded-lg appearance-none cursor-pointer accent-brass [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brass"
                     />
-                    <div className="flex justify-between text-xs text-gray-400">
+                    <div className="flex justify-between text-xs text-sage">
                         <span>{t('dystopian')}</span>
                         <span>{t('optimistic')}</span>
                     </div>
@@ -558,20 +558,20 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                             type="checkbox"
                             checked={groundingInReality}
                             onChange={(e) => setGroundingInReality(e.target.checked)}
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-500 rounded bg-gray-900"
+                            className="focus:ring-brass/40 h-4 w-4 text-brass-deep border-felt-500 rounded bg-felt-900"
                         />
                     </div>
                     <div className="ml-3 text-sm">
-                        <label htmlFor="grounding" className="font-medium text-gray-300">
+                        <label htmlFor="grounding" className="font-medium text-paper/85">
                             {t('groundInReality')}
                         </label>
-                        <p className="text-xs text-gray-500">{t('groundInRealityHint')}</p>
+                        <p className="text-xs text-sage/70">{t('groundInRealityHint')}</p>
                     </div>
                 </div>
                 <button
                     onClick={handleGenerateOutline}
                     disabled={isLoading || isSubmittingIdea}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg text-lg"
+                    className="w-full bg-brass hover:bg-brass-bright disabled:bg-felt-700 text-felt-900 font-bold py-3 px-4 rounded-lg text-lg"
                 >
                     {t('generateOutline')}
                 </button>
@@ -583,36 +583,36 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
                 {!draftQuest ? (
-                    <p className="text-gray-400">{t('generateOutlineFirst')}</p>
+                    <p className="text-sage">{t('generateOutlineFirst')}</p>
                 ) : (
                     <div>
                         <div className="mb-4 flex flex-wrap gap-1">
                             <button
                                 onClick={() => setRefineStep('DETAILS')}
-                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'DETAILS' ? 'bg-gray-700' : 'bg-gray-800'}`}
+                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'DETAILS' ? 'bg-felt-700' : 'bg-felt-800'}`}
                             >
                                 {t('details')}
                             </button>
                             <button
                                 onClick={() => setRefineStep('RESOURCES')}
-                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'RESOURCES' ? 'bg-gray-700' : 'bg-gray-800'}`}
+                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'RESOURCES' ? 'bg-felt-700' : 'bg-felt-800'}`}
                             >
                                 {t('resources')}
                             </button>
                             <button
                                 onClick={() => setRefineStep('BOARD')}
-                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'BOARD' ? 'bg-gray-700' : 'bg-gray-800'}`}
+                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'BOARD' ? 'bg-felt-700' : 'bg-felt-800'}`}
                             >
                                 {t('board')}
                             </button>
                             <button
                                 onClick={() => setRefineStep('CARDS')}
-                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'CARDS' ? 'bg-gray-700' : 'bg-gray-800'}`}
+                                className={`px-3 py-2 text-sm rounded-md ${refineStep === 'CARDS' ? 'bg-felt-700' : 'bg-felt-800'}`}
                             >
                                 {t('cards')}
                             </button>
                         </div>
-                        <div className="bg-gray-700 p-4 rounded-b-lg rounded-r-lg space-y-4 max-h-[60vh] overflow-y-auto">
+                        <div className="bg-felt-700 p-4 rounded-b-lg rounded-r-lg space-y-4 max-h-[60vh] overflow-y-auto">
                             {renderRefineForm()}
                         </div>
                     </div>
@@ -623,21 +623,21 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 <textarea
                     value={jsonText}
                     onChange={handleJsonTextChange}
-                    className="w-full h-[60vh] p-3 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
+                    className="w-full h-[60vh] p-3 bg-felt-900 border border-felt-600 rounded-lg font-mono text-sm"
                     placeholder={t('jsonOutputPlaceholder')}
                 />
-                {jsonError && <p className="text-red-400 text-sm">{jsonError}</p>}
+                {jsonError && <p className="text-clay text-sm">{jsonError}</p>}
                 {draftQuest && (
                     <div className="flex gap-4">
                         <button
                             onClick={() => handleStepNavigation('CONFIG')}
-                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg"
+                            className="flex-1 bg-felt-600 hover:bg-felt-700 text-paper font-bold py-3 px-4 rounded-lg"
                         >
                             {t('back')}
                         </button>
                         <button
                             onClick={handleGenerateScenarios}
-                            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg"
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-paper font-bold py-3 px-4 rounded-lg"
                         >
                             {t('nextGenerateScenarios')}
                         </button>
@@ -663,7 +663,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                         [language]: e.target.value,
                                     })
                                 }
-                                className="mt-1 block w-full bg-gray-800 rounded-md p-2"
+                                className="mt-1 block w-full bg-felt-800 rounded-md p-2"
                             />
                         </div>
                         <div>
@@ -676,19 +676,19 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                         [language]: e.target.value,
                                     })
                                 }
-                                className="mt-1 block w-full bg-gray-800 rounded-md p-2 h-24"
+                                className="mt-1 block w-full bg-felt-800 rounded-md p-2 h-24"
                             />
                         </div>
                     </>
                 );
             case 'RESOURCES':
                 return draftQuest.resources.map((res, index) => (
-                    <details key={index} className="bg-gray-800 rounded-lg" open={index === 0}>
+                    <details key={index} className="bg-felt-800 rounded-lg" open={index === 0}>
                         <summary className="p-3 font-semibold cursor-pointer list-inside">
                             {getLocalizedString(res.name, language) ||
                                 `${t('resource')} ${index + 1}`}
                         </summary>
-                        <div className="p-3 border-t border-gray-700 space-y-2">
+                        <div className="p-3 border-t border-felt-700 space-y-2">
                             <div>
                                 <label className="text-xs">{t('resourceName')}</label>
                                 <input
@@ -701,7 +701,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                         };
                                         handleDraftChange('resources', newResources);
                                     }}
-                                    className="w-full bg-gray-900 rounded-md p-1"
+                                    className="w-full bg-felt-900 rounded-md p-1"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-2">
@@ -714,7 +714,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             newResources[index].icon = e.target.value as any;
                                             handleDraftChange('resources', newResources);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     >
                                         {Object.keys(IconMap).map((iconName) => (
                                             <option key={iconName} value={iconName}>
@@ -732,7 +732,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             newResources[index].barColor = e.target.value;
                                             handleDraftChange('resources', newResources);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     />
                                 </div>
                             </div>
@@ -749,7 +749,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             );
                                             handleDraftChange('resources', newResources);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     />
                                 </div>
                                 <div>
@@ -764,7 +764,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             );
                                             handleDraftChange('resources', newResources);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     />
                                 </div>
                                 <div>
@@ -779,7 +779,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             );
                                             handleDraftChange('resources', newResources);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     />
                                 </div>
                             </div>
@@ -788,11 +788,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 ));
             case 'BOARD':
                 return draftQuest.board.locations.map((loc, index) => (
-                    <details key={index} className="bg-gray-800 rounded-lg">
+                    <details key={index} className="bg-felt-800 rounded-lg">
                         <summary className="p-3 font-semibold cursor-pointer list-inside">
                             {getLocalizedString(loc.name, language) || `${t('location')} ${index}`}
                         </summary>
-                        <div className="p-3 border-t border-gray-700 space-y-2">
+                        <div className="p-3 border-t border-felt-700 space-y-2">
                             <input
                                 value={getLocalizedString(loc.name, language)}
                                 onChange={(e) => {
@@ -806,7 +806,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                         locations: newLocations,
                                     });
                                 }}
-                                className="w-full bg-gray-900 rounded-md p-1"
+                                className="w-full bg-felt-900 rounded-md p-1"
                             />
                             <textarea
                                 value={getLocalizedString(loc.description, language)}
@@ -821,7 +821,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                         locations: newLocations,
                                     });
                                 }}
-                                className="w-full bg-gray-900 rounded-md p-1 h-16"
+                                className="w-full bg-felt-900 rounded-md p-1 h-16"
                             />
                             <div className="grid grid-cols-2 gap-2">
                                 <select
@@ -835,7 +835,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             locations: newLocations,
                                         });
                                     }}
-                                    className="w-full bg-gray-900 rounded-md p-1"
+                                    className="w-full bg-felt-900 rounded-md p-1"
                                 >
                                     {Object.values(BoardLocationType).map((type) => (
                                         <option key={type} value={type}>
@@ -854,8 +854,8 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                 locations: newLocations,
                                             });
                                         }}
-                                        placeholder="bg-red-500"
-                                        className="w-full bg-gray-900 rounded-md p-1"
+                                        placeholder="bg-clay"
+                                        className="w-full bg-felt-900 rounded-md p-1"
                                     />
                                 )}
                             </div>
@@ -867,9 +867,9 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     <div>
                         <h3 className="text-lg font-bold mb-2">{t('chanceCards')}</h3>
                         {draftQuest.chanceCards.map((card, index) => (
-                            <details key={index} className="bg-gray-800 rounded-lg mb-2">
+                            <details key={index} className="bg-felt-800 rounded-lg mb-2">
                                 <summary className="p-3 font-semibold cursor-pointer list-inside">{`${t('card')} ${index + 1}`}</summary>
-                                <div className="p-3 border-t border-gray-700 space-y-2">
+                                <div className="p-3 border-t border-felt-700 space-y-2">
                                     <textarea
                                         value={getLocalizedString(card.description, language)}
                                         onChange={(e) => {
@@ -880,7 +880,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                             };
                                             handleDraftChange('chanceCards', newCards);
                                         }}
-                                        className="w-full bg-gray-900 rounded-md p-1 h-16"
+                                        className="w-full bg-felt-900 rounded-md p-1 h-16"
                                     />
                                 </div>
                             </details>
@@ -900,10 +900,10 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
 
         return (
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-orange-400 mb-2">{t('writingStories')}</h2>
-                <p className="text-gray-400 mb-6">{t('writingStoriesDescription')}</p>
-                <div className="bg-gray-700 rounded-lg p-4 space-y-2 max-h-[50vh] overflow-y-auto">
-                    <div className="grid grid-cols-2 gap-4 text-left font-semibold border-b border-gray-600 pb-2 mb-2">
+                <h2 className="text-2xl font-bold text-brass mb-2">{t('writingStories')}</h2>
+                <p className="text-sage mb-6">{t('writingStoriesDescription')}</p>
+                <div className="bg-felt-700 rounded-lg p-4 space-y-2 max-h-[50vh] overflow-y-auto">
+                    <div className="grid grid-cols-2 gap-4 text-left font-semibold border-b border-felt-600 pb-2 mb-2">
                         <span>{t('location')}</span>
                         <span>{t('status')}</span>
                     </div>
@@ -915,10 +915,10 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                             <span className="truncate">{progress.locationName}</span>
                             <div className="flex items-center gap-2">
                                 {progress.status === 'pending' && (
-                                    <span className="text-gray-400">{t('pending')}...</span>
+                                    <span className="text-sage">{t('pending')}...</span>
                                 )}
                                 {progress.status === 'generating' && (
-                                    <span className="text-blue-400 animate-pulse">
+                                    <span className="text-brass-bright animate-pulse">
                                         {t('generating')}...
                                     </span>
                                 )}
@@ -930,14 +930,14 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                 {progress.status === 'error' && (
                                     <div className="flex items-center gap-2">
                                         <span
-                                            className="text-red-400 font-semibold"
+                                            className="text-clay font-semibold"
                                             title={progress.error}
                                         >
                                             ❌ {t('error')}
                                         </span>
                                         <button
                                             onClick={() => handleRetryScenario(progress.location)}
-                                            className="text-xs bg-gray-600 hover:bg-gray-500 px-2 py-1 rounded"
+                                            className="text-xs bg-felt-700 hover:bg-felt-600 px-2 py-1 rounded"
                                         >
                                             {t('retry')}
                                         </button>
@@ -949,12 +949,12 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 </div>
                 {isComplete && (
                     <div className="mt-6">
-                        <p className="text-gray-300 mb-4">
+                        <p className="text-paper/85 mb-4">
                             {hasErrors ? t('someScenariosFailed') : t('allScenariosGenerated')}
                         </p>
                         <button
                             onClick={() => setStep('PREVIEW')}
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg"
+                            className="bg-green-600 hover:bg-green-700 text-paper font-bold py-3 px-6 rounded-lg"
                         >
                             {t('proceedToPreview')}
                         </button>
@@ -998,18 +998,18 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-orange-400">{t('step3PreviewTitle')}</h2>
-                    <p className="text-gray-400">{t('step3DescPreview')}</p>
+                    <h2 className="text-2xl font-bold text-brass">{t('step3PreviewTitle')}</h2>
+                    <p className="text-sage">{t('step3DescPreview')}</p>
                     <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
                         {scenarioLocations.map((locationName) => (
-                            <div key={locationName} className="bg-gray-700 rounded-lg">
+                            <div key={locationName} className="bg-felt-700 rounded-lg">
                                 <button
                                     onClick={() =>
                                         setActiveAccordion(
                                             activeAccordion === locationName ? null : locationName
                                         )
                                     }
-                                    className="w-full text-left p-3 font-semibold flex justify-between items-center hover:bg-gray-600"
+                                    className="w-full text-left p-3 font-semibold flex justify-between items-center hover:bg-felt-600"
                                 >
                                     <span>{locationName}</span>
                                     <svg
@@ -1027,18 +1027,18 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                     </svg>
                                 </button>
                                 {activeAccordion === locationName && (
-                                    <div className="p-4 border-t border-gray-600 space-y-4">
+                                    <div className="p-4 border-t border-felt-600 space-y-4">
                                         {draftQuest?.pregeneratedScenarios?.[locationName]?.map(
                                             (scenario, index) => (
                                                 <div
                                                     key={scenario.id}
-                                                    className="bg-gray-800 p-3 rounded-md space-y-3 text-sm"
+                                                    className="bg-felt-800 p-3 rounded-md space-y-3 text-sm"
                                                 >
                                                     <h4 className="font-bold text-base">
                                                         Scenario {index + 1}
                                                     </h4>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-400">
+                                                        <label className="block text-xs font-medium text-sage">
                                                             {t('scenarioTitle')}
                                                         </label>
                                                         <input
@@ -1055,11 +1055,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                     true
                                                                 )
                                                             }
-                                                            className="mt-1 w-full bg-gray-900 rounded-md p-1"
+                                                            className="mt-1 w-full bg-felt-900 rounded-md p-1"
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-400">
+                                                        <label className="block text-xs font-medium text-sage">
                                                             {t('scenarioDescription')}
                                                         </label>
                                                         <textarea
@@ -1076,11 +1076,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                     true
                                                                 )
                                                             }
-                                                            className="mt-1 w-full bg-gray-900 rounded-md p-1 h-20"
+                                                            className="mt-1 w-full bg-felt-900 rounded-md p-1 h-20"
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-400">
+                                                        <label className="block text-xs font-medium text-sage">
                                                             {t('sourceURL')}
                                                         </label>
                                                         <input
@@ -1094,11 +1094,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                     false
                                                                 )
                                                             }
-                                                            className="mt-1 w-full bg-gray-900 rounded-md p-1"
+                                                            className="mt-1 w-full bg-felt-900 rounded-md p-1"
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-xs font-medium text-gray-400">
+                                                        <label className="block text-xs font-medium text-sage">
                                                             {t('sourceTitle')}
                                                         </label>
                                                         <input
@@ -1115,23 +1115,23 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                     true
                                                                 )
                                                             }
-                                                            className="mt-1 w-full bg-gray-900 rounded-md p-1"
+                                                            className="mt-1 w-full bg-felt-900 rounded-md p-1"
                                                         />
                                                     </div>
-                                                    <div className="border-t border-gray-700 pt-2 space-y-2">
-                                                        <h5 className="font-semibold text-gray-300">
+                                                    <div className="border-t border-felt-700 pt-2 space-y-2">
+                                                        <h5 className="font-semibold text-paper/85">
                                                             {t('choices')}
                                                         </h5>
                                                         {[0, 1].map((choiceIndex) => (
                                                             <div
                                                                 key={choiceIndex}
-                                                                className="bg-gray-900/50 p-2 rounded-md space-y-2"
+                                                                className="bg-felt-900/50 p-2 rounded-md space-y-2"
                                                             >
                                                                 <p className="font-medium">
                                                                     Choice {choiceIndex + 1}
                                                                 </p>
                                                                 <div>
-                                                                    <label className="block text-xs font-medium text-gray-400">
+                                                                    <label className="block text-xs font-medium text-sage">
                                                                         {t('choiceText')}
                                                                     </label>
                                                                     <input
@@ -1154,11 +1154,11 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                                 true
                                                                             )
                                                                         }
-                                                                        className="mt-1 w-full bg-gray-900 rounded-md p-1"
+                                                                        className="mt-1 w-full bg-felt-900 rounded-md p-1"
                                                                     />
                                                                 </div>
                                                                 <div>
-                                                                    <label className="block text-xs font-medium text-gray-400">
+                                                                    <label className="block text-xs font-medium text-sage">
                                                                         {t('outcomeExplanation')}
                                                                     </label>
                                                                     <textarea
@@ -1182,7 +1182,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                                                                                 true
                                                                             )
                                                                         }
-                                                                        className="mt-1 w-full bg-gray-900 rounded-md p-1 h-16"
+                                                                        className="mt-1 w-full bg-felt-900 rounded-md p-1 h-16"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -1202,20 +1202,20 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     <textarea
                         value={jsonText}
                         onChange={handleJsonTextChange}
-                        className="w-full h-[60vh] p-3 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
+                        className="w-full h-[60vh] p-3 bg-felt-900 border border-felt-600 rounded-lg font-mono text-sm"
                     />
-                    {jsonError && <p className="text-red-400 text-sm">{jsonError}</p>}
+                    {jsonError && <p className="text-clay text-sm">{jsonError}</p>}
                     {draftQuest && (
                         <div className="flex gap-4">
                             <button
                                 onClick={() => handleStepNavigation('REFINE')}
-                                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg"
+                                className="flex-1 bg-felt-600 hover:bg-felt-700 text-paper font-bold py-3 px-4 rounded-lg"
                             >
                                 {t('backToRefine')}
                             </button>
                             <button
                                 onClick={() => setStep('FINISH')}
-                                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg"
+                                className="flex-1 bg-green-600 hover:bg-green-700 text-paper font-bold py-3 px-4 rounded-lg"
                             >
                                 {t('nextFinish')}
                             </button>
@@ -1230,40 +1230,40 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6 text-center md:text-left">
                 <h2 className="text-3xl font-bold text-green-400">{t('step4Title')}</h2>
-                <p className="text-gray-300">
+                <p className="text-paper/85">
                     Your quest has been successfully generated! You can now download the JSON file
                     to save it, share it, or load it into the game to play.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                     <button
                         onClick={handleDownloadJson}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg"
+                        className="flex-1 bg-felt-500 hover:bg-felt-600 text-paper font-bold py-3 px-4 rounded-lg"
                     >
                         {t('downloadJson')}
                     </button>
                     <button
                         onClick={handleCopyJson}
-                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg"
+                        className="flex-1 bg-felt-600 hover:bg-felt-700 text-paper font-bold py-3 px-4 rounded-lg"
                     >
                         {t('copyJson')}
                     </button>
                 </div>
                 <button
                     onClick={() => draftQuest && onLoadQuest(draftQuest)}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-4 rounded-lg text-lg"
+                    className="w-full bg-brass hover:bg-brass-bright text-felt-900 font-bold py-4 px-4 rounded-lg text-lg"
                 >
                     {t('loadAndPlay')}
                 </button>
                 <div className="flex justify-center md:justify-start gap-4">
                     <button
                         onClick={() => handleStepNavigation('PREVIEW')}
-                        className="text-gray-400 hover:text-white mt-4"
+                        className="text-sage hover:text-paper mt-4"
                     >
                         {t('back')}
                     </button>
                     <button
                         onClick={handleStartOver}
-                        className="text-gray-400 hover:text-white mt-4"
+                        className="text-sage hover:text-paper mt-4"
                     >
                         {t('startOver')}
                     </button>
@@ -1274,7 +1274,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 <textarea
                     value={jsonText}
                     readOnly
-                    className="w-full h-[60vh] p-3 bg-gray-900 border border-gray-600 rounded-lg font-mono text-sm"
+                    className="w-full h-[60vh] p-3 bg-felt-900 border border-felt-600 rounded-lg font-mono text-sm"
                 />
             </div>
         </div>
@@ -1299,8 +1299,8 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
 
     return (
         <div className="p-4 md:p-8">
-            <h1 className="text-3xl font-bold font-mono text-center mb-2">{t('wizardTitle')}</h1>
-            <div className="max-w-7xl mx-auto mt-6 bg-gray-800/50 p-6 md:p-8 rounded-2xl shadow-2xl relative">
+            <h1 className="text-3xl font-bold font-display tracking-tight text-center mb-2 text-paper">{t('wizardTitle')}</h1>
+            <div className="max-w-7xl mx-auto mt-6 bg-felt-800/50 p-6 md:p-8 rounded-2xl shadow-2xl relative">
                 <Stepper
                     steps={wizardSteps}
                     currentStepName={visibleStep}
@@ -1308,8 +1308,8 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     disabled={isLoading || step === 'GENERATING'}
                 />
                 {isLoading && (
-                    <div className="absolute inset-0 bg-gray-800/80 flex items-center justify-center rounded-2xl z-10">
-                        <p className="text-white text-lg animate-pulse">
+                    <div className="absolute inset-0 bg-felt-800/80 flex items-center justify-center rounded-2xl z-10">
+                        <p className="text-paper text-lg animate-pulse">
                             {loadingMessage || t('generating')}
                         </p>
                     </div>

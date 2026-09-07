@@ -54,14 +54,14 @@ const Header: React.FC<HeaderProps> = ({
                                 content: getLocalizedString(section.content, language),
                             })
                         }
-                        className="hidden sm:block text-gray-300 hover:text-white text-sm hover:underline"
+                        className="hidden sm:block text-sage hover:text-paper text-sm hover:underline"
                     >
                         {getLocalizedString(section.title, language)}
                     </button>
                 ))}
                 <button
                     onClick={onExitGame}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm py-1.5 px-3 md:py-2 md:px-4 rounded-lg transition"
+                    className="bg-clay hover:bg-clay-deep text-paper font-bold text-sm py-1.5 px-3 md:py-2 md:px-4 rounded-lg transition"
                 >
                     {t('endGame')}
                 </button>
@@ -70,11 +70,11 @@ const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <header className="flex-shrink-0 bg-gray-900/80 backdrop-blur-sm border-b border-gray-700 h-16 flex items-center justify-between px-4 z-30">
+        <header className="flex-shrink-0 bg-felt-900/85 backdrop-blur-sm border-b border-felt-700 h-16 flex items-center justify-between px-4 z-30">
             <div className="flex items-center gap-4">
                 <button
                     onClick={onMenuClick}
-                    className="text-gray-300 hover:text-white p-1 rounded focus-visible:ring-2 focus-visible:ring-indigo-400"
+                    className="text-sage hover:text-paper p-1 rounded"
                     aria-label={t('menuOpen')}
                     aria-expanded={isMenuOpen}
                 >
@@ -85,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({
                     className="text-left hover:opacity-80 transition-opacity"
                     aria-label={t('navHome')}
                 >
-                    <span className="block text-xl md:text-2xl font-bold text-orange-400 font-mono truncate">
+                    <span className="block text-xl md:text-2xl font-bold text-brass font-display tracking-tight truncate">
                         {t('questCraftTitle')}
                     </span>
                 </button>

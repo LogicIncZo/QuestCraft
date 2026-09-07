@@ -43,7 +43,7 @@ const SectionHeader: React.FC<{
 }> = ({ title, sectionId, isOpen, onClick }) => (
     <button
         onClick={() => onClick(sectionId)}
-        className="w-full flex justify-between items-center text-left text-lg font-medium text-white mb-4"
+        className="w-full flex justify-between items-center text-left text-lg font-medium text-paper mb-4"
     >
         <span>{title}</span>
         <svg
@@ -85,9 +85,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
     let tokenBarColor = 'bg-green-500';
     if (tokenUsagePercentage > 90) {
-        tokenBarColor = 'bg-red-500';
+        tokenBarColor = 'bg-clay';
     } else if (tokenUsagePercentage > 75) {
-        tokenBarColor = 'bg-yellow-500';
+        tokenBarColor = 'bg-brass';
     }
 
     useEffect(() => {
@@ -220,8 +220,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     return (
         <div className="p-4 md:p-8 space-y-4 max-w-3xl">
             <div>
-                <h2 className="text-2xl font-bold text-orange-400 mb-1">{t('settingsTitle')}</h2>
-                <p className="text-gray-400">{t('settingsDescription')}</p>
+                <h2 className="text-2xl font-bold font-display tracking-tight text-brass mb-1">{t('settingsTitle')}</h2>
+                <p className="text-sage">{t('settingsDescription')}</p>
             </div>
 
             <section>
@@ -232,12 +232,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={handleToggleSection}
                 />
                 {openSection === 'language' && (
-                    <div className="space-y-4 bg-gray-800 p-4 rounded-lg">
+                    <div className="space-y-4 bg-felt-800 p-4 rounded-lg">
                         <select
                             id="language-selector"
                             value={language}
                             onChange={(e) => setLanguage(e.target.value as LanguageCode)}
-                            className="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md p-2"
+                            className="mt-1 block w-full bg-felt-700 border-felt-600 text-paper rounded-md p-2"
                         >
                             <option value="en">English</option>
                             <option value="es">Español</option>
@@ -257,11 +257,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         onClick={handleToggleSection}
                     />
                     {openSection === 'ai' && (
-                        <div className="space-y-4 bg-gray-800 p-4 rounded-lg">
+                        <div className="space-y-4 bg-felt-800 p-4 rounded-lg">
                             <div>
                                 <label
                                     htmlFor="ai-provider"
-                                    className="block text-sm font-medium text-gray-300"
+                                    className="block text-sm font-medium text-paper/85"
                                 >
                                     {t('provider')}
                                 </label>
@@ -271,7 +271,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                     onChange={(e) =>
                                         handleProviderChange(e.target.value as AiProviderId)
                                     }
-                                    className="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md p-2"
+                                    className="mt-1 block w-full bg-felt-700 border-felt-600 text-paper rounded-md p-2"
                                 >
                                     {Object.values(PROVIDER_CONFIGS).map((p) => (
                                         <option key={p.id} value={p.id}>
@@ -283,14 +283,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
                             {aiSettings.providerId === 'community' ? (
                                 <>
-                                    <div className="text-sm text-gray-400 bg-gray-900/50 p-3 rounded-lg">
+                                    <div className="text-sm text-sage bg-felt-900/50 p-3 rounded-lg">
                                         {t('communityProviderDescription')}
                                     </div>
                                     <div className="mt-4 space-y-2">
                                         <button
                                             onClick={handleTestConnection}
                                             disabled={testStatus === 'testing'}
-                                            className="w-full bg-gray-600 hover:bg-gray-700 disabled:bg-gray-500 disabled:cursor-wait text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="w-full bg-felt-600 hover:bg-felt-700 disabled:bg-felt-700 disabled:cursor-wait text-paper font-bold py-2 px-4 rounded-lg transition"
                                         >
                                             {testStatus === 'testing'
                                                 ? t('testing')
@@ -300,17 +300,17 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                 </>
                             ) : (
                                 <>
-                                    <div className="space-y-2 bg-gray-900/50 p-3 rounded-lg">
+                                    <div className="space-y-2 bg-felt-900/50 p-3 rounded-lg">
                                         <div className="flex justify-between items-baseline text-sm">
-                                            <span className="font-medium text-gray-300">
+                                            <span className="font-medium text-paper/85">
                                                 {t('sharedTokenUsage')}
                                             </span>
-                                            <span className="font-mono text-gray-400">
+                                            <span className="font-mono text-sage">
                                                 {tokenUsage.used.toLocaleString()} /{' '}
                                                 {tokenUsage.limit.toLocaleString()}
                                             </span>
                                         </div>
-                                        <div className="w-full bg-gray-600 rounded-full h-2.5">
+                                        <div className="w-full bg-felt-600 rounded-full h-2.5">
                                             <div
                                                 className={`${tokenBarColor} h-2.5 rounded-full transition-all duration-500 ease-out`}
                                                 style={{
@@ -319,18 +319,18 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             ></div>
                                         </div>
                                         {tokenUsagePercentage >= 100 && (
-                                            <p className="text-xs text-yellow-300 mt-1">
+                                            <p className="text-xs text-brass-bright mt-1">
                                                 {t('tokenLimitExceededWarning')}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="space-y-3 p-3 border border-yellow-700/50 bg-yellow-900/20 rounded-lg">
-                                        <h4 className="font-semibold text-yellow-300">
+                                    <div className="space-y-3 p-3 border border-brass/40 bg-brass/10 rounded-lg">
+                                        <h4 className="font-semibold text-brass-bright">
                                             {isEnvVarSet
                                                 ? t('apiKeyOverrideTitle')
                                                 : t('apiKeyEnterManuallyTitle')}
                                         </h4>
-                                        <p className="text-sm text-gray-400">
+                                        <p className="text-sm text-sage">
                                             {isEnvVarSet
                                                 ? t('apiKeyOverrideDescription')
                                                 : t('apiKeyEnterDescription')}
@@ -338,7 +338,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                         <div>
                                             <label
                                                 htmlFor="api-key-input"
-                                                className="block text-sm font-medium text-gray-300"
+                                                className="block text-sm font-medium text-paper/85"
                                             >
                                                 {t('apiKey')}
                                             </label>
@@ -349,11 +349,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                 onChange={(e) =>
                                                     setSessionApiKeyInput(e.target.value)
                                                 }
-                                                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                                                className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                                                 placeholder={t('apiKeyInputPlaceholder')}
                                             />
                                         </div>
-                                        <div className="text-xs text-yellow-400/80 space-y-2">
+                                        <div className="text-xs text-brass-bright/80 space-y-2">
                                             <p>
                                                 <strong>{t('securityWarningTitle')}</strong>{' '}
                                                 {t('securityWarningBody')}
@@ -368,13 +368,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                     onChange={(e) =>
                                                         setRiskAcknowledged(e.target.checked)
                                                     }
-                                                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-500 rounded bg-gray-900"
+                                                    className="focus:ring-brass/40 h-4 w-4 text-brass-deep border-felt-500 rounded bg-felt-900"
                                                 />
                                             </div>
                                             <div className="ml-3 text-sm">
                                                 <label
                                                     htmlFor="risk-ack"
-                                                    className="font-medium text-gray-300"
+                                                    className="font-medium text-paper/85"
                                                 >
                                                     {t('apiKeyAck')}
                                                 </label>
@@ -385,7 +385,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             disabled={
                                                 !riskAcknowledged || !sessionApiKeyInput.trim()
                                             }
-                                            className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-lg transition"
+                                            className="w-full bg-brass hover:bg-brass-bright disabled:bg-felt-700 disabled:cursor-not-allowed text-felt-900 font-bold py-2 px-4 rounded-lg transition"
                                         >
                                             {t('apiKeySaveButton')}
                                         </button>
@@ -395,7 +395,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                         <div>
                                             <label
                                                 htmlFor="model-name"
-                                                className="block text-sm font-medium text-gray-300"
+                                                className="block text-sm font-medium text-paper/85"
                                             >
                                                 {t('modelName')}
                                             </label>
@@ -408,7 +408,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                         e.target.value
                                                     )
                                                 }
-                                                className="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md p-2"
+                                                className="mt-1 block w-full bg-felt-700 border-felt-600 text-paper rounded-md p-2"
                                                 disabled={isLoadingModels}
                                             >
                                                 {isLoadingModels ? (
@@ -421,7 +421,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                     ))
                                                 )}
                                             </select>
-                                            <p className="text-xs text-gray-500 mt-1">
+                                            <p className="text-xs text-sage/70 mt-1">
                                                 {t('groundInRealityModelHint')}
                                             </p>
                                         </div>
@@ -429,7 +429,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                         <div>
                                             <label
                                                 htmlFor="model-name"
-                                                className="block text-sm font-medium text-gray-300"
+                                                className="block text-sm font-medium text-paper/85"
                                             >
                                                 {t('modelName')}
                                             </label>
@@ -443,7 +443,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                         e.target.value
                                                     )
                                                 }
-                                                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                                                className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                                                 placeholder="e.g., gemini-2.5-flash or gpt-4o"
                                             />
                                         </div>
@@ -452,7 +452,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                     <div>
                                         <label
                                             htmlFor="base-url"
-                                            className="block text-sm font-medium text-gray-300"
+                                            className="block text-sm font-medium text-paper/85"
                                         >
                                             {t('baseUrl')}
                                         </label>
@@ -463,7 +463,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             onChange={(e) =>
                                                 handleSettingsFieldChange('baseUrl', e.target.value)
                                             }
-                                            className={`mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2 ${!isBaseUrlEditable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            className={`mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2 ${!isBaseUrlEditable ? 'opacity-50 cursor-not-allowed' : ''}`}
                                             placeholder="e.g., https://api.groq.com/openai/v1"
                                             readOnly={!isBaseUrlEditable}
                                         />
@@ -472,7 +472,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                     <div>
                                         <label
                                             htmlFor="ai-request-delay"
-                                            className="block text-sm font-medium text-gray-300"
+                                            className="block text-sm font-medium text-paper/85"
                                         >
                                             {t('aiRequestDelay')}
                                         </label>
@@ -486,10 +486,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                                     parseInt(e.target.value, 10) || 0
                                                 )
                                             }
-                                            className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md p-2"
+                                            className="mt-1 block w-full bg-felt-700 border-felt-600 rounded-md p-2"
                                             placeholder="e.g., 1100"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="text-xs text-sage/70 mt-1">
                                             {t('aiRequestDelayHint')}
                                         </p>
                                     </div>
@@ -498,7 +498,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             <button
                                                 onClick={handleTestConnection}
                                                 disabled={testStatus === 'testing'}
-                                                className="w-full sm:w-auto flex-grow bg-gray-600 hover:bg-gray-700 disabled:bg-gray-500 disabled:cursor-wait text-white font-bold py-2 px-4 rounded-lg transition"
+                                                className="w-full sm:w-auto flex-grow bg-felt-600 hover:bg-felt-700 disabled:bg-felt-700 disabled:cursor-wait text-paper font-bold py-2 px-4 rounded-lg transition"
                                             >
                                                 {testStatus === 'testing'
                                                     ? t('testing')
@@ -506,7 +506,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             </button>
                                             <button
                                                 onClick={handleSaveAiSettings}
-                                                className="w-full sm:w-auto flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg"
+                                                className="w-full sm:w-auto flex-grow bg-brass hover:bg-brass-bright text-felt-900 font-bold py-2 px-4 rounded-lg"
                                             >
                                                 {t('saveAiSettings')}
                                             </button>
@@ -522,7 +522,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             ? 'bg-green-900/50 text-green-300'
                                             : ''
                                     } ${
-                                        testStatus === 'error' ? 'bg-red-900/50 text-red-300' : ''
+                                        testStatus === 'error' ? 'bg-clay/20 text-clay' : ''
                                     }`}
                                 >
                                     {testMessage}
@@ -541,23 +541,23 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={handleToggleSection}
                 />
                 {openSection === 'quests' && (
-                    <div className="space-y-3 max-h-60 overflow-y-auto pr-2 bg-gray-800 p-4 rounded-lg">
+                    <div className="space-y-3 max-h-60 overflow-y-auto pr-2 bg-felt-800 p-4 rounded-lg">
                         {customQuests.map((quest) => (
                             <div
                                 key={getLocalizedString(quest.name, 'en')}
-                                className="flex items-center justify-between bg-gray-900 p-3 rounded-lg"
+                                className="flex items-center justify-between bg-felt-900 p-3 rounded-lg"
                             >
                                 <div>
-                                    <p className="font-semibold text-white">
+                                    <p className="font-semibold text-paper">
                                         {getLocalizedString(quest.name, language)}
                                     </p>
-                                    <p className="text-xs text-purple-400">{t('customQuest')}</p>
+                                    <p className="text-xs text-brass-bright">{t('customQuest')}</p>
                                 </div>
                                 {isMakerModeEnabled && (
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => onEditQuest(quest)}
-                                            className="p-2 text-gray-300 hover:text-white"
+                                            className="p-2 text-paper/85 hover:text-paper"
                                             aria-label={`Edit ${getLocalizedString(quest.name, language)}`}
                                         >
                                             <svg
@@ -577,7 +577,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                         </button>
                                         <button
                                             onClick={() => handleCopyQuestJson(quest)}
-                                            className="p-2 text-gray-300 hover:text-white"
+                                            className="p-2 text-paper/85 hover:text-paper"
                                             aria-label={`Copy JSON for ${getLocalizedString(quest.name, language)}`}
                                         >
                                             <svg
@@ -597,7 +597,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                         </button>
                                         <button
                                             onClick={() => downloadQuestJson(quest)}
-                                            className="p-2 text-gray-300 hover:text-white"
+                                            className="p-2 text-paper/85 hover:text-paper"
                                             aria-label={`Download ${getLocalizedString(quest.name, language)}`}
                                         >
                                             <svg
@@ -619,7 +619,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                                             onClick={() =>
                                                 onDeleteQuest(getLocalizedString(quest.name, 'en'))
                                             }
-                                            className="p-2 text-red-400 hover:text-red-300"
+                                            className="p-2 text-clay hover:text-clay"
                                             aria-label={`Delete ${getLocalizedString(quest.name, language)}`}
                                         >
                                             <svg
@@ -644,13 +644,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         {defaultQuests.map((quest) => (
                             <div
                                 key={quest.filePath}
-                                className="flex items-center justify-between bg-gray-700/50 p-3 rounded-lg"
+                                className="flex items-center justify-between bg-felt-700/50 p-3 rounded-lg"
                             >
                                 <div>
-                                    <p className="font-semibold text-white">
+                                    <p className="font-semibold text-paper">
                                         {getLocalizedString(quest.config.name, language)}
                                     </p>
-                                    <p className="text-xs text-gray-400">{t('defaultQuest')}</p>
+                                    <p className="text-xs text-sage">{t('defaultQuest')}</p>
                                 </div>
                             </div>
                         ))}
@@ -666,34 +666,34 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     onClick={handleToggleSection}
                 />
                 {openSection === 'management' && (
-                    <div className="space-y-4 bg-gray-800 p-4 rounded-lg">
+                    <div className="space-y-4 bg-felt-800 p-4 rounded-lg">
                         {isMakerModeEnabled && (
                             <div>
-                                <p className="text-sm text-gray-400 mb-2">{t('auditLogCta')}</p>
+                                <p className="text-sm text-sage mb-2">{t('auditLogCta')}</p>
                                 <button
                                     onClick={onOpenAuditLog}
-                                    className="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition"
+                                    className="bg-felt-700 hover:bg-felt-600 text-paper font-medium py-2 px-4 rounded-lg transition"
                                 >
                                     {t('viewAuditLog')}
                                 </button>
                             </div>
                         )}
-                        <div className={isMakerModeEnabled ? 'border-t border-gray-700 pt-4' : ''}>
-                            <p className="text-sm text-gray-400 mb-2">
+                        <div className={isMakerModeEnabled ? 'border-t border-felt-700 pt-4' : ''}>
+                            <p className="text-sm text-sage mb-2">
                                 {t('resetStatsDescription')}
                             </p>
                             <button
                                 onClick={onResetStats}
-                                className="bg-yellow-800 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                                className="bg-brass-deep hover:bg-brass-bright text-felt-900 font-medium py-2 px-4 rounded-lg transition"
                             >
                                 {t('resetStats')}
                             </button>
                         </div>
-                        <div className="border-t border-gray-700 pt-4">
-                            <p className="text-sm text-gray-400 mb-2">{t('resetAppDescription')}</p>
+                        <div className="border-t border-felt-700 pt-4">
+                            <p className="text-sm text-sage mb-2">{t('resetAppDescription')}</p>
                             <button
                                 onClick={handleResetApp}
-                                className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                                className="bg-clay hover:bg-clay-deep text-paper font-bold py-2 px-4 rounded-lg transition"
                             >
                                 {t('resetApp')}
                             </button>

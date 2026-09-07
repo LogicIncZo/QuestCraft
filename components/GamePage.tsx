@@ -50,7 +50,7 @@ const TabButton: React.FC<{
     <button
         onClick={onClick}
         className={`p-2 rounded-lg text-center text-xs font-medium transition-colors w-full ${
-            isActive ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-gray-700'
+            isActive ? 'bg-brass text-felt-900 font-bold' : 'text-sage hover:bg-felt-700'
         }`}
     >
         {icon}
@@ -518,29 +518,27 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
     );
 
     const renderGameSetup = () => (
-        <div className="min-h-full flex items-center justify-center p-4 bg-gray-900">
-            <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-2xl p-8">
-                <h2 className="text-3xl font-bold mb-2 text-center">
+        <div className="min-h-full flex items-center justify-center p-4 bg-felt-900">
+            <div className="w-full max-w-md bg-felt-800 rounded-xl border border-felt-700 shadow-2xl p-8">
+                <h2 className="text-3xl font-bold font-display tracking-tight mb-2 text-center text-paper">
                     {getLocalizedString(questConfig.name, language)}
                 </h2>
-                <p className="text-gray-400 mb-6 text-center">
+                <p className="text-sage mb-6 text-center">
                     {getLocalizedString(questConfig.description, language)}
                 </p>
 
                 <div className="mb-6" role="group" aria-label={t('gameMode')}>
-                    <div className="block text-lg font-medium text-gray-300 mb-2">
-                        {t('gameMode')}
-                    </div>
+                    <div className="block text-lg font-medium text-sage mb-2">{t('gameMode')}</div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => handleGameModeChange('multi')}
-                            className={`flex-1 p-3 rounded-lg font-semibold transition ${gameMode === 'multi' ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                            className={`flex-1 p-3 rounded-lg font-semibold transition ${gameMode === 'multi' ? 'bg-brass text-felt-900 font-bold' : 'bg-felt-700 text-sage hover:text-paper'}`}
                         >
                             {t('multiplayer')}
                         </button>
                         <button
                             onClick={() => handleGameModeChange('single')}
-                            className={`flex-1 p-3 rounded-lg font-semibold transition ${gameMode === 'single' ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                            className={`flex-1 p-3 rounded-lg font-semibold transition ${gameMode === 'single' ? 'bg-brass text-felt-900 font-bold' : 'bg-felt-700 text-sage hover:text-paper'}`}
                         >
                             {t('singlePlayer')}
                         </button>
@@ -551,7 +549,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                     <div className="mb-6">
                         <label
                             htmlFor="numPlayers"
-                            className="block text-lg font-medium text-gray-300 mb-2"
+                            className="block text-lg font-medium text-sage mb-2"
                         >
                             {t('howManyPlayers')}
                         </label>
@@ -559,7 +557,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             id="numPlayers"
                             value={numPlayers}
                             onChange={handleNumPlayersChange}
-                            className="bg-gray-700 text-white p-3 rounded-lg w-full"
+                            className="bg-felt-900 text-paper p-3 rounded-lg w-full border border-felt-600"
                         >
                             <option value="2">{t('2players')}</option>
                             <option value="3">{t('3players')}</option>
@@ -569,7 +567,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                 )}
 
                 <div className="mb-8 space-y-3">
-                    <h3 className="text-lg font-medium text-gray-300">{t('playerNames')}</h3>
+                    <h3 className="text-lg font-medium text-sage">{t('playerNames')}</h3>
                     {Array.from({ length: gameMode === 'single' ? 1 : numPlayers }).map((_, i) => (
                         <input
                             key={i}
@@ -578,7 +576,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             onChange={(e) => handlePlayerNameChange(i, e.target.value)}
                             placeholder={`${t('player')} ${i + 1}`}
                             aria-label={`${t('player')} ${i + 1}`}
-                            className="bg-gray-700 text-white p-3 rounded-lg w-full"
+                            className="bg-felt-900 text-paper placeholder:text-sage/60 p-3 rounded-lg w-full border border-felt-600 focus:border-brass focus:outline-none transition-colors"
                         />
                     ))}
                     {gameMode === 'single' && (
@@ -587,20 +585,20 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             value={t('aiOpponent')}
                             readOnly
                             aria-label={t('aiOpponent')}
-                            className="bg-gray-900 text-gray-400 p-3 rounded-lg w-full cursor-not-allowed"
+                            className="bg-felt-900/60 text-sage p-3 rounded-lg w-full cursor-not-allowed border border-felt-700"
                         />
                     )}
                 </div>
 
                 <button
                     onClick={handleStartGame}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition"
+                    className="w-full bg-brass hover:bg-brass-bright text-felt-900 font-bold py-3 px-4 rounded-lg transition-colors"
                 >
                     {t('startGame')}
                 </button>
                 <button
                     onClick={onExit}
-                    className="w-full mt-3 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition"
+                    className="w-full mt-3 bg-felt-700 hover:bg-felt-600 text-paper font-medium py-2 px-4 rounded-lg transition-colors"
                 >
                     {t('backToMainMenu')}
                 </button>
@@ -615,7 +613,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
     if (players.length === 0) {
         return (
             <div
-                className="min-h-full bg-gray-900 flex items-center justify-center text-white"
+                className="min-h-full bg-felt-900 flex items-center justify-center text-paper"
                 role="status"
             >
                 {t('loadingQuest')}
@@ -692,7 +690,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                     {activeTab === 'turn' && commonPlayerDashboard}
                     {activeTab === 'scenario' && commonActionPanel}
                 </main>
-                <nav className="flex-shrink-0 bg-gray-900/95 backdrop-blur-md border-t border-gray-700 grid grid-cols-3 gap-2 p-2">
+                <nav className="flex-shrink-0 bg-felt-900/95 backdrop-blur-md border-t border-felt-700 grid grid-cols-3 gap-2 p-2">
                     <TabButton
                         label={t('tabBoard')}
                         icon={<BoardIcon className="w-6 h-6 mx-auto mb-1" />}

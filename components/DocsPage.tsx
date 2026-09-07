@@ -57,7 +57,7 @@ const DocsPage: React.FC = () => {
                 <button
                     key={link.id}
                     onClick={() => handleDocLinkClick(link.id)}
-                    className={`w-full text-left p-2.5 rounded-md text-sm font-medium transition-colors ${activeDocId === link.id ? 'bg-indigo-600 text-white shadow' : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'}`}
+                    className={`w-full text-left p-2.5 rounded-md text-sm font-medium transition-colors ${activeDocId === link.id ? 'bg-brass text-felt-900 font-bold' : 'text-sage hover:bg-felt-700/60 hover:text-paper'}`}
                     aria-current={activeDocId === link.id ? 'page' : undefined}
                 >
                     {link.title}
@@ -77,7 +77,7 @@ const DocsPage: React.FC = () => {
                         document.getElementById(h.id)?.scrollIntoView({ behavior: 'smooth' });
                         setIsTocOpen(false);
                     }}
-                    className={`block py-1 transition-colors ${h.level === 2 ? 'pl-2' : h.level === 3 ? 'pl-4' : ''} ${activeHeading === h.id ? 'text-orange-400 font-semibold' : 'text-gray-400 hover:text-white'}`}
+                    className={`block py-1 transition-colors ${h.level === 2 ? 'pl-2' : h.level === 3 ? 'pl-4' : ''} ${activeHeading === h.id ? 'text-brass-bright font-bold' : 'text-sage hover:text-paper'}`}
                 >
                     {h.text}
                 </a>
@@ -86,22 +86,22 @@ const DocsPage: React.FC = () => {
     );
 
     return (
-        <div className="flex flex-col md:grid md:grid-cols-[256px_1fr_256px] h-full bg-gray-900 text-gray-100 font-sans">
+        <div className="flex flex-col md:grid md:grid-cols-[256px_1fr_256px] h-full bg-felt-900 text-paper font-sans">
             {/* Mobile Header & Dropdowns */}
-            <header className="md:hidden flex-shrink-0 bg-gray-800/80 backdrop-blur-sm border-b border-gray-700 p-4 space-y-3 sticky top-0 z-20">
+            <header className="md:hidden flex-shrink-0 bg-felt-800/90 backdrop-blur-sm border-b border-felt-700 p-4 space-y-3 sticky top-0 z-20">
                 <div>
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="w-full flex justify-between items-center text-left p-2 bg-gray-700 rounded-md"
+                        className="w-full flex justify-between items-center text-left p-2 bg-felt-700 rounded-md"
                         aria-expanded={isMobileMenuOpen}
                         aria-controls="mobile-docs-nav"
                     >
                         <div>
-                            <span className="text-xs text-gray-400">{t('docs')}</span>
-                            <h2 className="font-semibold text-white">{activeDocTitle}</h2>
+                            <span className="text-xs text-sage">{t('docs')}</span>
+                            <h2 className="font-semibold text-paper">{activeDocTitle}</h2>
                         </div>
                         <svg
-                            className={`w-5 h-5 text-gray-400 transition-transform ${isMobileMenuOpen ? 'rotate-180' : ''}`}
+                            className={`w-5 h-5 text-sage transition-transform ${isMobileMenuOpen ? 'rotate-180' : ''}`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -124,13 +124,13 @@ const DocsPage: React.FC = () => {
                     <div>
                         <button
                             onClick={() => setIsTocOpen(!isTocOpen)}
-                            className="w-full flex justify-between items-center text-left p-2 bg-gray-700 rounded-md"
+                            className="w-full flex justify-between items-center text-left p-2 bg-felt-700 rounded-md"
                             aria-expanded={isTocOpen}
                             aria-controls="mobile-toc-nav"
                         >
-                            <span className="font-semibold text-white">{t('onThisPage')}</span>
+                            <span className="font-semibold text-paper">{t('onThisPage')}</span>
                             <svg
-                                className={`w-5 h-5 text-gray-400 transition-transform ${isTocOpen ? 'rotate-180' : ''}`}
+                                className={`w-5 h-5 text-sage transition-transform ${isTocOpen ? 'rotate-180' : ''}`}
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -144,7 +144,7 @@ const DocsPage: React.FC = () => {
                             </svg>
                         </button>
                         {isTocOpen && (
-                            <div id="mobile-toc-nav" className="mt-2 p-2 bg-gray-900/50 rounded-md">
+                            <div id="mobile-toc-nav" className="mt-2 p-2 bg-felt-900/60 rounded-md">
                                 <TocLinks />
                             </div>
                         )}
@@ -153,9 +153,9 @@ const DocsPage: React.FC = () => {
             </header>
 
             {/* Desktop Left Sidebar (Main Nav) */}
-            <aside className="hidden md:flex flex-col flex-shrink-0 w-64 bg-gray-800/50 border-r border-gray-700 p-4 h-full">
+            <aside className="hidden md:flex flex-col flex-shrink-0 w-64 bg-felt-800/60 border-r border-felt-700 p-4 h-full">
                 <div className="mb-8">
-                    <h2 className="text-lg text-gray-400">{t('docs')}</h2>
+                    <h2 className="text-lg font-display font-bold tracking-tight text-paper">{t('docs')}</h2>
                 </div>
                 <div className="flex-grow">
                     <NavLinks />
@@ -173,7 +173,7 @@ const DocsPage: React.FC = () => {
             <aside className="hidden md:block flex-shrink-0 w-64 p-4 h-full overflow-y-auto">
                 {headings.length > 0 && (
                     <div className="sticky top-4">
-                        <h3 className="text-sm font-semibold text-gray-300 mb-3">
+                        <h3 className="text-sm font-bold text-paper mb-3">
                             {t('onThisPage')}
                         </h3>
                         <TocLinks />

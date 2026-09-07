@@ -194,7 +194,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
             {(isMaximized) => (
                 <>
                     {!isChatEnabled && (
-                        <div className="bg-yellow-900/50 border border-yellow-700 text-yellow-300 p-3 rounded-md mb-4 text-sm">
+                        <div className="bg-brass/10 border border-brass/40 text-brass-bright p-3 rounded-md mb-4 text-sm">
                             {t('chatUnavailable')}
                         </div>
                     )}
@@ -206,15 +206,15 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
                                     {msg.role === 'system' ? (
-                                        <div className="w-full text-center text-xs text-gray-400 italic py-2 border-b border-gray-700">
+                                        <div className="w-full text-center text-xs text-sage italic py-2 border-b border-felt-700">
                                             {msg.content}
                                         </div>
                                     ) : (
                                         <div
-                                            className={`p-3 rounded-lg ${isMaximized ? 'max-w-4xl' : 'max-w-lg'} ${msg.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-200'}`}
+                                            className={`p-3 rounded-lg ${isMaximized ? 'max-w-4xl' : 'max-w-lg'} ${msg.role === 'user' ? 'bg-brass text-felt-900' : 'bg-felt-700 text-paper'}`}
                                         >
                                             <div
-                                                className="prose prose-invert prose-p:my-0"
+                                                className={`prose prose-p:my-0 ${msg.role === 'user' ? '[&_*]:text-inherit [&_a]:underline' : ''}`}
                                                 dangerouslySetInnerHTML={{
                                                     __html:
                                                         sanitizeHtml(
@@ -226,7 +226,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                                                 }}
                                             />
                                             {msg.updatedQuestJson && page === 'maker' && (
-                                                <div className="mt-2 pt-2 border-t border-gray-600">
+                                                <div className="mt-2 pt-2 border-t border-felt-600">
                                                     <button
                                                         onClick={() =>
                                                             handleApplyUpdate(
@@ -235,7 +235,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                                                             )
                                                         }
                                                         disabled={appliedUpdates.has(msg.id)}
-                                                        className="w-full text-sm font-semibold py-2 px-3 rounded-lg transition-colors bg-green-700 hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed text-white"
+                                                        className="w-full text-sm font-semibold py-2 px-3 rounded-lg transition-colors bg-felt-900 hover:bg-felt-800 disabled:bg-felt-900/40 disabled:cursor-not-allowed text-brass-bright"
                                                     >
                                                         {appliedUpdates.has(msg.id)
                                                             ? t('changesApplied')
@@ -249,13 +249,13 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                             ))}
                             <div ref={messagesEndRef} />
                         </div>
-                        <div className="mt-4 pt-4 border-t border-gray-700">
+                        <div className="mt-4 pt-4 border-t border-felt-700">
                             <form onSubmit={handleSend} className="flex items-center gap-2">
                                 <button
                                     type="button"
                                     onClick={handleClearChat}
                                     title={t('chatClear')}
-                                    className="p-2 text-gray-400 hover:text-white bg-gray-700 rounded-md"
+                                    className="p-2 text-sage hover:text-paper bg-felt-700 rounded-md"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -277,13 +277,13 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder={t('chatPlaceholder')}
-                                    className="flex-grow p-2 bg-gray-900 border border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                    className="flex-grow p-2 bg-felt-900 border border-felt-600 rounded-lg focus:border-brass focus:outline-none text-paper placeholder:text-sage/60"
                                     disabled={isLoading || !isChatEnabled}
                                 />
                                 <button
                                     type="submit"
                                     aria-label={t('chatSend')}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 rounded-lg disabled:bg-gray-600"
+                                    className="bg-brass hover:bg-brass-bright text-felt-900 font-bold p-2 rounded-lg disabled:bg-felt-700 disabled:text-sage"
                                     disabled={isLoading || !input.trim() || !isChatEnabled}
                                 >
                                     <svg

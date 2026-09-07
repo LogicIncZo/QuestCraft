@@ -131,16 +131,16 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
 
             <div
                 ref={panelRef}
-                className={`fixed top-0 right-0 h-full bg-gray-800 border-l border-gray-700 shadow-2xl flex flex-col transform transition-all duration-300 ease-in-out ${drawerWidthClass} ${show ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed top-0 right-0 h-full bg-felt-800 border-l border-felt-700 shadow-2xl flex flex-col transform transition-all duration-300 ease-in-out ${drawerWidthClass} ${show ? 'translate-x-0' : 'translate-x-full'}`}
             >
-                <header className="flex justify-between items-center p-4 md:p-5 border-b border-gray-700 flex-shrink-0">
-                    <h1 id="drawer-title" className="text-xl font-bold text-white">
+                <header className="flex justify-between items-center p-4 md:p-5 border-b border-felt-700 flex-shrink-0">
+                    <h1 id="drawer-title" className="text-xl font-bold font-display tracking-tight text-paper">
                         {title}
                     </h1>
                     <div className="flex items-center space-x-2">
                         <button
                             onClick={() => setIsMaximized(!isMaximized)}
-                            className="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+                            className="text-sage bg-transparent hover:bg-felt-700 hover:text-paper rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
                             aria-label={isMaximized ? t('drawerRestore') : t('drawerMaximize')}
                         >
                             {isMaximized ? <MinimizeIcon /> : <MaximizeIcon />}
@@ -150,7 +150,7 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
                         </button>
                         <button
                             onClick={onClose}
-                            className="text-gray-400 bg-transparent hover:bg-gray-600 hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            className="text-sage bg-transparent hover:bg-felt-700 hover:text-paper rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                             aria-label={t('drawerClose')}
                         >
                             <svg
@@ -173,14 +173,12 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, onClose, show }) => {
                     </div>
                 </header>
                 <main className="p-4 md:p-6 flex-grow overflow-y-auto">
-                    <div className="prose prose-invert prose-p:text-gray-300 prose-li:text-gray-300 prose-strong:text-white max-w-none">
-                        {children(isMaximized)}
-                    </div>
+                    <div className="prose max-w-none">{children(isMaximized)}</div>
                 </main>
-                <footer className="flex items-center p-4 md:p-5 mt-auto border-t border-gray-700 flex-shrink-0">
+                <footer className="flex items-center p-4 md:p-5 mt-auto border-t border-felt-700 flex-shrink-0">
                     <button
                         onClick={onClose}
-                        className="ms-auto text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        className="ms-auto text-felt-900 bg-brass hover:bg-brass-bright focus:ring-4 focus:outline-none focus:ring-brass/30 font-bold rounded-lg text-sm px-5 py-2.5 text-center transition-colors"
                     >
                         {t('close')}
                     </button>

@@ -8,69 +8,78 @@ interface HomePageProps {
     isMakerModeEnabled: boolean;
 }
 
-const ModeCard = ({
+// The two modes are rendered as game components laid on the table: paper tiles
+// with a deed-style color band, like the property cards they will play with.
+const ModeTile = ({
     title,
     description,
     icon,
     onClick,
-    colorClass,
+    bandClass,
 }: {
     title: string;
     description: string;
     icon: React.ReactNode;
     onClick: () => void;
-    colorClass: string;
+    bandClass: string;
 }) => (
     <button
         onClick={onClick}
-        className="group bg-gray-800 border border-gray-700 rounded-xl p-6 text-center transition-all duration-300 hover:border-gray-500 hover:bg-gray-700/50 hover:shadow-2xl"
+        className="group text-left bg-paper text-ink rounded-lg overflow-hidden border border-ink/10 shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1"
     >
-        <div
-            className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center transition-colors duration-300 bg-gray-700/50 group-hover:bg-gray-700 ${colorClass}`}
-        >
-            {icon}
+        <div className={`h-3 w-full ${bandClass}`}></div>
+        <div className="p-6 md:p-8">
+            <div className="flex items-center gap-4 mb-4">
+                <div className="text-felt-700">{icon}</div>
+                <h3 className="text-2xl md:text-3xl font-bold font-display tracking-tight">
+                    {title}
+                </h3>
+            </div>
+            <p className="text-ink/80 leading-relaxed">{description}</p>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-gray-400">{description}</p>
     </button>
 );
 
 const HomePage: React.FC<HomePageProps> = ({ onNavigate, isMakerModeEnabled }) => {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-col items-center justify-center h-full p-4 md:p-8 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-orange-400 font-mono mb-4">
-                {t('questCraftTitle')}
-            </h1>
-            <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-                {t('welcomeScreenLead')}{' '}
-                <button
-                    onClick={() => onNavigate('docs')}
-                    className="text-indigo-400 hover:underline"
+        <div className="h-full flex flex-col justify-center">
+            <div className="w-full max-w-5xl mx-auto px-6 py-10 md:py-14">
+                <h1 className="text-5xl md:text-7xl font-extrabold font-display tracking-tight text-paper mb-5">
+                    {t('questCraftTitle')}
+                </h1>
+                <p className="text-lg md:text-xl text-sage max-w-2xl leading-relaxed mb-12">
+                    {t('welcomeScreenLead')}{' '}
+                    <button
+                        onClick={() => onNavigate('docs')}
+                        className="text-brass-bright hover:underline underline-offset-4"
+                    >
+                        {t('welcomeScreenLeadLink')}
+                    </button>
+                </p>
+                <h2 className="text-xl font-bold text-paper mb-5 font-display tracking-tight">
+                    {t('homeTitle')}
+                </h2>
+                <div
+                    className={`grid grid-cols-1 ${isMakerModeEnabled ? 'md:grid-cols-2' : ''} gap-6 max-w-3xl`}
                 >
-                    {t('welcomeScreenLeadLink')}
-                </button>
-            </p>
-            <h2 className="text-2xl font-bold text-white mb-8">{t('homeTitle')}</h2>
-            <div
-                className={`grid grid-cols-1 ${isMakerModeEnabled ? 'md:grid-cols-2' : ''} gap-8 w-full max-w-4xl`}
-            >
-                <ModeCard
-                    onClick={() => onNavigate('welcome')}
-                    title={t('playerMode')}
-                    description={t('playerModeDescription')}
-                    icon={<PlayIcon className="w-8 h-8 text-white" />}
-                    colorClass="group-hover:bg-green-600"
-                />
-                {isMakerModeEnabled && (
-                    <ModeCard
-                        onClick={() => onNavigate('maker')}
-                        title={t('makerMode')}
-                        description={t('makerModeDescription')}
-                        icon={<MakerIcon className="w-8 h-8 text-white" />}
-                        colorClass="group-hover:bg-indigo-600"
+                    <ModeTile
+                        onClick={() => onNavigate('welcome')}
+                        title={t('playerMode')}
+                        description={t('playerModeDescription')}
+                        icon={<PlayIcon className="w-8 h-8" />}
+                        bandClass="bg-felt-500"
                     />
-                )}
+                    {isMakerModeEnabled && (
+                        <ModeTile
+                            onClick={() => onNavigate('maker')}
+                            title={t('makerMode')}
+                            description={t('makerModeDescription')}
+                            icon={<MakerIcon className="w-8 h-8" />}
+                            bandClass="bg-brass"
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );

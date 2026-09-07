@@ -74,7 +74,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
     const gridTemplateRows = `1.5fr repeat(${sideLength - 1}, ${track}) 1.5fr`;
 
     return (
-        <div className="aspect-square w-full max-w-[80vh] max-h-full mx-auto p-2 md:p-4 bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="aspect-square w-full max-w-[80vh] max-h-full mx-auto p-2 md:p-4 bg-felt-800 rounded-lg border border-felt-600 shadow-2xl overflow-hidden">
             <div
                 className="relative grid h-full w-full gap-1"
                 style={{ gridTemplateColumns, gridTemplateRows }}
@@ -89,7 +89,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                             key={locationId}
                             id={locationId}
                             style={positionStyle}
-                            className={`relative flex flex-col justify-between p-1 md:p-1.5 rounded-md shadow-inner bg-gray-200 text-gray-800 text-center overflow-hidden ${isCorner ? 'items-center justify-center' : ''}`}
+                            className={`relative flex flex-col justify-between p-1 md:p-1.5 rounded-sm bg-paper text-ink text-center overflow-hidden ${isCorner ? 'items-center justify-center' : ''}`}
                         >
                             {location.type === 'PROPERTY' && location.color && (
                                 <div
@@ -99,7 +99,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                             <div
                                 className={`flex-grow flex flex-col min-h-0 ${isCorner ? 'justify-center items-center' : 'justify-start'}`}
                             >
-                                <p className="text-[7px] sm:text-[8px] md:text-[10px] font-bold uppercase leading-tight tracking-tighter break-words">
+                                <p className="text-[7px] sm:text-[8px] md:text-[10px] font-bold leading-tight break-words">
                                     {getLocalizedString(location.name, language)}
                                 </p>
                                 {isCorner && (
@@ -123,7 +123,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                                             key={`token-${p.id}`}
                                             role="img"
                                             aria-label={p.name}
-                                            className={`w-3.5 h-3.5 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-white shadow-lg animate-token-move`}
+                                            className={`w-3.5 h-3.5 md:w-5 md:h-5 rounded-full ${p.color} bg-current border-2 border-paper shadow-lg animate-token-move`}
                                             style={{ animationDelay: `${p.id * 100}ms` }}
                                             title={p.name}
                                         />
@@ -135,7 +135,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
 
                 {/* Center Area */}
                 <div
-                    className="flex flex-col items-center justify-center bg-gray-900/50 rounded-lg shadow-xl min-h-0 min-w-0 p-2"
+                    className="flex flex-col items-center justify-center bg-felt-900/40 rounded-lg min-h-0 min-w-0 p-2"
                     style={{
                         gridColumn: `2 / ${sideLength + 1}`,
                         gridRow: `2 / ${sideLength + 1}`,
@@ -143,7 +143,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ board, players, questName, langua
                 >
                     <div
                         aria-hidden="true"
-                        className="text-2xl sm:text-4xl md:text-5xl font-bold font-mono text-center text-orange-400 transform -rotate-6 max-w-full leading-tight"
+                        className="text-2xl sm:text-4xl md:text-5xl font-extrabold font-display text-center text-brass transform -rotate-3 max-w-full leading-tight"
                     >
                         {questName}
                     </div>

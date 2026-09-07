@@ -10,14 +10,34 @@ import type {
 import { getLocalizedString } from '../utils/localization';
 import { useTranslation } from '../services/i18n';
 
-const ActionCard: React.FC<{ children: React.ReactNode; title: string }> = ({
+// Cards are drawn from a deck and laid on the felt: printed paper with a
+// deed-style color band encoding the card type (chance, chest, scenario...).
+const ActionCard: React.FC<{ children: React.ReactNode; title: string; band?: string }> = ({
     children,
     title,
+    band,
 }) => (
-    <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-lg border border-gray-700 shadow-lg animate-fade-in flex flex-col h-full">
-        <h3 className="text-xl font-bold text-orange-400 mb-4">{title}</h3>
-        <div className="text-gray-300 space-y-4 flex-grow overflow-y-auto">{children}</div>
+    <div className="bg-paper text-ink rounded-lg border border-ink/10 shadow-xl animate-fade-in flex flex-col h-full overflow-hidden">
+        {band && <div className={`h-2.5 w-full ${band} flex-shrink-0`}></div>}
+        <div className="p-6 flex flex-col flex-grow min-h-0">
+            <h3 className="text-xl font-bold font-display tracking-tight text-felt-700 mb-4">
+                {title}
+            </h3>
+            <div className="text-ink/90 space-y-4 flex-grow overflow-y-auto">{children}</div>
+        </div>
     </div>
+);
+
+const CardButton: React.FC<{ children: React.ReactNode; onClick: () => void }> = ({
+    children,
+    onClick,
+}) => (
+    <button
+        onClick={onClick}
+        className="w-full bg-felt-700 hover:bg-felt-600 text-paper font-bold py-3 px-4 rounded-lg transition-colors"
+    >
+        {children}
+    </button>
 );
 
 interface ActionPanelProps {
@@ -79,14 +99,9 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
     const renderContent = () => {
         if (gameError) {
             return (
-                <ActionCard title={t('error')}>
-                    <p className="text-red-300">{gameError}</p>
-                    <button
-                        onClick={onNextTurn}
-                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
-                    >
-                        {t('continue')}
-                    </button>
+                <ActionCard title={t('error')} band="bg-clay">
+                    <p className="text-clay-deep">{gameError}</p>
+                    <CardButton onClick={onNextTurn}>{t('continue')}</CardButton>
                 </ActionCard>
             );
         }
@@ -94,30 +109,22 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         if (gamePhase === 'GAME_OVER') {
             const winner = players.find((p) => !p.isBankrupt);
             return (
-                <ActionCard title={t('gameOver')}>
+                <ActionCard title={t('gameOver')} band="bg-brass">
                     <p className="text-lg text-center">
                         {t('gameOverMessage', { winnerName: winner?.name || '' })}
                     </p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
-                    >
+                    <CardButton onClick={() => window.location.reload()}>
                         {t('playAgain')}
-                    </button>
+                    </CardButton>
                 </ActionCard>
             );
         }
 
         if (activeChoiceOutcome) {
             return (
-                <ActionCard title={t('outcome')}>
+                <ActionCard title={t('outcome')} band="bg-brass">
                     <p>{getLocalizedString(activeChoiceOutcome.explanation, language)}</p>
-                    <button
-                        onClick={onNextTurn}
-                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
-                    >
-                        {t('endTurn')}
-                    </button>
+                    <CardButton onClick={onNextTurn}>{t('endTurn')}</CardButton>
                 </ActionCard>
             );
         }
@@ -125,19 +132,27 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         if (activeScenario && gamePhase === 'SCENARIO_CHOICE') {
             if (currentPlayer.isAI) {
                 return (
-                    <ActionCard title={getLocalizedString(activeScenario.title, language)}>
+                    <ActionCard
+                        title={getLocalizedString(activeScenario.title, language)}
+                        band="bg-felt-500"
+                    >
                         <p className="flex-grow overflow-y-auto">
                             {getLocalizedString(activeScenario.description, language)}
                         </p>
                         <div className="text-center p-4">
-                            <p className="text-lg animate-pulse">{t('aiIsThinking')}</p>
+                            <p className="text-lg animate-pulse text-ink/60">
+                                {t('aiIsThinking')}
+                            </p>
                         </div>
                     </ActionCard>
                 );
             }
 
             return (
-                <ActionCard title={getLocalizedString(activeScenario.title, language)}>
+                <ActionCard
+                    title={getLocalizedString(activeScenario.title, language)}
+                    band="bg-felt-500"
+                >
                     <p className="flex-grow overflow-y-auto">
                         {getLocalizedString(activeScenario.description, language)}
                     </p>
@@ -146,7 +161,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
                             href={activeScenario.sourceUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-400 hover:underline text-sm block mt-2"
+                            className="text-brass-deep hover:underline text-sm block mt-2"
                         >
                             {t('source', {
                                 sourceTitle:
@@ -160,7 +175,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
                             <button
                                 key={index}
                                 onClick={() => onScenarioChoice(choice)}
-                                className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg transition duration-300"
+                                className="w-full text-left bg-felt-900/5 hover:bg-felt-900/10 border border-ink/15 hover:border-felt-600 text-ink font-semibold py-3 px-4 rounded-lg transition-colors"
                             >
                                 {getLocalizedString(choice.text, language)}
                             </button>
@@ -172,18 +187,18 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
 
         if (gamePhase === 'SCENARIO_SOURCE_SELECTION') {
             return (
-                <ActionCard title={t('choosePath')}>
+                <ActionCard title={t('choosePath')} band="bg-felt-500">
                     <p className="text-center">{t('choosePathDescription')}</p>
                     <div className="flex flex-col space-y-3 pt-4">
                         <button
                             onClick={() => onSelectScenarioSource('pregen')}
-                            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-300"
+                            className="w-full bg-brass hover:bg-brass-bright text-felt-900 font-bold py-3 px-4 rounded-lg transition-colors"
                         >
                             {t('playStoryScenario')}
                         </button>
                         <button
                             onClick={() => onSelectScenarioSource('dynamic')}
-                            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-300"
+                            className="w-full bg-felt-700 hover:bg-felt-600 text-paper font-bold py-3 px-4 rounded-lg transition-colors"
                         >
                             {t('generateDynamicEvent')}
                         </button>
@@ -193,18 +208,16 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         }
 
         if (activeCard && (gamePhase === 'CHANCE_CARD' || gamePhase === 'COMMUNITY_CHEST_CARD')) {
-            const cardType = gamePhase === 'CHANCE_CARD' ? 'Chance' : 'Community Chest';
+            const isChance = gamePhase === 'CHANCE_CARD';
             return (
-                <ActionCard title={cardType}>
+                <ActionCard
+                    title={isChance ? 'Chance' : 'Community Chest'}
+                    band={isChance ? 'bg-amber-500' : 'bg-sky-600'}
+                >
                     <p className="text-lg text-center font-medium">
                         "{getLocalizedString(activeCard.description, language)}"
                     </p>
-                    <button
-                        onClick={onNextTurn}
-                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
-                    >
-                        {t('continue')}
-                    </button>
+                    <CardButton onClick={onNextTurn}>{t('continue')}</CardButton>
                 </ActionCard>
             );
         }
@@ -212,7 +225,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         if (gamePhase === 'GENERATING_SCENARIO') {
             return (
                 <div className="text-center space-y-4 flex flex-col justify-center items-center h-full">
-                    <p className="text-lg animate-pulse">{loadingMessage}</p>
+                    <p className="text-lg animate-pulse text-sage">{loadingMessage}</p>
                 </div>
             );
         }
@@ -220,14 +233,14 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         return (
             <div className="flex flex-col justify-center items-center h-full space-y-4">
                 {diceResult && (
-                    <p className="text-lg">
+                    <p className="text-lg text-paper">
                         {t('youRolled', { roll: diceResult[0] + diceResult[1] })}
                     </p>
                 )}
                 <button
                     onClick={onRollDice}
                     disabled={gamePhase !== 'TURN_START' || currentPlayer.isAI}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition duration-300 shadow-lg disabled:shadow-none"
+                    className="w-full bg-brass hover:bg-brass-bright disabled:bg-felt-700 disabled:text-sage/50 disabled:cursor-not-allowed text-felt-900 font-bold py-3 px-4 rounded-lg transition-colors"
                 >
                     {t('rollDice')}
                 </button>
@@ -236,7 +249,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
     };
 
     return (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md p-4 md:p-6 rounded-2xl shadow-2xl flex flex-col">
+        <div className="w-full h-full bg-felt-800 p-4 md:p-6 rounded-xl border border-felt-700 flex flex-col">
             {renderContent()}
         </div>
     );

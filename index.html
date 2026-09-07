@@ -28,16 +28,47 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Spline+Sans+Mono:wght@400..700&display=swap"
             rel="stylesheet"
         />
         <script>
             tailwind.config = {
                 theme: {
                     extend: {
+                        colors: {
+                            // "The Game Table": felt chrome, printed paper components,
+                            // brass as the single accent. Quest data (property bands,
+                            // player tokens, resource bars) uses stock palette colors.
+                            felt: {
+                                900: '#0B241E',
+                                800: '#103028',
+                                700: '#164035',
+                                600: '#1E5244',
+                                500: '#2A6B59',
+                            },
+                            paper: {
+                                DEFAULT: '#F3EEE2',
+                                dim: '#E4DBC6',
+                            },
+                            ink: {
+                                DEFAULT: '#22302B',
+                                soft: '#5C6E64',
+                            },
+                            brass: {
+                                DEFAULT: '#D9A13B',
+                                bright: '#E8BA5F',
+                                deep: '#A87818',
+                            },
+                            sage: '#9FB7A9',
+                            clay: {
+                                DEFAULT: '#C05540',
+                                deep: '#A44330',
+                            },
+                        },
                         fontFamily: {
-                            sans: ['Inter', 'sans-serif'],
-                            mono: ['Space Mono', 'monospace'],
+                            sans: ['"Atkinson Hyperlegible"', 'sans-serif'],
+                            display: ['"Bricolage Grotesque"', 'sans-serif'],
+                            mono: ['"Spline Sans Mono"', 'monospace'],
                         },
                         keyframes: {
                             'fade-in': {
@@ -63,38 +94,22 @@
                         typography: (theme) => ({
                             DEFAULT: {
                                 css: {
-                                    '--tw-prose-body': theme('colors.gray[300]'),
-                                    '--tw-prose-headings': theme('colors.white'),
-                                    '--tw-prose-lead': theme('colors.gray[400]'),
-                                    '--tw-prose-links': theme('colors.indigo[400]'),
-                                    '--tw-prose-bold': theme('colors.white'),
-                                    '--tw-prose-counters': theme('colors.gray[400]'),
-                                    '--tw-prose-bullets': theme('colors.gray[500]'),
-                                    '--tw-prose-hr': theme('colors.gray[700]'),
-                                    '--tw-prose-quotes': theme('colors.gray[200]'),
-                                    '--tw-prose-quote-borders': theme('colors.gray[600]'),
-                                    '--tw-prose-captions': theme('colors.gray[400]'),
-                                    '--tw-prose-code': theme('colors.orange[300]'),
-                                    '--tw-prose-pre-code': theme('colors.orange[300]'),
-                                    '--tw-prose-pre-bg': theme('colors.gray[900]'),
-                                    '--tw-prose-th-borders': theme('colors.gray[600]'),
-                                    '--tw-prose-td-borders': theme('colors.gray[700]'),
-                                    '--tw-prose-invert-body': theme('colors.gray[300]'),
-                                    '--tw-prose-invert-headings': theme('colors.white'),
-                                    '--tw-prose-invert-lead': theme('colors.gray[400]'),
-                                    '--tw-prose-invert-links': theme('colors.indigo[400]'),
-                                    '--tw-prose-invert-bold': theme('colors.white'),
-                                    '--tw-prose-invert-counters': theme('colors.gray[400]'),
-                                    '--tw-prose-invert-bullets': theme('colors.gray[500]'),
-                                    '--tw-prose-invert-hr': theme('colors.gray[700]'),
-                                    '--tw-prose-invert-quotes': theme('colors.gray[200]'),
-                                    '--tw-prose-invert-quote-borders': theme('colors.gray[600]'),
-                                    '--tw-prose-invert-captions': theme('colors.gray[400]'),
-                                    '--tw-prose-invert-code': theme('colors.orange[300]'),
-                                    '--tw-prose-invert-pre-code': theme('colors.orange[300]'),
-                                    '--tw-prose-invert-pre-bg': theme('colors.gray[900]'),
-                                    '--tw-prose-invert-th-borders': theme('colors.gray[600]'),
-                                    '--tw-prose-invert-td-borders': theme('colors.gray[700]'),
+                                    '--tw-prose-body': theme('colors.paper'),
+                                    '--tw-prose-headings': theme('colors.brass.bright'),
+                                    '--tw-prose-lead': theme('colors.sage'),
+                                    '--tw-prose-links': theme('colors.brass.bright'),
+                                    '--tw-prose-bold': theme('colors.paper'),
+                                    '--tw-prose-counters': theme('colors.sage'),
+                                    '--tw-prose-bullets': theme('colors.sage'),
+                                    '--tw-prose-hr': theme('colors.felt.600'),
+                                    '--tw-prose-quotes': theme('colors.paper'),
+                                    '--tw-prose-quote-borders': theme('colors.felt.500'),
+                                    '--tw-prose-captions': theme('colors.sage'),
+                                    '--tw-prose-code': theme('colors.brass.bright'),
+                                    '--tw-prose-pre-code': theme('colors.brass.bright'),
+                                    '--tw-prose-pre-bg': theme('colors.felt.900'),
+                                    '--tw-prose-th-borders': theme('colors.felt.600'),
+                                    '--tw-prose-td-borders': theme('colors.felt.700'),
                                 },
                             },
                         }),
@@ -122,7 +137,7 @@
             }
         </script>
     </head>
-    <body class="bg-gray-900 text-gray-100 font-sans antialiased">
+    <body class="bg-felt-900 text-paper font-sans antialiased">
         <style>
             /* The app shell is a fixed-height flex column; the window itself never scrolls. */
             html,
@@ -132,7 +147,7 @@
             }
             /* Visible keyboard focus everywhere, without changing mouse aesthetics. */
             :focus-visible {
-                outline: 2px solid #818cf8;
+                outline: 2px solid #d9a13b;
                 outline-offset: 2px;
                 border-radius: 4px;
             }

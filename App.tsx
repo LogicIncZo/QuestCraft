@@ -354,9 +354,9 @@ const App: React.FC = () => {
     };
 
     const PageLoadingFallback = () => (
-        <div className="flex h-full w-full items-center justify-center bg-gray-900">
+        <div className="flex h-full w-full items-center justify-center bg-felt-900">
             <div
-                className="h-10 w-10 animate-spin rounded-full border-4 border-gray-600 border-t-white"
+                className="h-10 w-10 animate-spin rounded-full border-4 border-felt-600 border-t-brass"
                 role="status"
                 aria-label="Loading"
             />
@@ -367,7 +367,7 @@ const App: React.FC = () => {
         aiSettings.providerId === 'community' ? PROVIDER_CONFIGS.community.name : aiSettings.model;
 
     return (
-        <div className="flex h-screen bg-gray-900 text-gray-100 font-sans antialiased">
+        <div className="flex h-screen bg-felt-900 text-paper font-sans antialiased">
             <HamburgerMenu
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}

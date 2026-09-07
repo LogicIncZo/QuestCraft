@@ -41,8 +41,8 @@ const NavItem: React.FC<{
             onClick={() => onNavigate(page)}
             className={`w-full flex items-center gap-4 p-3 rounded-lg text-left transition-colors ${
                 isActive
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
+                    ? 'bg-brass text-felt-900 font-bold'
+                    : 'text-sage hover:bg-felt-700/60 hover:text-paper'
             }`}
         >
             {icon}
@@ -88,12 +88,12 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
                 ref={navRef}
                 tabIndex={-1}
                 aria-label={t('menuOpen')}
-                className={`fixed top-0 left-0 h-full w-64 bg-gray-800 border-r border-gray-700 p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out outline-none ${
+                className={`fixed top-0 left-0 h-full w-64 bg-felt-800 border-r border-felt-700 p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out outline-none ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
                 <div className="mb-8">
-                    <p className="text-2xl font-bold text-orange-400 font-mono" aria-hidden="true">
+                    <p className="text-2xl font-bold text-brass font-display tracking-tight" aria-hidden="true">
                         {t('questCraftTitle')}
                     </p>
                 </div>

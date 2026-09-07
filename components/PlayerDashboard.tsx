@@ -24,15 +24,15 @@ const ResourceBar: React.FC<{
 
     return (
         <div className="flex items-center space-x-3">
-            <IconComponent className="w-6 h-6 text-gray-400" />
+            <IconComponent className="w-6 h-6 text-sage" />
             <div className="flex-1">
                 <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-sm font-medium text-gray-200">
+                    <span className="text-sm font-bold text-paper">
                         {getLocalizedString(resourceDef.name, language)}
                     </span>
-                    <span className="text-lg font-mono font-bold text-white">{value}</span>
+                    <span className="text-lg font-mono font-bold text-paper">{value}</span>
                 </div>
-                <div className="w-full bg-gray-600 rounded-full h-2.5">
+                <div className="w-full bg-felt-900 rounded-full h-2.5">
                     <div
                         className={`${resourceDef.barColor} h-2.5 rounded-full transition-all duration-500 ease-out`}
                         style={{ width: `${percentage}%` }}
@@ -58,20 +58,18 @@ const PlayerDashboard: React.FC<PlayerDashboardProps> = ({
 }) => {
     const { t } = useTranslation();
     return (
-        <div className="w-full h-full bg-gray-800/50 backdrop-blur-md p-4 md:p-6 rounded-2xl shadow-2xl flex flex-col space-y-6 overflow-y-auto">
+        <div className="w-full h-full bg-felt-800 p-4 md:p-6 rounded-xl border border-felt-700 flex flex-col space-y-6 overflow-y-auto">
             {/* Players Header */}
-            <div className="bg-gray-900/50 p-3 rounded-lg">
-                <h2 className="text-xs uppercase font-semibold text-gray-400 mb-2">
-                    {t('players')}
-                </h2>
+            <div className="bg-felt-900/60 p-3 rounded-lg">
+                <h2 className="text-xs font-bold text-sage mb-2">{t('players')}</h2>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {players.map((p) => (
                         <div
                             key={p.id}
-                            className={`flex items-center space-x-2 p-1 rounded-md ${p.id === currentPlayer.id ? 'bg-gray-700' : ''} ${p.isBankrupt ? 'opacity-50 line-through' : ''}`}
+                            className={`flex items-center space-x-2 p-1 rounded-md ${p.id === currentPlayer.id ? 'bg-felt-700' : ''} ${p.isBankrupt ? 'opacity-50 line-through' : ''}`}
                         >
                             <div className={`w-3 h-3 rounded-full ${p.color} bg-current`}></div>
-                            <span className="text-sm font-medium">{p.name}</span>
+                            <span className="text-sm font-medium text-paper">{p.name}</span>
                         </div>
                     ))}
                 </div>
@@ -79,8 +77,8 @@ const PlayerDashboard: React.FC<PlayerDashboardProps> = ({
 
             {/* Current Turn Info */}
             <div>
-                <p className="text-sm text-gray-400">{t('currentTurn')}</p>
-                <h2 className={`text-3xl font-bold ${currentPlayer.color}`}>
+                <p className="text-sm text-sage">{t('currentTurn')}</p>
+                <h2 className={`text-3xl font-bold font-display tracking-tight ${currentPlayer.color}`}>
                     {currentPlayer.name}
                 </h2>
             </div>
