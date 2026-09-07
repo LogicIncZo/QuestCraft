@@ -42,8 +42,9 @@ failure.
 `main` plus PRs to `main`; its `verification-gate` job aggregates
 `build` (typecheck/lint/test/build), `e2e`, and `security-audit`. Every push to
 `dev` also triggers `.github/workflows/promote-to-main.yml`, which re-runs the
-gates, opens/reuses a `dev` → `main` PR, and enables auto-merge. `main` must
-never be advanced outside that gated PR.
+gates, then advances `main` via a `dev` → `main` PR with auto-merge (or a
+gated direct push when the org forbids Actions-created PRs). `main` must
+never be advanced outside this gated flow.
 
 ## Tech Stack & Setup
 

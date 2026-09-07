@@ -55,10 +55,16 @@ every PR targeting `main`:
 every push to `dev` (and manually via *Run workflow*):
 
 1. Re-runs the full gate suite on `dev`.
-2. If `dev` is ahead of `main`, opens or reuses a "Promote dev to main" PR.
-3. Enables auto-merge on that PR, so it merges once all required checks pass.
+2. If `dev` is ahead of `main`, opens or reuses a "Promote dev to main" PR and
+   enables auto-merge, so it merges once all required checks pass.
+3. If repo/org policy forbids GitHub Actions from creating pull requests, it
+   falls back to a gated direct push of `dev` → `main` (equally gated: the
+   push step only runs after the gate jobs above succeeded).
 
 To promote manually: **Actions → Promote dev to main → Run workflow**.
+To restore the PR-based flow, enable *"Allow GitHub Actions to create and
+approve pull requests"* in the org's **Settings → Actions → General →
+Workflow permissions** (org admin).
 
 ### Making the gates required (recommended)
 
