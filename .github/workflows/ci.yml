@@ -2,7 +2,7 @@ name: CI
 
 on:
     push:
-        branches: [main]
+        branches: [main, dev]
     pull_request:
         branches: [main]
 
@@ -80,3 +80,25 @@ jobs:
 
             - name: npm audit (high severity, non-blocking)
               run: npm audit --audit-level high || echo "::warning::npm audit found high-severity issues"
+
+    # Single aggregate status check: make THIS job the required check on main
+    # (and on dev) so the promotion gate and branch protection have one name
+    # to key on, instead of tracking each job individually.
+    verification-gate:
+        needs: [build, e2e, security-audit]
+        if: ${{ always() }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Evaluate verification gate
+              run: |
+                  results="${{ join(needs.*.result, ' ') }}"
+                  echo "Gate results: $results"
+                  failed=0
+                  for result in $results; do
+                      if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+                          echo "::error::Verification gate failed: a required job reported '$result'"
+                          failed=1
+                      fi
+                  done
+                  exit $failed

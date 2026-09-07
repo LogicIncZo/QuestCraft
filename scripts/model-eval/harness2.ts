@@ -1,4 +1,4 @@
-import { questConfigSchema, dynamicScenarioSchema } from '/home/workspace/Projects/QuestCraft/services/schemas';
+import { questConfigSchema, dynamicScenarioSchema } from '../../services/schemas';
 import { readFileSync } from 'fs';
 
 export const KEY = process.env.OPENROUTER_API_KEY!;

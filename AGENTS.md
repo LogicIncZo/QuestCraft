@@ -38,6 +38,13 @@ game start, docs, settings/i18n, console error scan) via agent-browser against
 The suite needs the preview server running first; it exits non-zero on any
 failure.
 
+**Gates & promotion:** `.github/workflows/ci.yml` runs on pushes to `dev` and
+`main` plus PRs to `main`; its `verification-gate` job aggregates
+`build` (typecheck/lint/test/build), `e2e`, and `security-audit`. Every push to
+`dev` also triggers `.github/workflows/promote-to-main.yml`, which re-runs the
+gates, opens/reuses a `dev` → `main` PR, and enables auto-merge. `main` must
+never be advanced outside that gated PR.
+
 ## Tech Stack & Setup
 
 - **Framework:** React 19.1.1 with TypeScript 5.8.2
