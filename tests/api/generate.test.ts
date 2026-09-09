@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 vi.mock('openai', () => {
     const create = vi.fn(async function* () {
@@ -19,6 +19,12 @@ const typedMockCreate = (openaiModule as unknown as { __create: ReturnType<typeo
     .__create;
 
 const ALLOWED_ORIGIN = 'https://aipoly.vercel.app';
+
+// Env stubs must not leak between tests — NVIDIA_API_KEY set in one suite
+// would otherwise make the 'NIM skipped' test see a configured key.
+afterEach(() => {
+    vi.unstubAllEnvs();
+});
 
 function postRequest(body: string | object, origin: string | null = ALLOWED_ORIGIN) {
     return new Request('https://aipoly.vercel.app/api/generate', {
@@ -194,6 +200,7 @@ describe('api/generate security hardening (issue #56)', () => {
         typedMockCreate.mockImplementationOnce(() => {
             const bad = async function* () {
                 throw new Error('Upstream error from Nvidia: Service temporarily overloaded');
+                yield 0; // unreachable; satisfies require-yield
             };
             return bad();
         });
@@ -211,5 +218,163 @@ describe('api/generate security hardening (issue #56)', () => {
         expect(typedMockCreate).toHaveBeenCalledTimes(2);
         const secondCallModel = typedMockCreate.mock.calls[1][0].model;
         expect(secondCallModel).not.toBe(COMMUNITY_MODELS[0].model);
+    });
+});
+
+describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
+    const chatPayload = {
+        message: 'hi',
+        history: [],
+        systemInstruction: 'sys',
+    };
+
+    beforeEach(() => {
+        vi.stubEnv('OPENROUTER_API_KEY', 'test-key');
+        typedMockCreate.mockReset();
+        typedMockCreate.mockImplementation(async function* () {
+            yield { choices: [{ delta: { content: 'ok' } }] };
+        } as any);
+    });
+
+    it('rejects an unknown action with 400 and never touches the AI chain', async () => {
+        const res = await handler(
+            postRequest({ action: 'deleteAllUsers', payload: {} })
+        );
+        expect(res.status).toBe(400);
+        expect(await res.text()).toContain('Unknown action');
+        expect(typedMockCreate).not.toHaveBeenCalled();
+    });
+
+    it('rejects a chat payload with an empty message via the zod contract', async () => {
+        const res = await handler(
+            postRequest({ action: 'chat', payload: { ...chatPayload, message: '' } })
+        );
+        expect(res.status).toBe(400);
+        expect(await res.text()).toContain('Invalid payload');
+        expect(typedMockCreate).not.toHaveBeenCalled();
+    });
+
+    it('rejects an oversized enhanceQuestIdea payload (>8k chars) with 400', async () => {
+        const res = await handler(
+            postRequest({
+                action: 'enhanceQuestIdea',
+                payload: { idea: 'x'.repeat(8_001), ageGroup: 'teens' },
+            })
+        );
+        expect(res.status).toBe(400);
+        expect(typedMockCreate).not.toHaveBeenCalled();
+    });
+
+    it('enforces the generateQuestOutline numeric bounds', async () => {
+        for (const numLocations of [1, 41]) {
+            const res = await handler(
+                postRequest({
+                    action: 'generateQuestOutline',
+                    payload: {
+                        idea: 'A day at the market',
+                        numLocations,
+                        positivity: 50,
+                        groundingInReality: false,
+                        supportedLanguages: ['en'],
+                        languageCode: 'en',
+                    },
+                })
+            );
+            expect(res.status).toBe(400);
+        }
+        expect(typedMockCreate).not.toHaveBeenCalled();
+    });
+
+    it('returns 405 for non-POST/non-OPTIONS methods', async () => {
+        const res = await handler(
+            new Request('https://aipoly.vercel.app/api/generate', {
+                method: 'GET',
+                headers: { origin: ALLOWED_ORIGIN },
+            })
+        );
+        expect(res.status).toBe(405);
+    });
+
+    it('blocks OPTIONS preflight from disallowed origins with 403', async () => {
+        const res = await handler(
+            new Request('https://aipoly.vercel.app/api/generate', {
+                method: 'OPTIONS',
+                headers: { origin: 'https://evil.example' },
+            })
+        );
+        expect(res.status).toBe(403);
+    });
+
+    it('fails closed with a generic 500 when OPENROUTER_API_KEY is missing', async () => {
+        vi.stubEnv('OPENROUTER_API_KEY', '');
+        const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
+        expect(res.status).toBe(500);
+        const text = await res.text();
+        expect(text).toContain('unexpected error');
+        expect(text).not.toContain('OPENROUTER_API_KEY');
+    });
+
+    it('falls all the way through the OpenRouter chain to the NIM entry', async () => {
+        vi.stubEnv('NVIDIA_API_KEY', 'nim-key');
+        // First three calls (all OpenRouter entries) fail; the fourth call is
+        // the first NIM entry (deepseek-ai/deepseek-v4-flash-0731) and succeeds.
+        typedMockCreate
+            .mockImplementationOnce(() => {
+                throw new Error('OpenRouter: model pulled');
+            })
+            .mockImplementationOnce(() => {
+                throw new Error('OpenRouter: rate limited (429)');
+            })
+            .mockImplementationOnce(() => {
+                throw new Error('OpenRouter: upstream overloaded');
+            });
+
+        const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
+        expect(res.status).toBe(200);
+        expect(typedMockCreate).toHaveBeenCalledTimes(4);
+        const fourthCall = typedMockCreate.mock.calls[3][0];
+        expect(fourthCall.model).toBe('deepseek-ai/deepseek-v4-flash-0731');
+        const text = await res.text();
+        expect(text).toContain('ok');
+        expect(text).not.toContain('429');
+        expect(text).not.toContain('OpenRouter');
+    });
+
+    it('skips NIM entries entirely when NVIDIA_API_KEY is not configured', async () => {
+        vi.stubEnv('NVIDIA_API_KEY', '');
+        typedMockCreate.mockImplementation(() => {
+            throw new Error('OpenRouter: everything is down');
+        });
+
+        const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
+        expect(res.status).toBe(500);
+        // Only the 3 OpenRouter entries were attempted; no NIM models called.
+        expect(typedMockCreate).toHaveBeenCalledTimes(3);
+        const calledModels = typedMockCreate.mock.calls.map(
+            (c: any[]) => c[0].model
+        );
+        expect(calledModels).not.toContain('deepseek-ai/deepseek-v4-flash-0731');
+        expect(calledModels).toEqual(COMMUNITY_MODELS.filter((m) => m.client === 'openrouter').map((m) => m.model));
+    });
+
+    it('treats an empty stream as a failure and moves to the next entry', async () => {
+        typedMockCreate.mockImplementationOnce(async function* () {
+            // yields nothing — empty stream
+        } as any);
+
+        const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
+        expect(res.status).toBe(200);
+        expect(typedMockCreate).toHaveBeenCalledTimes(2);
+        const secondCall = typedMockCreate.mock.calls[1][0];
+        expect(secondCall.model).toBe(COMMUNITY_MODELS[1].model);
+    });
+
+    it('answers testConnection with 200 on a healthy chain', async () => {
+        const res = await handler(postRequest({ action: 'testConnection', payload: undefined }));
+        expect(res.status).toBe(200);
+        expect(await res.text()).toContain('Connection successful');
+        const firstCall = typedMockCreate.mock.calls[0][0];
+        expect(firstCall.model).toBe(COMMUNITY_MODELS[0].model);
+        expect(firstCall.max_tokens).toBe(1);
     });
 });
