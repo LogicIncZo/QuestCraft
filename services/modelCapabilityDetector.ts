@@ -158,6 +158,35 @@ export const MODEL_CAPABILITIES: Record<string, ModelCapabilities> = {
         supportsMultiLanguage: true,
     },
 
+    // NIM twin of the :free entry above (served directly by build.nvidia.com)
+    'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning': {
+        supportsJsonSchema: true,
+        supportsTools: false,
+        supportsThinking: true,
+        maxContextTokens: 256000,
+        prefersMarkdown: false,
+        requiresJsonOnly: true,
+        canDoWebSearch: false, // CRITICAL: No web search in community tier
+        supportsStreaming: true,
+        qualityTier: 'medium',
+        supportsMultiLanguage: true,
+    },
+
+    // DeepSeek V4 Flash via NIM (4th chain entry, verified live 2026-09-07
+    // against response_format json_object + streaming)
+    'deepseek-ai/deepseek-v4-flash-0731': {
+        supportsJsonSchema: true,
+        supportsTools: false,
+        supportsThinking: false,
+        maxContextTokens: 131072,
+        prefersMarkdown: false,
+        requiresJsonOnly: true,
+        canDoWebSearch: false, // CRITICAL: No web search in community tier
+        supportsStreaming: true,
+        qualityTier: 'medium',
+        supportsMultiLanguage: true,
+    },
+
     // Default for unknown models
     default: {
         supportsJsonSchema: false,
