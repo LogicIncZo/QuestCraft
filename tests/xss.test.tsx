@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import DocContent from '../components/DocContent';
 import ChatDrawer from '../components/ChatDrawer';
+import { ConfirmDialogProvider } from '../components/ConfirmDialog';
 import type { QuestConfig } from '../types';
 
 const XSS_MARKDOWN = [
@@ -95,14 +96,16 @@ describe('ChatDrawer XSS (issue #57)', () => {
     it('renders malicious model output inert (no script execution)', async () => {
         const user = userEvent.setup();
         render(
-            <ChatDrawer
-                show={true}
-                onClose={() => {}}
-                page="game"
-                questConfig={baseQuest}
-                draftQuest={null}
-                onApplyQuestUpdate={() => {}}
-            />
+            <ConfirmDialogProvider>
+                <ChatDrawer
+                    show={true}
+                    onClose={() => {}}
+                    page="game"
+                    questConfig={baseQuest}
+                    draftQuest={null}
+                    onApplyQuestUpdate={() => {}}
+                />
+            </ConfirmDialogProvider>
         );
 
         const input = await screen.findByRole('textbox');

@@ -3,6 +3,7 @@ import Drawer from './Drawer';
 import { auditLogService, AUDIT_LOG_UPDATED_EVENT } from '../services/auditLogService';
 import type { AIAuditLog } from '../types';
 import { useTranslation } from '../services/i18n';
+import { useConfirmDialog } from './ConfirmDialog';
 
 interface AIAuditLogDrawerProps {
     show: boolean;
@@ -12,6 +13,7 @@ interface AIAuditLogDrawerProps {
 const AIAuditLogDrawer: React.FC<AIAuditLogDrawerProps> = ({ show, onClose }) => {
     const [logs, setLogs] = useState<AIAuditLog[]>([]);
     const { t } = useTranslation();
+    const confirm = useConfirmDialog();
 
     useEffect(() => {
         const handleLogUpdate = () => {
@@ -29,8 +31,8 @@ const AIAuditLogDrawer: React.FC<AIAuditLogDrawerProps> = ({ show, onClose }) =>
         };
     }, [show]);
 
-    const handleClearLogs = () => {
-        if (window.confirm(t('clearLogsConfirmation'))) {
+    const handleClearLogs = async () => {
+        if (await confirm({ message: t('clearLogsConfirmation'), confirmLabel: t('clearLogs') })) {
             auditLogService.clearLogs();
         }
     };

@@ -5,6 +5,7 @@ import { chatManager, loadPrompt } from '../services/aiService';
 import { settingsService } from '../services/settingsService';
 import type { ChatMessage, Page, QuestConfig } from '../types';
 import { useTranslation } from '../services/i18n';
+import { useConfirmDialog } from './ConfirmDialog';
 import { getLocalizedString } from '../utils/localization';
 import { DOC_LINKS } from '../constants';
 import { sanitizeHtml } from '../utils/sanitizeHtml';
@@ -36,6 +37,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
     onApplyQuestUpdate,
 }) => {
     const { t } = useTranslation();
+    const confirm = useConfirmDialog();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -174,8 +176,8 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
         }
     };
 
-    const handleClearChat = () => {
-        if (window.confirm(t('chatClearConfirm'))) {
+    const handleClearChat = async () => {
+        if (await confirm({ message: t('chatClearConfirm'), confirmLabel: t('chatClear') })) {
             setMessages([{ id: 'system-welcome', role: 'system', content: welcomeMessage }]);
             setAppliedUpdates(new Set());
             if (systemInstruction) {

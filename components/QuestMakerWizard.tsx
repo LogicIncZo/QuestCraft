@@ -18,6 +18,7 @@ import {
 import { settingsService } from '../services/settingsService';
 import { BoardLocationType } from '../types';
 import { useTranslation } from '../services/i18n';
+import { useConfirmDialog } from './ConfirmDialog';
 import { getLocalizedString } from '../utils/localization';
 import { IconMap } from '../constants';
 import { logger } from '../services/logger';
@@ -102,6 +103,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
     draftQuest,
 }) => {
     const { t, language } = useTranslation();
+    const confirm = useConfirmDialog();
     const [step, setStep] = useState<WizardStep>(draftQuest ? 'REFINE' : 'CONFIG');
     const [refineStep, setRefineStep] = useState<RefineStep>('DETAILS');
     const [idea, setIdea] = useState('');
@@ -348,15 +350,15 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
         });
     };
 
-    const handleStartOver = () => {
-        if (!draftQuest || window.confirm(t('confirmStartOver'))) {
+    const handleStartOver = async () => {
+        if (!draftQuest || (await confirm({ message: t('confirmStartOver'), confirmLabel: t('startOver') }))) {
             onDraftUpdate(null);
             setIdea('');
             setStep('CONFIG');
         }
     };
 
-    const handleStepNavigation = (targetStep: WizardStep) => {
+    const handleStepNavigation = async (targetStep: WizardStep) => {
         const wizardSteps: WizardStep[] = ['CONFIG', 'REFINE', 'PREVIEW', 'FINISH'];
         const currentStepName = step === 'GENERATING' ? 'REFINE' : step;
         const currentStepIndex = wizardSteps.indexOf(currentStepName);
@@ -370,13 +372,13 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                 if (targetStep === 'PREVIEW') {
                     setStep('PREVIEW');
                 } else if (targetStep === 'REFINE') {
-                    if (draftQuest && window.confirm(t('confirmDiscardScenarios'))) {
+                    if (draftQuest && (await confirm({ message: t('confirmDiscardScenarios') }))) {
                         const newDraft = { ...draftQuest, pregeneratedScenarios: {} };
                         onDraftUpdate(newDraft);
                         setStep('REFINE');
                     }
                 } else if (targetStep === 'CONFIG') {
-                    if (draftQuest && window.confirm(t('confirmStartOver'))) {
+                    if (draftQuest && (await confirm({ message: t('confirmStartOver'), confirmLabel: t('startOver') }))) {
                         handleStartOver();
                     }
                 }
@@ -384,7 +386,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
 
             case 'PREVIEW':
                 if (targetStep === 'REFINE') {
-                    if (draftQuest && window.confirm(t('confirmDiscardScenarios'))) {
+                    if (draftQuest && (await confirm({ message: t('confirmDiscardScenarios') }))) {
                         const newDraft = { ...draftQuest, pregeneratedScenarios: {} };
                         onDraftUpdate(newDraft);
                         setStep('REFINE');
@@ -394,7 +396,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
 
             case 'REFINE':
                 if (targetStep === 'CONFIG') {
-                    if (draftQuest && window.confirm(t('confirmDiscardOutline'))) {
+                    if (draftQuest && (await confirm({ message: t('confirmDiscardOutline') }))) {
                         onDraftUpdate(null);
                         setJsonText('');
                         setStep('CONFIG');
