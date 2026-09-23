@@ -16,6 +16,7 @@ import {
 import { aiConnectivityService } from '../services/aiConnectivityService';
 import { testConnection } from '../services/aiService';
 import { useTranslation } from '../services/i18n';
+import { useConfirmDialog } from './ConfirmDialog';
 import { getLocalizedString } from '../utils/localization';
 
 interface SettingsPageProps {
@@ -68,6 +69,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     isMakerModeEnabled,
 }) => {
     const { t, language, setLanguage } = useTranslation();
+    const confirm = useConfirmDialog();
     const [aiSettings, setAiSettings] = useState<AiProviderSettings>(
         settingsService.getAiSettings()
     );
@@ -174,8 +176,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         handleTestConnection();
     };
 
-    const handleResetApp = () => {
-        if (window.confirm(t('resetAppConfirmation'))) {
+    const handleResetApp = async () => {
+        if (await confirm({ message: t('resetAppConfirmation') })) {
             const keysToClear = Object.keys(localStorage).filter((key) =>
                 key.startsWith('questcraft-')
             );

@@ -30,6 +30,10 @@ import { fetchJsonAsset } from './utils/staticAssets';
 import { sanitizeHtml } from './utils/sanitizeHtml';
 import { useTranslation } from './services/i18n';
 import { logger } from './services/logger';
+import {
+    ConfirmDialogProvider,
+    useConfirmDialog,
+} from './components/ConfirmDialog';
 
 const CUSTOM_QUESTS_STORAGE_KEY = 'questcraft-custom-quests';
 const ACTIVE_QUEST_CONFIG_KEY = 'questcraft-active-quest';
@@ -56,8 +60,9 @@ const saveCustomQuestsToStorage = (quests: QuestConfig[]) => {
     }
 };
 
-const App: React.FC = () => {
+const AppShell: React.FC = () => {
     const { t } = useTranslation();
+    const confirm = useConfirmDialog();
     const [page, setPage] = useState<Page>('home');
     const [questConfig, setQuestConfig] = useState<QuestConfig | null>(null);
     const [draftQuestForChat, setDraftQuestForChat] = useState<QuestConfig | null>(null);
@@ -175,8 +180,11 @@ const App: React.FC = () => {
         return () => clearInterval(timerId);
     }, [page]);
 
-    const handleExitGameWithConfirm = useCallback(() => {
-        const confirmed = window.confirm(t('confirmEndGame'));
+    const handleExitGameWithConfirm = useCallback(async () => {
+        const confirmed = await confirm({
+            message: t('confirmEndGame'),
+            confirmLabel: t('endGame'),
+        });
         setIsMenuOpen(false); // Always close menu if action originated from there
 
         if (confirmed) {
@@ -185,7 +193,7 @@ const App: React.FC = () => {
             localStorage.removeItem(ACTIVE_QUEST_CONFIG_KEY);
             setPage('home');
         }
-    }, [t]);
+    }, [confirm, t]);
 
     const handleExitGameImmediate = useCallback(() => {
         // For failsafe exits where no confirmation is needed
@@ -196,19 +204,20 @@ const App: React.FC = () => {
     }, []);
 
     const handleNavigate = useCallback(
-        (targetPage: Page) => {
+        async (targetPage: Page) => {
             if (targetPage === 'maker' && !isMakerModeEnabled) return;
 
             if (page === 'game' && (targetPage === 'home' || targetPage === 'welcome')) {
-                handleExitGameWithConfirm();
+                await handleExitGameWithConfirm();
                 return;
             }
             if (page === 'maker' && targetPage !== 'maker') {
                 const confirmed =
                     !draftQuestForChat ||
-                    window.confirm(
-                        'You have an unsaved quest draft. Are you sure you want to leave the Quest Maker? Your draft will be lost.'
-                    );
+                    (await confirm({
+                        message:
+                            'You have an unsaved quest draft. Are you sure you want to leave the Quest Maker? Your draft will be lost.',
+                    }));
                 if (!confirmed) {
                     setIsMenuOpen(false);
                     return;
@@ -219,7 +228,7 @@ const App: React.FC = () => {
             setPage(targetPage);
             setIsMenuOpen(false);
         },
-        [page, draftQuestForChat, handleExitGameWithConfirm]
+        [page, draftQuestForChat, handleExitGameWithConfirm, confirm]
     );
 
     const handleLoadQuest = useCallback(
@@ -248,12 +257,12 @@ const App: React.FC = () => {
         [isMakerModeEnabled, handleNavigate]
     );
 
-    const handleDeleteQuest = (questName: string) => {
+    const handleDeleteQuest = async (questName: string) => {
         if (
             isMakerModeEnabled &&
-            window.confirm(
-                `Are you sure you want to delete the quest "${questName}"? This cannot be undone.`
-            )
+            (await confirm({
+                message: `Are you sure you want to delete the quest "${questName}"? This cannot be undone.`,
+            }))
         ) {
             const newQuests = customQuests.filter(
                 (q) => getLocalizedString(q.name, 'en') !== questName
@@ -272,13 +281,13 @@ const App: React.FC = () => {
         [handleNavigate]
     );
 
-    const handleResetStats = useCallback(() => {
-        if (window.confirm(t('resetStatsConfirmation'))) {
+    const handleResetStats = useCallback(async () => {
+        if (await confirm({ message: t('resetStatsConfirmation'), confirmLabel: t('resetStats') })) {
             statsService.resetStats();
             // Force a state update to ensure UI reflects the change immediately
             setAppStats(statsService.getStats());
         }
-    }, [t]);
+    }, [confirm, t]);
 
     const handleApplyQuestUpdate = useCallback((updatedConfig: QuestConfig) => {
         setDraftQuestForChat(updatedConfig);
@@ -422,5 +431,11 @@ const App: React.FC = () => {
         </div>
     );
 };
+
+const App: React.FC = () => (
+    <ConfirmDialogProvider>
+        <AppShell />
+    </ConfirmDialogProvider>
+);
 
 export default App;

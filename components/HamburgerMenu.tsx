@@ -87,6 +87,8 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
             <nav
                 ref={navRef}
                 tabIndex={-1}
+                inert={!isOpen}
+                aria-hidden={!isOpen ? true : undefined}
                 aria-label={t('menuOpen')}
                 className={`fixed top-0 left-0 h-full w-64 bg-felt-800 border-r border-felt-700 p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out outline-none ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
