@@ -2,16 +2,20 @@
   <h1>🎲 QuestCraft</h1>
   <p><strong>AI-Powered Educational Board Game Engine</strong></p>
   <p>
-    <a href="https://github.com/CCAgentOrg/QuestCraft/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-blue.svg" alt="License"></a>
-    <a href="https://github.com/CCAgentOrg/QuestCraft/actions"><img src="https://img.shields.io/github/actions/workflow/status/CCAgentOrg/QuestCraft/ci.yml?branch=main" alt="CI"></a>
-    <a href="https://aipoly.vercel.app"><img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Demo"></a>
-    <a href="https://github.com/CCAgentOrg/QuestCraft/issues"><img src="https://img.shields.io/github/issues/CCAgentOrg/QuestCraft" alt="Issues"></a>
+    <a href="https://github.com/LogicIncZo/QuestCraft/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPLv3-blue.svg" alt="License"></a>
+    <a href="https://github.com/LogicIncZo/QuestCraft/actions"><img src="https://img.shields.io/github/actions/workflow/status/LogicIncZo/QuestCraft/ci.yml?branch=main" alt="CI"></a>
+    <a href="https://questcraft-srikanthlogics-projects.vercel.app"><img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Demo"></a>
+    <a href="https://github.com/LogicIncZo/QuestCraft/issues"><img src="https://img.shields.io/github/issues/LogicIncZo/QuestCraft" alt="Issues"></a>
   </p>
 </div>
 
 **QuestCraft** turns any topic into a playable, AI-driven board game. Build custom quests, learn through play, and generate dynamic scenarios — all powered by your choice of AI model (Gemini, OpenAI, OpenRouter, or community gateways).
 
 Built for classrooms, self-learners, and game enthusiasts.
+
+| ![Home](docs/screenshots/home.png) | ![Quest selection](docs/screenshots/quest-select.png) | ![Aadhaar Quest gameplay](docs/screenshots/gameplay.png) |
+|:---:|:---:|:---:|
+| Home & mode picker | Pick or load a quest | Play — AI scenarios on every landing |
 
 ## ✨ Features
 
@@ -27,8 +31,7 @@ Built for classrooms, self-learners, and game enthusiasts.
 ## 🚀 Quick Start
 
 ```bash
-# Clone the fork
-git clone https://github.com/CCAgentOrg/QuestCraft.git
+git clone https://github.com/LogicIncZo/QuestCraft.git
 cd QuestCraft
 
 # Install dependencies
