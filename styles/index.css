@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* The app shell is a fixed-height flex column; the window itself never scrolls. */
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Visible keyboard focus everywhere, without changing mouse aesthetics. */
+:focus-visible {
+    outline: 2px solid #d9a13b;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
