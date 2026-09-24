@@ -370,6 +370,63 @@ export const testConnection = async (settings: AiProviderSettings): Promise<void
     await withRetry(apiCall, 1, 0);
 };
 
+// --- Jev decision layer (community gateway) ---
+export interface QuestIdeaScreenResult {
+    suitableProbability: number;
+    improvementHint: string | null;
+}
+
+// Pre-screen a quest idea with the Jev decision model (System One). Runs on the
+// community tier only and is strictly best-effort: any failure resolves to null
+// and the caller proceeds without screening.
+export const evaluateQuestIdea = async (
+    idea: string,
+    ageGroup: string
+): Promise<QuestIdeaScreenResult | null> => {
+    try {
+        const response = await fetchWithTimeout('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+                apiRequestBody('jevEvaluate', {
+                    state: `A creator is designing an educational board game quest for ${getAgeGroupText(
+                        ageGroup
+                    )}. They submitted this quest idea: """${idea}"""`,
+                    questions: {
+                        educational_suitability: {
+                            type: 'noul',
+                            instructions:
+                                'Does this idea work well as an educational board game quest for this age group? Consider clarity, scope, and age-appropriateness.',
+                        },
+                        improvement_hint: {
+                            type: 'choice',
+                            instructions: 'Which single improvement would most help this idea as a quest?',
+                            options: [
+                                'Anchor it in a real-world place or system',
+                                'Narrow the scope to one concrete topic',
+                                'Add stakes appropriate for the age group',
+                                'The idea is already well-scoped',
+                            ],
+                        },
+                    },
+                })
+            ),
+        });
+        if (!response.ok) return null;
+        const data: any = await response.json();
+        const answers = data?.answers ?? {};
+        const probability = answers.educational_suitability?.noul;
+        if (typeof probability !== 'number') return null;
+        return {
+            suitableProbability: probability,
+            improvementHint: answers.improvement_hint?.choice ?? null,
+        };
+    } catch (e) {
+        logger.warn('[AI] Jev idea screening unavailable, proceeding without it.', e);
+        return null;
+    }
+};
+
 export const enhanceQuestIdea = async (idea: string, ageGroup: string): Promise<string> => {
     logger.info('[AI] Starting enhanceQuestIdea call...');
     const settings = settingsService.getAiSettings();

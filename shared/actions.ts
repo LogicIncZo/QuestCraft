@@ -12,6 +12,7 @@ export const API_ACTIONS = [
     'generateDynamicScenario',
     'chat',
     'gatewayStatus',
+    'jevEvaluate',
 ] as const;
 
 export type ApiAction = (typeof API_ACTIONS)[number];
@@ -64,6 +65,29 @@ export const actionPayloadSchemas = {
     }),
     // Ops surface: provider config + per-model health. No upstream calls.
     gatewayStatus: z.undefined(),
+    // Jev (TypeSafe System One) structured-decision probe, routed through the
+    // OpenRouter Decisions API. Server holds the key; payload is bounded so a
+    // decision round-trip stays pennies on input and free on output tokens.
+    jevEvaluate: z.object({
+        state: z.string().min(1).max(8_000),
+        questions: z
+            .record(
+                z.string().min(1).max(64),
+                z.object({
+                    type: z.enum(['choice', 'noul', 'score']),
+                    instructions: z.string().min(1).max(1_000),
+                    options: z
+                        .array(z.string().min(1).max(128))
+                        .min(2)
+                        .max(8)
+                        .optional(),
+                })
+            )
+            .refine(
+                (q) => Object.keys(q).length >= 1 && Object.keys(q).length <= 6,
+                'questions must contain between 1 and 6 entries'
+            ),
+    }),
 } as const satisfies Record<ApiAction, z.ZodTypeAny>;
 
 export type ActionPayloadSchema = typeof actionPayloadSchemas;

@@ -11,6 +11,7 @@ import type {
 } from '../types';
 import {
     enhanceQuestIdea,
+    evaluateQuestIdea,
     generateQuestOutline,
     generatePregeneratedScenarios,
     generateRandomQuestIdea,
@@ -107,6 +108,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
     const [step, setStep] = useState<WizardStep>(draftQuest ? 'REFINE' : 'CONFIG');
     const [refineStep, setRefineStep] = useState<RefineStep>('DETAILS');
     const [idea, setIdea] = useState('');
+    const [ideaNote, setIdeaNote] = useState<string | null>(null);
     const [ageGroup, setAgeGroup] = useState('any');
     const [numLocations, setNumLocations] = useState(20);
     const [numScenarios, setNumScenarios] = useState(1);
@@ -158,6 +160,20 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
         logger.info('[QuestMaker] User clicked Enhance Idea.');
         setIsSubmittingIdea(true);
         try {
+            // Jev pre-screen (community tier, best-effort): surfaces a soft note
+            // for weak ideas but never blocks the creative flow.
+            if (settingsService.getAiSettings().providerId === 'community') {
+                const screen = await evaluateQuestIdea(idea, ageGroup);
+                if (screen && screen.suitableProbability < 0.5) {
+                    setIdeaNote(
+                        screen.improvementHint
+                            ? `Heads up: ${screen.improvementHint}. Enhancing anyway.`
+                            : 'Heads up: this idea may need sharpening. Enhancing anyway.'
+                    );
+                } else {
+                    setIdeaNote(null);
+                }
+            }
             const enhancedIdea = await enhanceQuestIdea(idea, ageGroup);
             setIdea(enhancedIdea);
         } catch (error: any) {
@@ -426,6 +442,7 @@ const QuestMakerPage: React.FC<QuestMakerPageProps> = ({
                     className="w-full h-40 p-3 bg-felt-900 border border-felt-600 rounded-lg font-mono text-sm"
                     placeholder={t('ideaPlaceholder')}
                 />
+                {ideaNote && <p className="text-xs text-sage/80 italic">{ideaNote}</p>}
                 <div className="flex gap-4">
                     <button
                         onClick={handleSurpriseMe}

@@ -347,6 +347,13 @@ Conventions any change must preserve:
   `getCommunityClients()`. Probe prod with:
   `curl -X POST <prod>/api/generate -H 'content-type: application/json'
   -H "origin: <prod>" -d '{"action":"gatewayStatus"}'`.
+- **Jev decision layer** (`jevEvaluate` action, issue #84): TypeSafe's System
+  One decision model (`typesafe/jev-1.13`) via the OpenRouter Decisions API
+  (`/api/alpha/decisions`) — same `OPENROUTER_API_KEY`, output tokens free.
+  It is NOT a generation model: never add it to `COMMUNITY_MODELS` or use it
+  for scenario/chat text. First consumer: `evaluateQuestIdea` pre-screens
+  quest ideas (community tier only, best-effort — any failure must return
+  null and never block creation).
 
 ### API Security
 
