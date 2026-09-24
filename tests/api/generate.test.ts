@@ -435,6 +435,7 @@ describe('jevEvaluate decision layer (issue #84)', () => {
     });
 
     it('proxies to the Decisions API and returns typed answers', async () => {
+        vi.stubEnv('OPENROUTER_API_KEY', 'test-or-key');
         const fetchSpy = vi
             .spyOn(globalThis, 'fetch')
             .mockResolvedValue(
@@ -458,6 +459,7 @@ describe('jevEvaluate decision layer (issue #84)', () => {
     });
 
     it('returns 502 with no upstream error leakage on upstream failure', async () => {
+        vi.stubEnv('OPENROUTER_API_KEY', 'test-or-key');
         vi.spyOn(globalThis, 'fetch').mockResolvedValue(
             new Response(JSON.stringify({ error: { message: 'secret upstream detail' } }), {
                 status: 400,
