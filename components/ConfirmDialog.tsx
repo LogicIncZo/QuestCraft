@@ -142,6 +142,10 @@ export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
         if (!visible) return;
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
+                // Capture phase + stopImmediatePropagation: this dialog sits above
+                // drawers that also listen for Escape on document. Settle only the
+                // topmost layer so the drawer beneath stays open (issue #95).
+                e.stopImmediatePropagation();
                 settle(false);
                 return;
             }
@@ -159,8 +163,12 @@ export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
                 first.focus();
             }
         };
-        document.addEventListener('keydown', onKeyDown);
-        return () => document.removeEventListener('keydown', onKeyDown);
+        // Window capture, not document: for keydown dispatched at document,
+        // same-node listeners run in registration order, so drawer handlers
+        // registered earlier would still fire before this one. Capture on
+        // window always precedes document listeners (issue #95).
+        window.addEventListener('keydown', onKeyDown, true);
+        return () => window.removeEventListener('keydown', onKeyDown, true);
     }, [visible, settle]);
 
     useEffect(() => {

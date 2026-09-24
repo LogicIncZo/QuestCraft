@@ -53,6 +53,7 @@ interface ActionPanelProps {
     onScenarioChoice: (choice: Choice) => void;
     onNextTurn: () => void;
     onSelectScenarioSource: (source: 'pregen' | 'dynamic') => void;
+    onCancelGeneration: () => void;
     language: LanguageCode;
 }
 
@@ -69,10 +70,20 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
     onScenarioChoice,
     onNextTurn,
     onSelectScenarioSource,
+    onCancelGeneration,
     language,
 }) => {
     const { t } = useTranslation();
     const [loadingMessage, setLoadingMessage] = useState<string>('');
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+    useEffect(() => {
+        if (gamePhase === 'GENERATING_SCENARIO') {
+            setElapsedSeconds(0);
+            const elapsed = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+            return () => clearInterval(elapsed);
+        }
+    }, [gamePhase]);
 
     useEffect(() => {
         if (gamePhase === 'GENERATING_SCENARIO') {
@@ -226,6 +237,10 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
             return (
                 <div className="text-center space-y-4 flex flex-col justify-center items-center h-full">
                     <p className="text-lg animate-pulse text-sage">{loadingMessage}</p>
+                    <p className="text-sm text-sage/80">
+                        {t('elapsedTime', { seconds: elapsedSeconds })}
+                    </p>
+                    <CardButton onClick={onCancelGeneration}>{t('cancelGeneration')}</CardButton>
                 </div>
             );
         }

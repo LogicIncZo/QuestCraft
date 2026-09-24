@@ -39,6 +39,22 @@ const CUSTOM_QUESTS_STORAGE_KEY = 'questcraft-custom-quests';
 const ACTIVE_QUEST_CONFIG_KEY = 'questcraft-active-quest';
 const CURRENT_PAGE_KEY = 'questcraft-current-page';
 
+// Hash routing (issue #94): page is mirrored in the URL so refresh/deep-link
+// lands on the same screen and the browser back button works.
+const HASH_PAGES = ['home', 'welcome', 'docs', 'maker', 'settings'] as const;
+type HashPage = (typeof HASH_PAGES)[number];
+
+const pageFromHash = (): HashPage | null => {
+    const raw = window.location.hash.replace(/^#\/?/, '').split('?')[0];
+    const candidate = raw as HashPage;
+    return candidate && (HASH_PAGES as readonly string[]).includes(candidate)
+        ? candidate
+        : null;
+};
+
+const hashForPage = (target: HashPage): string =>
+    target === 'home' ? '#' : `#/${target}`;
+
 // Check environment variable to disable maker mode
 const isMakerModeEnabled = process.env.MAKER_MODE_DISABLED !== 'true';
 
@@ -124,6 +140,8 @@ const AppShell: React.FC = () => {
 
         loadDefaultQuests();
 
+        const hashPage = pageFromHash();
+
         // Test connection on mount to set initial status
         const testInitialConnection = async () => {
             try {
@@ -141,6 +159,8 @@ const AppShell: React.FC = () => {
             setQuestConfig(savedQuestConfig);
             // If a game is active, always go to the game page
             setPage('game');
+        } else if (hashPage) {
+            setPage(hashPage);
         } else if (savedPage) {
             setPage(savedPage);
         } else {
@@ -156,10 +176,16 @@ const AppShell: React.FC = () => {
         window.addEventListener(STATS_UPDATED_EVENT, handleStatsUpdate);
         window.addEventListener(CONNECTIVITY_UPDATED_EVENT, handleConnectivityUpdate);
         window.addEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdate);
+        const handleHashChange = () => {
+            const p = pageFromHash();
+            if (p && page !== 'game') setPage(p);
+        };
+        window.addEventListener('hashchange', handleHashChange);
         return () => {
             window.removeEventListener(STATS_UPDATED_EVENT, handleStatsUpdate);
             window.removeEventListener(CONNECTIVITY_UPDATED_EVENT, handleConnectivityUpdate);
             window.removeEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdate);
+            window.removeEventListener('hashchange', handleHashChange);
         };
     }, []);
 
@@ -201,6 +227,7 @@ const AppShell: React.FC = () => {
         gameStateService.clear();
         localStorage.removeItem(ACTIVE_QUEST_CONFIG_KEY);
         setPage('home');
+        window.history.pushState(null, '', '#');
     }, []);
 
     const handleNavigate = useCallback(
@@ -227,6 +254,9 @@ const AppShell: React.FC = () => {
             logger.info(`[App] Navigating from page "${page}" to "${targetPage}"`);
             setPage(targetPage);
             setIsMenuOpen(false);
+            if (targetPage !== 'game') {
+                window.history.pushState(null, '', hashForPage(targetPage as HashPage));
+            }
         },
         [page, draftQuestForChat, handleExitGameWithConfirm, confirm]
     );
