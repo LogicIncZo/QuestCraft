@@ -31,7 +31,8 @@ npx vite preview --port 4173 &
 npm run test:e2e      # drives http://localhost:4173
 ```
 
-**Testing:** Vitest unit/component tests live in `tests/` (108 tests). The e2e
+**Testing:** Vitest unit/component tests live in `tests/` (167 tests across
+19 files; the count moves — run `npm test`, don't trust this number). The e2e
 suite in `e2e/e2e.mjs` drives key flows (home, quest list, asset content-types,
 game start, docs, settings/i18n, console error scan) via agent-browser against
 `localhost:4173` and runs in CI as the `e2e` job in `.github/workflows/ci.yml`.
@@ -44,7 +45,17 @@ failure.
 `dev` also triggers `.github/workflows/promote-to-main.yml`, which re-runs the
 gates, then advances `main` via a `dev` → `main` PR with auto-merge (or a
 gated direct push when the org forbids Actions-created PRs). `main` must
-never be advanced outside this gated flow.
+never be advanced outside this gated flow. Branch protection on `main`
+enforces all four checks (no force-push/delete); PRs from feature branches
+are the standard path — the four checks gate the merge.
+
+**Deploy & release:** push to `main` auto-deploys to Vercel
+(https://questcraft-srikanthlogics-projects.vercel.app, public — SSO
+protection removed 2026-09-23; deploy runs `.github/workflows/deploy.yml`).
+Releases: tag `vX.Y.Z` + `gh release create` with notes summarizing the
+delta. Current: v1.0.0 (2026-09-23, stable), v1.0.1 (gateway resilience).
+Verify a deploy end-to-end: `gatewayStatus` (chain health) + `testConnection`
+(1-token live generation) against the prod URL.
 
 ## Tech Stack & Setup
 
@@ -307,6 +318,35 @@ const Component: React.FC<ComponentProps> = ({ requiredProp, optionalProp, onAct
 
 - ESLint (`npm run lint`) and Prettier (`npm run format`) are configured.
 - Keep `npx tsc --noEmit` clean; CI enforces all three.
+
+### Community Gateway Architecture (api/generate.ts, edge fn)
+
+The free-tier community gateway is a resilience-first chain, not a static list.
+Conventions any change must preserve:
+
+- **Chain = quality order + outage insurance.** Entry 2 is deliberately
+  non-NVIDIA (nex-n2.5-pro): every nemotron entry ultimately depends on NVIDIA
+  capacity, and the 2026-09-23 full-chain outage proved the concentration.
+  Adding a model: live-probe it first (1-token, `response_format: json_object`),
+  record the probe date/result in the chain comment, add a capability entry in
+  `services/modelCapabilityDetector.ts` (registry-integrity tests enforce this),
+  and never ship an entry that was not verified live.
+- **Health ledger** (`healthLedger`, per edge isolate): failures earn
+  exponential cooldown (30s → 10m cap), success resets. `orderedChain()` skips
+  cooling entries; when all are cooling it retries best-effort by earliest
+  recovery. Tests must call `__resetGatewayHealth()` in beforeEach.
+- **Soft-fail guard**: OpenRouter can return HTTP 200 with `{error: ...}` —
+  the SDK does not throw. Non-stream bodies and the peeked first chunk are
+  inspected for an error object and treated as failures.
+- **Budgets**: SDK `maxRetries: 0` (our failover, not double latency), 8s
+  headers timeout, 10s first-chunk race, 40s total chain deadline — a walk
+  must end in a clean 500 before the edge runtime kills the function.
+  Every handler consumes streams; `testConnection` must drain its stream.
+- **`gatewayStatus` action**: free ops surface (providers + per-model chain
+  state). It must answer with zero provider keys — it runs before
+  `getCommunityClients()`. Probe prod with:
+  `curl -X POST <prod>/api/generate -H 'content-type: application/json'
+  -H "origin: <prod>" -d '{"action":"gatewayStatus"}'`.
 
 ### API Security
 
