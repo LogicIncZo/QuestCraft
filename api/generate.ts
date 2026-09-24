@@ -51,17 +51,30 @@ class StreamingTextResponse extends Response {
 }
 
 // --- Model Configuration ---
-// Community gateway chain: verified free models with per-request fallback.
-// 1-3 OpenRouter free tier (NVIDIA nemotron family); 4-5 NVIDIA NIM direct
-// (build.nvidia.com free tier, `NVIDIA_API_KEY`). Verified live 2026-09-07
-// against response_format json_object + streaming. `lightning` was dropped:
-// it leaks reasoning text into visible content.
+// Community gateway chain: free models with per-request fallback plus a
+// health ledger (below) so a failing entry is skipped for a cooldown window
+// instead of taxing every request with its failure latency.
+//
+// Ordering note: entry 2 (nex-n2.5-pro) is deliberately NOT an NVIDIA model.
+// Every other entry - the OpenRouter nemotrons (routed to NVIDIA upstream)
+// and the NIM direct entry - ultimately depends on NVIDIA capacity. During
+// the 2026-09-23 NVIDIA overload all four NVIDIA-backed entries failed at
+// once; a non-NVIDIA entry early in the chain keeps the gateway alive when
+// that happens. Verified live that day (json_object, ~1s).
+//
+// Entries verified live 2026-09-23 (1-token json_object probe):
+//   ultra (200), nex-pro (200); super / nano-omni-OR / nano-omni-NIM hit
+//   transient capacity errors with retryable semantics (still registered).
+// Probed and REJECTED 2026-09-23:
+//   - deepseek-ai/deepseek-v4-flash-0731 (NIM): 410 Gone - retired.
+//   - deepseek-ai/deepseek-v4.1-flash (NIM): listed but hangs >45s.
+//   - google/gemma-4-31b-it:free (OpenRouter): 504 upstream abort.
 type CommunityModelEntry = { model: string; client: 'openrouter' | 'nim' };
 export const COMMUNITY_MODELS: CommunityModelEntry[] = [
     { model: 'nvidia/nemotron-3-ultra-550b-a55b:free', client: 'openrouter' },
+    { model: 'nex-agi/nex-n2.5-pro:free', client: 'openrouter' },
     { model: 'nvidia/nemotron-3-super-120b-a12b:free', client: 'openrouter' },
     { model: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', client: 'openrouter' },
-    { model: 'deepseek-ai/deepseek-v4-flash-0731', client: 'nim' },
     { model: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning', client: 'nim' },
 ];
 // Display-only default (first chain entry) — the server may serve any chain entry.
@@ -70,24 +83,28 @@ const COMMUNITY_MODEL = COMMUNITY_MODELS[0].model;
 const NIM_BASE_URL = 'https://integrate.api.nvidia.com/v1';
 
 interface CommunityClients {
-    openrouter: OpenAI;
+    openrouter?: OpenAI;
     nim?: OpenAI;
 }
 
 function getCommunityClients(): CommunityClients {
     const openrouterKey = process.env.OPENROUTER_API_KEY;
-    if (!openrouterKey) {
-        throw new Error('Missing OPENROUTER_API_KEY environment variable.');
-    }
-    const openrouter = new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1',
-        apiKey: openrouterKey,
-        defaultHeaders: {
-            'HTTP-Referer': 'https://questcraft.ai',
-            'X-Title': 'QuestCraft',
-        },
-    });
     const nimKey = process.env.NVIDIA_API_KEY;
+    if (!openrouterKey && !nimKey) {
+        throw new Error(
+            'No community gateway provider keys configured (OPENROUTER_API_KEY / NVIDIA_API_KEY).'
+        );
+    }
+    const openrouter = openrouterKey
+        ? new OpenAI({
+              baseURL: 'https://openrouter.ai/api/v1',
+              apiKey: openrouterKey,
+              defaultHeaders: {
+                  'HTTP-Referer': 'https://questcraft.ai',
+                  'X-Title': 'QuestCraft',
+              },
+          })
+        : undefined;
     const nim = nimKey
         ? new OpenAI({
               baseURL: NIM_BASE_URL,
@@ -95,6 +112,70 @@ function getCommunityClients(): CommunityClients {
           })
         : undefined;
     return { openrouter, nim };
+}
+
+// --- Health ledger (per edge isolate) ---
+// Tracks consecutive failures per model so a dead or overloaded entry is
+// skipped for a cooldown window instead of being retried on every request.
+// State is per-isolate: correctness never depends on it (the full chain is
+// still walked when everything is cooling); it only keeps known-bad entries
+// out of the front of the line.
+interface ModelHealth {
+    consecutiveFails: number;
+    lastFailAt: number;
+    openUntil: number;
+}
+const healthLedger = new Map<string, ModelHealth>();
+const COOLDOWN_BASE_MS = 30_000;
+const COOLDOWN_MAX_MS = 10 * 60_000;
+
+function cooldownFor(consecutiveFails: number): number {
+    // 30s, 1m, 2m, 4m, 8m, then capped at 10m.
+    return Math.min(COOLDOWN_BASE_MS * 2 ** (consecutiveFails - 1), COOLDOWN_MAX_MS);
+}
+
+function recordFailure(model: string): void {
+    const prev = healthLedger.get(model);
+    const consecutiveFails = (prev?.consecutiveFails ?? 0) + 1;
+    const now = Date.now();
+    healthLedger.set(model, {
+        consecutiveFails,
+        lastFailAt: now,
+        openUntil: now + cooldownFor(consecutiveFails),
+    });
+    console.warn(
+        `[community-gateway] ${model} failed (${consecutiveFails} consecutive); cooling down ${Math.round(cooldownFor(consecutiveFails) / 1000)}s`
+    );
+}
+
+function recordSuccess(model: string): void {
+    healthLedger.delete(model);
+}
+
+function isCooling(model: string, now = Date.now()): boolean {
+    const h = healthLedger.get(model);
+    return !!h && h.openUntil > now;
+}
+
+/** Test hook: clear all health state between test cases. */
+export function __resetGatewayHealth(): void {
+    healthLedger.clear();
+}
+
+/**
+ * Chain order for one request: healthy entries first (config order - the
+ * quality ranking), then cooling entries ordered by soonest recovery as a
+ * best-effort last resort. Availability beats purity when every entry is
+ * cooling: trying a maybe-recovered model beats failing hard.
+ */
+function orderedChain(now = Date.now()): CommunityModelEntry[] {
+    const healthy = COMMUNITY_MODELS.filter((e) => !isCooling(e.model, now));
+    const cooling = COMMUNITY_MODELS.filter((e) => isCooling(e.model, now)).sort(
+        (a, b) =>
+            (healthLedger.get(a.model)?.openUntil ?? 0) -
+            (healthLedger.get(b.model)?.openUntil ?? 0)
+    );
+    return [...healthy, ...cooling];
 }
 
 /**
@@ -110,46 +191,128 @@ async function* guardedStream(first: IteratorResult<any>, rest: AsyncIterator<an
     }
 }
 
+const NON_STREAM_TIMEOUT_MS = 90_000; // full JSON generation on slow free models
+const STREAM_FIRST_CHUNK_TIMEOUT_MS = 20_000; // headers + first chunk
+const SDK_MAX_RETRIES = 0; // we run our own failover - SDK retries would delay it
+
+function rejectAfter(ms: number): Promise<never> {
+    return new Promise((_, reject) => {
+        const t = setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms);
+        (t as any)?.unref?.();
+    });
+}
+
 /**
- * Runs a community-tier completion against the first healthy model in
- * COMMUNITY_MODELS. Transient provider failures (model pulled, rate limit,
- * upstream overload) fall through to the next entry; NIM entries are
- * skipped when NVIDIA_API_KEY is not configured.
+ * Runs a community-tier completion against the best available model in the
+ * chain. Resilience layers, in order:
+ *   1. Health ledger - cooling entries are skipped (see orderedChain).
+ *   2. Per-request SDK options - maxRetries: 0 and a hard timeout, so one
+ *      hung model cannot eat the function budget before failover.
+ *   3. Soft-fail detection - OpenRouter can return HTTP 200 with an
+ *      {error: ...} body (observed live 2026-09-23 during NVIDIA overload).
+ *      The SDK does not throw on a 200, so both the non-stream response and
+ *      the peeked first stream chunk are inspected for an error object.
+ *   4. Streaming errors surface on iteration, not at create() - the first
+ *      chunk is peeked so upstream failures (429/502, model pulled) trigger
+ *      the fallback instead of blowing up in the caller after we have
+ *      returned a doomed stream. A stream that dies after the first chunk is
+ *      not recoverable here (bytes may already be flushed) and is accepted
+ *      as the boundary of server-side failover; only chat streams.
+ * Each failure records a cooldown; each success resets the entry's health.
  */
 async function communityCompletion(
     clients: CommunityClients,
     params: { messages: any[]; [key: string]: any }
 ): Promise<any> {
     let lastError: unknown;
-    for (const entry of COMMUNITY_MODELS) {
+    for (const entry of orderedChain()) {
         const client = entry.client === 'nim' ? clients.nim : clients.openrouter;
-        if (!client) continue; // NIM key not configured -> skip NIM entries
+        if (!client) continue; // provider key not configured -> skip entries
+        const timeout = params.stream
+            ? STREAM_FIRST_CHUNK_TIMEOUT_MS
+            : NON_STREAM_TIMEOUT_MS;
         try {
-            const stream = await client.chat.completions.create({
-                ...(params as any),
-                model: entry.model,
-            });
+            const stream = await client.chat.completions.create(
+                {
+                    ...(params as any),
+                    model: entry.model,
+                },
+                { timeout, maxRetries: SDK_MAX_RETRIES }
+            );
             if (params.stream) {
-                // Streaming errors surface on iteration, not at create() —
-                // peek the first chunk here so upstream failures (429/502,
-                // model pulled) trigger the fallback instead of blowing up
-                // in the caller after we have returned a doomed stream.
                 const iterator = (stream as any)[Symbol.asyncIterator]();
-                const first = await iterator.next();
+                const first = await Promise.race([
+                    iterator.next(),
+                    rejectAfter(STREAM_FIRST_CHUNK_TIMEOUT_MS),
+                ]);
                 if (first.done) {
                     throw new Error(`${entry.model} returned an empty stream`);
                 }
+                if (
+                    first.value &&
+                    typeof first.value === 'object' &&
+                    'error' in first.value
+                ) {
+                    throw new Error(
+                        `${entry.model} soft-failed: ${JSON.stringify(first.value.error).slice(0, 300)}`
+                    );
+                }
+                recordSuccess(entry.model);
                 return guardedStream(first, iterator);
             }
-            return stream;
+            const completion = stream as any;
+            if (completion && typeof completion === 'object' && 'error' in completion) {
+                throw new Error(
+                    `${entry.model} soft-failed: ${JSON.stringify(completion.error).slice(0, 300)}`
+                );
+            }
+            recordSuccess(entry.model);
+            return completion;
         } catch (error) {
             lastError = error;
+            recordFailure(entry.model);
             console.warn(
                 `[community-gateway] ${entry.model} failed: ${(error as Error).message}; trying next model`
             );
         }
     }
     throw lastError ?? new Error('No community gateway models are configured.');
+}
+
+/**
+ * Cheap ops surface for the gateway: which providers are configured and the
+ * live health of every chain entry. No upstream calls, no token spend.
+ */
+function handleGatewayStatus(origin: string | null, req: Request): Response {
+    const now = Date.now();
+    const chain = COMMUNITY_MODELS.map((e) => {
+        const h = healthLedger.get(e.model);
+        const cooldownMs = h ? Math.max(0, h.openUntil - now) : 0;
+        return {
+            model: e.model,
+            client: e.client,
+            status: cooldownMs > 0 ? 'cooling' : 'healthy',
+            consecutiveFails: h?.consecutiveFails ?? 0,
+            cooldownMs: cooldownMs > 0 ? cooldownMs : undefined,
+        };
+    });
+    return new Response(
+        JSON.stringify({
+            providers: {
+                openrouter: !!process.env.OPENROUTER_API_KEY,
+                nim: !!process.env.NVIDIA_API_KEY,
+            },
+            chain,
+            timestamp: new Date().toISOString(),
+        }),
+        {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                ...corsHeaders(origin, req),
+            },
+        }
+    );
 }
 
 // --- Schemas for OpenAI-compatible models ---
@@ -417,7 +580,9 @@ function loadPrompt(
 // --- Security hardening (issue #56) ---
 
 const DEFAULT_ALLOWED_ORIGINS = [
-    'https://aipoly.vercel.app',
+    // Current production URL (fork deploy). aipoly.vercel.app is a dead
+    // third-party name collision - removed 2026-09-23.
+    'https://questcraft-srikanthlogics-projects.vercel.app',
     'https://quest-craft.vercel.app',
     'https://questcraft-dusky.vercel.app',
     'http://localhost:5173',
@@ -679,6 +844,12 @@ export default async function handler(req: Request) {
     }
 
     const payload = parsed.data;
+
+    // gatewayStatus is an ops surface: it must answer even when zero provider
+    // keys are configured, so it runs before any client is constructed.
+    if (action === 'gatewayStatus') {
+        return handleGatewayStatus(origin, req);
+    }
 
     try {
         const clients = getCommunityClients();
