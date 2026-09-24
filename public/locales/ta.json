@@ -240,5 +240,7 @@
     "drawerClose": "டிராயரை மூடு",
     "menuOpen": "வழிசெலுத்தல் மெனுவைத் திற",
     "navHome": "முகப்புப் பக்கத்திற்குச் செல்",
-    "navProgress": "முன்னேற்றம்"
+    "navProgress": "முன்னேற்றம்",
+    "cancelGeneration": "ரத்து செய்",
+    "elapsedTime": "கழிந்த நேரம்: {seconds}s"
 }

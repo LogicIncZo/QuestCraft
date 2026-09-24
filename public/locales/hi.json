@@ -240,5 +240,7 @@
     "drawerClose": "ड्रॉर बंद करें",
     "menuOpen": "नेविगेशन मेनू खोलें",
     "navHome": "होम पेज पर जाएँ",
-    "navProgress": "प्रगति"
+    "navProgress": "प्रगति",
+    "cancelGeneration": "रद्द करें",
+    "elapsedTime": "बीता समय: {seconds}s"
 }

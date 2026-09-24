@@ -124,6 +124,7 @@ export interface AIAuditLog {
         | 'Dynamic Scenario (Fictional)'
         | 'Pregenerated Scenarios'
         | 'Enhance Idea'
+        | 'Jev Idea Screen'
         | 'AI Player Choice'
         | 'Chat';
     prompt: string;

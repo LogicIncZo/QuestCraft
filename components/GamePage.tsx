@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type {
     QuestConfig,
     Player,
@@ -82,6 +82,15 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
 
     // Mobile-specific state
     const [activeTab, setActiveTab] = useState<MobileTab>('board');
+    const scenarioAbortRef = useRef<AbortController | null>(null);
+    const preGenPhaseRef = useRef<GamePhase>('TURN_START');
+    const gamePhaseRef = useRef<GamePhase>(gamePhase);
+    gamePhaseRef.current = gamePhase;
+
+    // Cancel must live above the early returns (rules-of-hooks)
+    const handleCancelScenario = useCallback(() => {
+        scenarioAbortRef.current?.abort();
+    }, []);
 
     // Load game state on mount
     useEffect(() => {
@@ -105,7 +114,10 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
             setActiveTab('scenario');
             return;
         }
-        if (gamePhase === 'PLAYER_MOVE') {
+        if (gamePhase === 'TURN_START') {
+            // Roll lives on the Turn tab on mobile — bring it to the player.
+            setActiveTab('turn');
+        } else if (gamePhase === 'PLAYER_MOVE') {
             setActiveTab('board');
         } else if (
             gamePhase === 'SCENARIO_SOURCE_SELECTION' ||
@@ -263,15 +275,26 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
 
     const triggerDynamicScenario = useCallback(
         async (location: BoardLocation) => {
+            preGenPhaseRef.current = gamePhaseRef.current;
+            const controller = new AbortController();
+            scenarioAbortRef.current = controller;
             updateGameState({ gamePhase: 'GENERATING_SCENARIO' });
             try {
                 const dynamicScenario = await generateDynamicScenario(
                     questConfig,
                     players[currentPlayerIndex],
-                    location
+                    location,
+                    { signal: controller.signal }
                 );
                 updateGameState({ activeScenario: dynamicScenario, gamePhase: 'SCENARIO_CHOICE' });
             } catch (error: any) {
+                if (controller.signal.aborted) {
+                    // User cancelled (issue #91): put the turn back where it was,
+                    // letting them pick pregen/fictional instead.
+                    logger.info('[GamePage] Scenario generation cancelled by user.');
+                    updateGameState({ gamePhase: preGenPhaseRef.current });
+                    return;
+                }
                 if (error.name === 'TokenLimitExceededError') {
                     setGameError(error.message);
                     return;
@@ -299,9 +322,62 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                         gamePhase: 'SCENARIO_CHOICE',
                     });
                 }
+            } finally {
+                scenarioAbortRef.current = null;
             }
         },
         [questConfig, players, currentPlayerIndex, nextTurn, updateGameState]
+    );
+
+    const handleSelectScenarioSource = useCallback(
+        async (source: 'pregen' | 'dynamic') => {
+            if (!activeLocation) {
+                // This can happen if AI triggers this function
+                const currentPosition = players[currentPlayerIndex].position;
+                const location = questConfig.board.locations[currentPosition];
+                if (!location) return;
+
+                if (source === 'pregen') {
+                    const pregenScenarios =
+                        questConfig.pregeneratedScenarios?.[
+                            getLocalizedString(location.name, 'en')
+                        ];
+                    if (pregenScenarios && pregenScenarios.length > 0) {
+                        const scenario =
+                            pregenScenarios[Math.floor(Math.random() * pregenScenarios.length)];
+                        updateGameState({ activeScenario: scenario, gamePhase: 'SCENARIO_CHOICE' });
+                    } else {
+                        nextTurn();
+                    }
+                }
+                return;
+            }
+
+            const locationNameEn = getLocalizedString(activeLocation.name, 'en');
+
+            if (source === 'pregen') {
+                const pregenScenarios = questConfig.pregeneratedScenarios?.[locationNameEn];
+                if (pregenScenarios && pregenScenarios.length > 0) {
+                    const scenario =
+                        pregenScenarios[Math.floor(Math.random() * pregenScenarios.length)];
+                    updateGameState({ activeScenario: scenario, gamePhase: 'SCENARIO_CHOICE' });
+                } else {
+                    nextTurn(); // Fallback
+                }
+            } else if (source === 'dynamic') {
+                await triggerDynamicScenario(activeLocation);
+            }
+            updateGameState({ activeLocation: null });
+        },
+        [
+            activeLocation,
+            questConfig,
+            players,
+            currentPlayerIndex,
+            nextTurn,
+            triggerDynamicScenario,
+            updateGameState,
+        ]
     );
 
     const handleLocationAction = useCallback(
@@ -386,6 +462,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
             currentPlayerIndex,
             triggerDynamicScenario,
             updateGameState,
+            handleSelectScenarioSource,
         ]
     );
 
@@ -466,56 +543,6 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
         }
     }, [gamePhase, currentPlayerIndex, players, activeScenario, handleRollDice, handleAIChoice]);
 
-    const handleSelectScenarioSource = useCallback(
-        async (source: 'pregen' | 'dynamic') => {
-            if (!activeLocation) {
-                // This can happen if AI triggers this function
-                const currentPosition = players[currentPlayerIndex].position;
-                const location = questConfig.board.locations[currentPosition];
-                if (!location) return;
-
-                if (source === 'pregen') {
-                    const pregenScenarios =
-                        questConfig.pregeneratedScenarios?.[
-                            getLocalizedString(location.name, 'en')
-                        ];
-                    if (pregenScenarios && pregenScenarios.length > 0) {
-                        const scenario =
-                            pregenScenarios[Math.floor(Math.random() * pregenScenarios.length)];
-                        updateGameState({ activeScenario: scenario, gamePhase: 'SCENARIO_CHOICE' });
-                    } else {
-                        nextTurn();
-                    }
-                }
-                return;
-            }
-
-            const locationNameEn = getLocalizedString(activeLocation.name, 'en');
-
-            if (source === 'pregen') {
-                const pregenScenarios = questConfig.pregeneratedScenarios?.[locationNameEn];
-                if (pregenScenarios && pregenScenarios.length > 0) {
-                    const scenario =
-                        pregenScenarios[Math.floor(Math.random() * pregenScenarios.length)];
-                    updateGameState({ activeScenario: scenario, gamePhase: 'SCENARIO_CHOICE' });
-                } else {
-                    nextTurn(); // Fallback
-                }
-            } else if (source === 'dynamic') {
-                await triggerDynamicScenario(activeLocation);
-            }
-            updateGameState({ activeLocation: null });
-        },
-        [
-            activeLocation,
-            questConfig,
-            players,
-            currentPlayerIndex,
-            nextTurn,
-            triggerDynamicScenario,
-            updateGameState,
-        ]
-    );
 
     const renderGameSetup = () => (
         <div className="min-h-full flex items-center justify-center p-4 bg-felt-900">
@@ -633,6 +660,7 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
             activeChoiceOutcome={activeChoiceOutcome}
             activeCard={activeCard}
             gameError={gameError}
+            onCancelGeneration={handleCancelScenario}
             onRollDice={handleRollDice}
             onScenarioChoice={handleScenarioChoice}
             onNextTurn={nextTurn}
@@ -687,7 +715,14 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
                             {commonGameBoard}
                         </div>
                     )}
-                    {activeTab === 'turn' && commonPlayerDashboard}
+                    {activeTab === 'turn' && (
+                        <div className="flex flex-col gap-2 h-full">
+                            <div className="flex-1 min-h-0 overflow-y-auto">
+                                {commonPlayerDashboard}
+                            </div>
+                            <div className="flex-1 min-h-0">{commonActionPanel}</div>
+                        </div>
+                    )}
                     {activeTab === 'scenario' && commonActionPanel}
                 </main>
                 <nav className="flex-shrink-0 bg-felt-900/95 backdrop-blur-md border-t border-felt-700 grid grid-cols-3 gap-2 p-2">
@@ -716,3 +751,5 @@ const GamePage: React.FC<GamePageProps> = ({ questConfig, onExit, onOpenFooterDr
 };
 
 export default GamePage;
+
+

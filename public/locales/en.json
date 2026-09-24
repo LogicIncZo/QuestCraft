@@ -240,5 +240,7 @@
     "drawerClose": "Close drawer",
     "menuOpen": "Open navigation menu",
     "navHome": "Go to Home page",
-    "navProgress": "Progress"
+    "navProgress": "Progress",
+    "cancelGeneration": "Cancel",
+    "elapsedTime": "Elapsed: {seconds}s"
 }

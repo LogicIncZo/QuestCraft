@@ -240,5 +240,7 @@
     "drawerClose": "Cerrar panel",
     "menuOpen": "Abrir menú de navegación",
     "navHome": "Ir a la página de inicio",
-    "navProgress": "Progreso"
+    "navProgress": "Progreso",
+    "cancelGeneration": "Cancelar",
+    "elapsedTime": "Transcurrido: {seconds}s"
 }

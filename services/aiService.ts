@@ -205,15 +205,22 @@ const fetchWithTimeout = async (
 ): Promise<Response> => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const external = init.signal;
+    const onExternalAbort = () => controller.abort();
+    external?.addEventListener('abort', onExternalAbort);
     try {
         return await fetch(url, { ...init, signal: controller.signal });
     } catch (error: any) {
         if (error?.name === 'AbortError') {
+            // Caller-initiated cancel propagates as AbortError; our own timeout
+            // is converted to GatewayTimeoutError so callers can tell them apart.
+            if (external?.aborted) throw error;
             throw new GatewayTimeoutError(timeoutMs);
         }
         throw error;
     } finally {
         clearTimeout(timer);
+        external?.removeEventListener('abort', onExternalAbort);
     }
 };
 
@@ -383,6 +390,16 @@ export const evaluateQuestIdea = async (
     idea: string,
     ageGroup: string
 ): Promise<QuestIdeaScreenResult | null> => {
+    const settings = settingsService.getAiSettings();
+    const logDetails = {
+        mode: 'Jev Idea Screen' as const,
+        prompt: idea,
+        requestDetails: {
+            ageGroup,
+            provider: settings.providerId,
+        },
+        model: 'typesafe/jev-1.13 (decisions)',
+    };
     try {
         const response = await fetchWithTimeout('/api/generate', {
             method: 'POST',
@@ -416,13 +433,22 @@ export const evaluateQuestIdea = async (
         const data: any = await response.json();
         const answers = data?.answers ?? {};
         const probability = answers.educational_suitability?.noul;
-        if (typeof probability !== 'number') return null;
+        if (typeof probability !== 'number') {
+            auditLogService.addLog({ ...logDetails, response: JSON.stringify(data), error: 'missing educational_suitability.noul' });
+            return null;
+        }
+        auditLogService.addLog({
+            ...logDetails,
+            response: JSON.stringify({ probability, hint: answers.improvement_hint?.choice ?? null }),
+            error: null,
+        });
         return {
             suitableProbability: probability,
             improvementHint: answers.improvement_hint?.choice ?? null,
         };
-    } catch (e) {
+    } catch (e: any) {
         logger.warn('[AI] Jev idea screening unavailable, proceeding without it.', e);
+        auditLogService.addLog({ ...logDetails, response: '', error: e?.message || String(e) });
         return null;
     }
 };
@@ -983,7 +1009,8 @@ export const generatePregeneratedScenarios = async ({
 export const generateDynamicScenario = async (
     questConfig: QuestConfig,
     player: Player,
-    location: BoardLocation
+    location: BoardLocation,
+    options?: { signal?: AbortSignal }
 ): Promise<ManagedScenario> => {
     logger.info(
         `[AI] Starting generateDynamicScenario for location "${getLocalizedString(location.name, 'en')}"...`
@@ -1019,18 +1046,22 @@ export const generateDynamicScenario = async (
         const apiCall = async (): Promise<string> => {
             if (isCommunity) {
                 logger.info('[AI] Calling Community Gateway for dynamic scenario...');
-                const response = await fetchWithTimeout('/api/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(
-                        apiRequestBody('generateDynamicScenario', {
-                            questConfig,
-                            player,
-                            location,
-                            languageCode,
-                        })
-                    ),
-                });
+                const response = await fetchWithTimeout(
+                    '/api/generate',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: options?.signal,
+                        body: JSON.stringify(
+                            apiRequestBody('generateDynamicScenario', {
+                                questConfig,
+                                player,
+                                location,
+                                languageCode,
+                            })
+                        ),
+                    }
+                );
                 const jsonText = await processCommunityGatewayStream(response);
                 logDetails.inputTokens = undefined;
                 logDetails.outputTokens = undefined;

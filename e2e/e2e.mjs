@@ -178,7 +178,7 @@ console.log('[6] Settings and language switch');
 // sidebar items swallow clicks from automation.
 ab([
     'eval',
-    "localStorage.removeItem('questcraft-active-quest'); localStorage.removeItem('questcraft-game-state'); localStorage.setItem('questcraft-current-page', 'settings'); localStorage.setItem('questcraft-app-settings', JSON.stringify({ language: 'en' })); 'ok'",
+    "localStorage.removeItem('questcraft-active-quest'); localStorage.removeItem('questcraft-game-state'); localStorage.setItem('questcraft-current-page', 'settings'); localStorage.setItem('questcraft-app-settings', JSON.stringify({ language: 'en' })); location.hash=''; 'ok'",
 ]);
 ab(['eval', 'location.reload()']);
 ab(['wait', 3000]);
