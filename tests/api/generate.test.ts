@@ -391,3 +391,90 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
         expect(firstCall.max_tokens).toBe(1);
     });
 });
+
+describe('jevEvaluate decision layer (issue #84)', () => {
+    const jevPayload = {
+        action: 'jevEvaluate',
+        payload: {
+            state: 'A creator submitted an Aadhaar quest idea for teens.',
+            questions: {
+                educational_suitability: {
+                    type: 'noul',
+                    instructions: 'Does this idea work well as an educational quest?',
+                },
+            },
+        },
+    };
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it('rejects malformed question types with 400', async () => {
+        const res = await handler(
+            postRequest({
+                action: 'jevEvaluate',
+                payload: {
+                    state: 'x',
+                    questions: { s: { type: 'telepathy', instructions: 'x' } },
+                },
+            })
+        );
+        expect(res.status).toBe(400);
+    });
+
+    it('caps questions at 6 entries with 400', async () => {
+        const questions: Record<string, unknown> = {};
+        for (let i = 0; i < 7; i++) {
+            questions[`q${i}`] = { type: 'noul', instructions: 'x' };
+        }
+        const res = await handler(
+            postRequest({ action: 'jevEvaluate', payload: { state: 'x', questions } })
+        );
+        expect(res.status).toBe(400);
+    });
+
+    it('proxies to the Decisions API and returns typed answers', async () => {
+        vi.stubEnv('OPENROUTER_API_KEY', 'test-or-key');
+        const fetchSpy = vi
+            .spyOn(globalThis, 'fetch')
+            .mockResolvedValue(
+                new Response(
+                    JSON.stringify({
+                        answers: { educational_suitability: { type: 'noul', noul: 0.9 } },
+                        usage: { input_tokens: 100, output_tokens: 20, cost: 0.00001 },
+                    }),
+                    { status: 200 }
+                )
+            );
+        const res = await handler(postRequest(jevPayload));
+        expect(res.status).toBe(200);
+        const data = await res.json();
+        expect(data.answers.educational_suitability.noul).toBe(0.9);
+        expect(data.usage.cost).toBe(0.00001);
+        const [, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
+        const sent = JSON.parse(init.body as string);
+        expect(sent.model).toBe('typesafe/jev-1.13');
+        expect(sent.state).toContain('Aadhaar quest idea');
+    });
+
+    it('returns 502 with no upstream error leakage on upstream failure', async () => {
+        vi.stubEnv('OPENROUTER_API_KEY', 'test-or-key');
+        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+            new Response(JSON.stringify({ error: { message: 'secret upstream detail' } }), {
+                status: 400,
+            })
+        );
+        const res = await handler(postRequest(jevPayload));
+        expect(res.status).toBe(502);
+        const text = await res.text();
+        expect(text).not.toContain('secret upstream detail');
+    });
+
+    it('surfaces the jev provider flag in gatewayStatus', async () => {
+        const res = await handler(postRequest({ action: 'gatewayStatus' }));
+        expect(res.status).toBe(200);
+        const data = await res.json();
+        expect(typeof data.providers.jev).toBe('boolean');
+    });
+});

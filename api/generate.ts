@@ -197,6 +197,14 @@ const CHAIN_TOTAL_BUDGET_MS = 40_000; // whole walk; Vercel edge kills past ~45s
 const MIN_ENTRY_BUDGET_MS = 6_000; // don't start an entry we can't guard
 const SDK_MAX_RETRIES = 0; // we run our own failover - SDK retries would delay it
 
+// --- Jev decision layer (TypeSafe System One, via the OpenRouter Decisions API) ---
+// Jev returns typed decisions, not prose, so it never joins the generation chain.
+// Same OpenRouter key as the chain; output tokens are free. Wire format
+// live-probed 2026-09-24: { model, state, questions } -> { answers, usage }.
+const JEV_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
+const JEV_MODEL = 'typesafe/jev-1.13';
+const JEV_TIMEOUT_MS = 10_000;
+
 function rejectAfter(ms: number): Promise<never> {
     return new Promise((_, reject) => {
         const t = setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms);
@@ -279,6 +287,60 @@ async function communityCompletion(
  * Cheap ops surface for the gateway: which providers are configured and the
  * live health of every chain entry. No upstream calls, no token spend.
  */
+async function handleJevEvaluate(
+    payload: any,
+    origin: string | null,
+    req: Request
+): Promise<Response> {
+    const fail = (status: number, message: string) =>
+        new Response(JSON.stringify({ error: { message } }), {
+            status,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders(origin, req) },
+        });
+
+    const key = process.env.OPENROUTER_API_KEY;
+    if (!key) return fail(503, 'Decision layer is not configured.');
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), JEV_TIMEOUT_MS);
+    try {
+        const upstream = await fetch(JEV_DECISIONS_URL, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${key}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: JEV_MODEL,
+                state: payload.state,
+                questions: payload.questions,
+            }),
+            signal: controller.signal,
+        });
+        if (!upstream.ok) {
+            console.error(`Jev upstream HTTP ${upstream.status}`);
+            return fail(502, 'Decision layer is temporarily unavailable.');
+        }
+        const data: any = await upstream.json();
+        if (data && typeof data === 'object' && data.error) {
+            console.error('Jev upstream soft error');
+            return fail(502, 'Decision layer is temporarily unavailable.');
+        }
+        return new Response(
+            JSON.stringify({ answers: data?.answers ?? {}, usage: data?.usage ?? null }),
+            {
+                status: 200,
+                headers: { 'Content-Type': 'application/json', ...corsHeaders(origin, req) },
+            }
+        );
+    } catch (e: any) {
+        console.error('Jev call failed:', e?.message);
+        return fail(502, 'Decision layer is temporarily unavailable.');
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
 function handleGatewayStatus(origin: string | null, req: Request): Response {
     const now = Date.now();
     const chain = COMMUNITY_MODELS.map((e) => {
@@ -297,6 +359,7 @@ function handleGatewayStatus(origin: string | null, req: Request): Response {
             providers: {
                 openrouter: !!process.env.OPENROUTER_API_KEY,
                 nim: !!process.env.NVIDIA_API_KEY,
+                jev: !!process.env.OPENROUTER_API_KEY,
             },
             chain,
             timestamp: new Date().toISOString(),
@@ -850,6 +913,12 @@ export default async function handler(req: Request) {
     // keys are configured, so it runs before any client is constructed.
     if (action === 'gatewayStatus') {
         return handleGatewayStatus(origin, req);
+    }
+
+    // The decision layer runs on the server-side OpenRouter key and never
+    // touches the chat-model chain, so it dispatches before client construction.
+    if (action === 'jevEvaluate') {
+        return await handleJevEvaluate(payload, origin, req);
     }
 
     try {
