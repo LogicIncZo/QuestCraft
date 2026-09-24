@@ -11,6 +11,7 @@ export const API_ACTIONS = [
     'generatePregeneratedScenarios',
     'generateDynamicScenario',
     'chat',
+    'gatewayStatus',
 ] as const;
 
 export type ApiAction = (typeof API_ACTIONS)[number];
@@ -61,6 +62,8 @@ export const actionPayloadSchemas = {
             .max(200),
         systemInstruction: z.string().max(64_000).optional(),
     }),
+    // Ops surface: provider config + per-model health. No upstream calls.
+    gatewayStatus: z.undefined(),
 } as const satisfies Record<ApiAction, z.ZodTypeAny>;
 
 export type ActionPayloadSchema = typeof actionPayloadSchemas;

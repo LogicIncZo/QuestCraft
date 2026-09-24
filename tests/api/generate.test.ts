@@ -12,13 +12,14 @@ vi.mock('openai', () => {
 
 import handler, {
     COMMUNITY_MODELS,
+    __resetGatewayHealth,
 } from '../../api/generate';
 import * as openaiModule from 'openai';
 
 const typedMockCreate = (openaiModule as unknown as { __create: ReturnType<typeof vi.fn> })
     .__create;
 
-const ALLOWED_ORIGIN = 'https://aipoly.vercel.app';
+const ALLOWED_ORIGIN = 'https://questcraft-srikanthlogics-projects.vercel.app';
 
 // Env stubs must not leak between tests — NVIDIA_API_KEY set in one suite
 // would otherwise make the 'NIM skipped' test see a configured key.
@@ -26,8 +27,14 @@ afterEach(() => {
     vi.unstubAllEnvs();
 });
 
+// The gateway health ledger persists across requests within a process;
+// reset it so cooldowns earned in one test never leak into the next.
+beforeEach(() => {
+    __resetGatewayHealth();
+});
+
 function postRequest(body: string | object, origin: string | null = ALLOWED_ORIGIN) {
-    return new Request('https://aipoly.vercel.app/api/generate', {
+    return new Request('https://questcraft-srikanthlogics-projects.vercel.app/api/generate', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -94,7 +101,7 @@ describe('api/generate security hardening (issue #56)', () => {
     });
 
     it('answers OPTIONS preflight with 204 and CORS headers for allowed origins', async () => {
-        const req = new Request('https://aipoly.vercel.app/api/generate', {
+        const req = new Request('https://questcraft-srikanthlogics-projects.vercel.app/api/generate', {
             method: 'OPTIONS',
             headers: { origin: ALLOWED_ORIGIN },
         });
@@ -157,7 +164,7 @@ describe('api/generate security hardening (issue #56)', () => {
             'nvidia/nemotron-3-ultra-550b-a55b:free'
         );
         expect(typedMockCreate.mock.calls[1][0].model).toBe(
-            'nvidia/nemotron-3-super-120b-a12b:free'
+            COMMUNITY_MODELS[1].model
         );
         const text = await res.text();
         expect(text).not.toContain('quota');
@@ -287,7 +294,7 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
 
     it('returns 405 for non-POST/non-OPTIONS methods', async () => {
         const res = await handler(
-            new Request('https://aipoly.vercel.app/api/generate', {
+            new Request('https://questcraft-srikanthlogics-projects.vercel.app/api/generate', {
                 method: 'GET',
                 headers: { origin: ALLOWED_ORIGIN },
             })
@@ -297,7 +304,7 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
 
     it('blocks OPTIONS preflight from disallowed origins with 403', async () => {
         const res = await handler(
-            new Request('https://aipoly.vercel.app/api/generate', {
+            new Request('https://questcraft-srikanthlogics-projects.vercel.app/api/generate', {
                 method: 'OPTIONS',
                 headers: { origin: 'https://evil.example' },
             })
@@ -305,8 +312,9 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
         expect(res.status).toBe(403);
     });
 
-    it('fails closed with a generic 500 when OPENROUTER_API_KEY is missing', async () => {
+    it('fails closed with a generic 500 when no provider key is configured', async () => {
         vi.stubEnv('OPENROUTER_API_KEY', '');
+        vi.stubEnv('NVIDIA_API_KEY', '');
         const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
         expect(res.status).toBe(500);
         const text = await res.text();
@@ -316,8 +324,8 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
 
     it('falls all the way through the OpenRouter chain to the NIM entry', async () => {
         vi.stubEnv('NVIDIA_API_KEY', 'nim-key');
-        // First three calls (all OpenRouter entries) fail; the fourth call is
-        // the first NIM entry (deepseek-ai/deepseek-v4-flash-0731) and succeeds.
+        // All four OpenRouter entries fail; the fifth call is the NIM
+        // nemotron nano entry and succeeds.
         typedMockCreate
             .mockImplementationOnce(() => {
                 throw new Error('OpenRouter: model pulled');
@@ -327,13 +335,17 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
             })
             .mockImplementationOnce(() => {
                 throw new Error('OpenRouter: upstream overloaded');
+            })
+            .mockImplementationOnce(() => {
+                throw new Error('OpenRouter: upstream overloaded');
             });
 
         const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
         expect(res.status).toBe(200);
-        expect(typedMockCreate).toHaveBeenCalledTimes(4);
-        const fourthCall = typedMockCreate.mock.calls[3][0];
-        expect(fourthCall.model).toBe('deepseek-ai/deepseek-v4-flash-0731');
+        expect(typedMockCreate).toHaveBeenCalledTimes(5);
+        const fifthCall = typedMockCreate.mock.calls[4][0];
+        expect(fifthCall.model).toBe(COMMUNITY_MODELS[COMMUNITY_MODELS.length - 1].model);
+        expect(fifthCall.model.endsWith(':free')).toBe(false);
         const text = await res.text();
         expect(text).toContain('ok');
         expect(text).not.toContain('429');
@@ -348,12 +360,13 @@ describe('api/generate gateway robustness (hardening pass 2026-09-09)', () => {
 
         const res = await handler(postRequest({ action: 'chat', payload: chatPayload }));
         expect(res.status).toBe(500);
-        // Only the 3 OpenRouter entries were attempted; no NIM models called.
-        expect(typedMockCreate).toHaveBeenCalledTimes(3);
+        // Only the OpenRouter entries were attempted; no NIM models called.
+        expect(typedMockCreate).toHaveBeenCalledTimes(
+            COMMUNITY_MODELS.filter((m) => m.client === 'openrouter').length
+        );
         const calledModels = typedMockCreate.mock.calls.map(
             (c: any[]) => c[0].model
         );
-        expect(calledModels).not.toContain('deepseek-ai/deepseek-v4-flash-0731');
         expect(calledModels).toEqual(COMMUNITY_MODELS.filter((m) => m.client === 'openrouter').map((m) => m.model));
     });
 

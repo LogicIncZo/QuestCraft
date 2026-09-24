@@ -172,18 +172,19 @@ export const MODEL_CAPABILITIES: Record<string, ModelCapabilities> = {
         supportsMultiLanguage: true,
     },
 
-    // DeepSeek V4 Flash via NIM (4th chain entry, verified live 2026-09-07
-    // against response_format json_object + streaming)
-    'deepseek-ai/deepseek-v4-flash-0731': {
+    // Nex AGI N2.5 Pro via OpenRouter free tier (2nd chain entry). Added
+    // 2026-09-23 as non-NVIDIA outage insurance: verified live against
+    // response_format json_object (262144 context per OpenRouter registry).
+    'nex-agi/nex-n2.5-pro:free': {
         supportsJsonSchema: true,
         supportsTools: false,
         supportsThinking: false,
-        maxContextTokens: 131072,
+        maxContextTokens: 262144,
         prefersMarkdown: false,
         requiresJsonOnly: true,
         canDoWebSearch: false, // CRITICAL: No web search in community tier
         supportsStreaming: true,
-        qualityTier: 'medium',
+        qualityTier: 'high',
         supportsMultiLanguage: true,
     },
 
