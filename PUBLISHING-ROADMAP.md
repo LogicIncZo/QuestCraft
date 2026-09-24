@@ -56,7 +56,7 @@ Replace AI Studio boilerplate with a proper open-source project identity.
     - `"path": "^0.12.7"` — Node polyfill, not needed in browser
     - `"fs": "^0.0.1-security"` — Node polyfill, not needed in browser
     - `"vite": "^6.2.0"` in devDeps (already `"^7.1.2"` in deps)
-- [ ] Fix `vite.config.ts`: replace `process.env` with Vite's `import.meta.env` pattern
+- [x] Fix vite.config.ts (worker session; superseded by Tailwind build migration d9fd0f0)
 - [ ] Verify no hardcoded API keys anywhere in source
 
 ### 1.5 Dependency Audit

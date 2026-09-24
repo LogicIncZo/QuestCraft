@@ -191,8 +191,10 @@ async function* guardedStream(first: IteratorResult<any>, rest: AsyncIterator<an
     }
 }
 
-const NON_STREAM_TIMEOUT_MS = 90_000; // full JSON generation on slow free models
-const STREAM_FIRST_CHUNK_TIMEOUT_MS = 20_000; // headers + first chunk
+const SDK_HEADERS_TIMEOUT_MS = 8_000; // time to response headers only
+const FIRST_CHUNK_TIMEOUT_MS = 10_000; // headers may arrive, body must speak
+const CHAIN_TOTAL_BUDGET_MS = 40_000; // whole walk; Vercel edge kills past ~45s
+const MIN_ENTRY_BUDGET_MS = 6_000; // don't start an entry we can't guard
 const SDK_MAX_RETRIES = 0; // we run our own failover - SDK retries would delay it
 
 function rejectAfter(ms: number): Promise<never> {
@@ -225,49 +227,43 @@ async function communityCompletion(
     params: { messages: any[]; [key: string]: any }
 ): Promise<any> {
     let lastError: unknown;
+    const deadline = Date.now() + CHAIN_TOTAL_BUDGET_MS;
     for (const entry of orderedChain()) {
         const client = entry.client === 'nim' ? clients.nim : clients.openrouter;
         if (!client) continue; // provider key not configured -> skip entries
-        const timeout = params.stream
-            ? STREAM_FIRST_CHUNK_TIMEOUT_MS
-            : NON_STREAM_TIMEOUT_MS;
+        const remaining = deadline - Date.now();
+        // Out of platform-safe budget: fail clean (500 + ledger-cooled models)
+        // instead of letting the edge runtime kill the function mid-walk.
+        if (remaining < MIN_ENTRY_BUDGET_MS) break;
+        const entryBudget = Math.min(FIRST_CHUNK_TIMEOUT_MS, remaining);
         try {
             const stream = await client.chat.completions.create(
                 {
                     ...(params as any),
+                    stream: true,
                     model: entry.model,
                 },
-                { timeout, maxRetries: SDK_MAX_RETRIES }
+                { timeout: Math.min(SDK_HEADERS_TIMEOUT_MS, remaining), maxRetries: SDK_MAX_RETRIES }
             );
-            if (params.stream) {
-                const iterator = (stream as any)[Symbol.asyncIterator]();
-                const first = await Promise.race([
-                    iterator.next(),
-                    rejectAfter(STREAM_FIRST_CHUNK_TIMEOUT_MS),
-                ]);
-                if (first.done) {
-                    throw new Error(`${entry.model} returned an empty stream`);
-                }
-                if (
-                    first.value &&
-                    typeof first.value === 'object' &&
-                    'error' in first.value
-                ) {
-                    throw new Error(
-                        `${entry.model} soft-failed: ${JSON.stringify(first.value.error).slice(0, 300)}`
-                    );
-                }
-                recordSuccess(entry.model);
-                return guardedStream(first, iterator);
+            const iterator = (stream as any)[Symbol.asyncIterator]();
+            const first = await Promise.race([
+                iterator.next(),
+                rejectAfter(entryBudget),
+            ]);
+            if (first.done) {
+                throw new Error(`${entry.model} returned an empty stream`);
             }
-            const completion = stream as any;
-            if (completion && typeof completion === 'object' && 'error' in completion) {
+            if (
+                first.value &&
+                typeof first.value === 'object' &&
+                'error' in first.value
+            ) {
                 throw new Error(
-                    `${entry.model} soft-failed: ${JSON.stringify(completion.error).slice(0, 300)}`
+                    `${entry.model} soft-failed: ${JSON.stringify(first.value.error).slice(0, 300)}`
                 );
             }
             recordSuccess(entry.model);
-            return completion;
+            return guardedStream(first, iterator);
         } catch (error) {
             lastError = error;
             recordFailure(entry.model);
@@ -649,10 +645,15 @@ const getAgeGroupText = (ageGroupKey: string): string => {
 // --- Action Handlers ---
 
 async function handleTestConnection(clients: CommunityClients) {
-    await communityCompletion(clients, {
+    const stream = await communityCompletion(clients, {
         messages: [{ role: 'user', content: 'test' }],
         max_tokens: 1,
     });
+    // Drain the guarded stream: an unconsumed body would dangle and can hold
+    // the edge function alive until the platform kills it.
+    const iterator = (stream as any)[Symbol.asyncIterator]();
+    await iterator.next();
+    await iterator.return?.();
     return new Response('Connection successful', { status: 200 });
 }
 
